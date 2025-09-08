@@ -420,31 +420,27 @@
                             <input type="text" class="filter-input" placeholder="담당자 검색" style="width: 100px;">
                         </div>
                         <div class="filter-item">
-                            <span class="filter-label">국가:</span>
+                            <span class="filter-label">통화:</span>
                             <div class="multi-select" style="width: 100px;">
                                 <div class="multi-select-display">
                                     <span>전체</span>
                                 </div>
                                 <div class="multi-select-dropdown">
                                     <div class="multi-select-option">
-                                        <input type="checkbox" id="country-all" checked>
-                                        <label for="country-all">전체</label>
+                                        <input type="checkbox" id="currency-all" checked>
+                                        <label for="currency-all">전체</label>
                                     </div>
                                     <div class="multi-select-option">
-                                        <input type="checkbox" id="country-kr">
-                                        <label for="country-kr">한국</label>
+                                        <input type="checkbox" id="currency-krw">
+                                        <label for="currency-krw">원 (₩)</label>
                                     </div>
                                     <div class="multi-select-option">
-                                        <input type="checkbox" id="country-us">
-                                        <label for="country-us">미국</label>
+                                        <input type="checkbox" id="currency-jpy">
+                                        <label for="currency-jpy">엔 (¥)</label>
                                     </div>
                                     <div class="multi-select-option">
-                                        <input type="checkbox" id="country-jp">
-                                        <label for="country-jp">일본</label>
-                                    </div>
-                                    <div class="multi-select-option">
-                                        <input type="checkbox" id="country-cn">
-                                        <label for="country-cn">중국</label>
+                                        <input type="checkbox" id="currency-usd">
+                                        <label for="currency-usd">달러 ($)</label>
                                     </div>
                                 </div>
                             </div>
@@ -530,7 +526,7 @@
                     <div class="chart-card">
                         <div class="chart-header">갱신고객 현황</div>
                         <div class="chart-body placeholder">
-                            [Map Chart Placeholder]
+                            [Bar Chart Placeholder]
                         </div>
                     </div>
                 </div>
@@ -598,7 +594,8 @@
                                     <th>요금제</th>
                                     <th>결제수단</th>
                                     <th>담당자</th>
-                                    <th>계약액</th>
+                                    <th>계약금액</th>
+                                    <th>매출액</th>
                                     <th>계약(충전)건수</th>
                                 </tr>
                             </thead>
@@ -612,6 +609,7 @@
                                     <td>신용카드</td>
                                     <td>김영희</td>
                                     <td>₩150M</td>
+                                    <td>₩12.5M</td>
                                     <td>-</td>
                                 </tr>
                                 <tr>
@@ -622,6 +620,7 @@
                                     <td>Prepaid-Enterprise</td>
                                     <td>계좌이체</td>
                                     <td>박민수</td>
+                                    <td>₩85M</td>
                                     <td>₩85M</td>
                                     <td>2</td>
                                 </tr>
@@ -634,6 +633,7 @@
                                     <td>신용카드</td>
                                     <td>이지은</td>
                                     <td>₩45M</td>
+                                    <td>₩3.75M</td>
                                     <td>-</td>
                                 </tr>
                                 <tr>
@@ -644,6 +644,7 @@
                                     <td>Prepaid</td>
                                     <td>가상계좌</td>
                                     <td>정현우</td>
+                                    <td>₩120M</td>
                                     <td>₩120M</td>
                                     <td>5</td>
                                 </tr>
@@ -656,6 +657,7 @@
                                     <td>계좌이체</td>
                                     <td>김민준</td>
                                     <td>₩95M</td>
+                                    <td>₩7.9M</td>
                                     <td>-</td>
                                 </tr>
                             </tbody>

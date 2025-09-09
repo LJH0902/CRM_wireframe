@@ -1326,43 +1326,122 @@
                             <h3 style="margin-bottom: 20px; color: #2c3e50;">월별 매출 추이</h3>
                             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
                                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px;">
-                                    <div>
-                                        <div style="font-size: 12px; color: #6c757d;">이번 달</div>
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">이번 달</div>
                                         <div style="font-size: 24px; font-weight: bold; color: #2c3e50;">₩2.5B</div>
                                     </div>
-                                    <div>
-                                        <div style="font-size: 12px; color: #6c757d;">지난 달</div>
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">지난 달</div>
                                         <div style="font-size: 24px; font-weight: bold; color: #6c757d;">₩2.17B</div>
                                     </div>
-                                    <div>
-                                        <div style="font-size: 12px; color: #6c757d;">전년 동기</div>
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">전년 동기</div>
                                         <div style="font-size: 24px; font-weight: bold; color: #6c757d;">₩1.8B</div>
                                     </div>
                                 </div>
+                                <!-- Bar Chart for Revenue Comparison -->
+                                <div style="margin-top: 20px;">
+                                    <div style="display: flex; align-items: flex-end; justify-content: space-around; height: 200px; padding: 0 20px;">
+                                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; margin: 0 10px;">
+                                            <div style="width: 60px; background: linear-gradient(to top, #3498db, #5dade2); height: 180px; border-radius: 4px 4px 0 0; position: relative;">
+                                                <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 14px; font-weight: bold;">₩2.5B</span>
+                                            </div>
+                                            <span style="margin-top: 8px; font-size: 12px; color: #495057;">이번 달</span>
+                                        </div>
+                                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; margin: 0 10px;">
+                                            <div style="width: 60px; background: linear-gradient(to top, #95a5a6, #bdc3c7); height: 156px; border-radius: 4px 4px 0 0; position: relative;">
+                                                <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 14px; font-weight: bold;">₩2.17B</span>
+                                            </div>
+                                            <span style="margin-top: 8px; font-size: 12px; color: #495057;">지난 달</span>
+                                        </div>
+                                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; margin: 0 10px;">
+                                            <div style="width: 60px; background: linear-gradient(to top, #e8c4a0, #f5deb3); height: 130px; border-radius: 4px 4px 0 0; position: relative;">
+                                                <span style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 14px; font-weight: bold;">₩1.8B</span>
+                                            </div>
+                                            <span style="margin-top: 8px; font-size: 12px; color: #495057;">전년 동기</span>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 15px; padding: 10px; background: #e8f5e9; border-radius: 4px; text-align: center;">
+                                        <span style="color: #27ae60; font-weight: bold;">전월 대비 +15.2% | 전년 동기 대비 +38.9%</span>
+                                    </div>
+                                </div>
                             </div>
+                            
                             <h4 style="margin: 20px 0 10px; color: #495057;">제품별 매출 비중</h4>
-                            <table style="width: 100%; border-collapse: collapse;">
-                                <tr style="background: #f8f9fa;">
-                                    <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">제품 유형</th>
-                                    <th style="padding: 10px; text-align: right; border-bottom: 2px solid #dee2e6;">매출액</th>
-                                    <th style="padding: 10px; text-align: right; border-bottom: 2px solid #dee2e6;">비중</th>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">SaaS</td>
-                                    <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">₩1.5B</td>
-                                    <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">60%</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">CSAP</td>
-                                    <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">₩750M</td>
-                                    <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">30%</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">OnPremise</td>
-                                    <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">₩250M</td>
-                                    <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">10%</td>
-                                </tr>
-                            </table>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                <!-- Pie Chart -->
+                                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                                    <div style="position: relative; width: 200px; height: 200px; margin: 0 auto;">
+                                        <!-- SVG Pie Chart -->
+                                        <svg viewBox="0 0 200 200" style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                                            <!-- SaaS 60% -->
+                                            <circle cx="100" cy="100" r="80" fill="none" stroke="#3498db" stroke-width="40" 
+                                                    stroke-dasharray="301.6 502.7" stroke-dashoffset="0"/>
+                                            <!-- CSAP 30% -->
+                                            <circle cx="100" cy="100" r="80" fill="none" stroke="#2ecc71" stroke-width="40" 
+                                                    stroke-dasharray="150.8 502.7" stroke-dashoffset="-301.6"/>
+                                            <!-- OnPremise 10% -->
+                                            <circle cx="100" cy="100" r="80" fill="none" stroke="#f39c12" stroke-width="40" 
+                                                    stroke-dasharray="50.3 502.7" stroke-dashoffset="-452.4"/>
+                                        </svg>
+                                        <!-- Center text -->
+                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                                            <div style="font-size: 24px; font-weight: bold; color: #2c3e50;">₩2.5B</div>
+                                            <div style="font-size: 12px; color: #6c757d;">총 매출</div>
+                                        </div>
+                                    </div>
+                                    <!-- Legend -->
+                                    <div style="margin-top: 20px;">
+                                        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                                            <div style="width: 12px; height: 12px; background: #3498db; border-radius: 2px; margin-right: 8px;"></div>
+                                            <span style="font-size: 13px; color: #495057;">SaaS (60%)</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                                            <div style="width: 12px; height: 12px; background: #2ecc71; border-radius: 2px; margin-right: 8px;"></div>
+                                            <span style="font-size: 13px; color: #495057;">CSAP (30%)</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center;">
+                                            <div style="width: 12px; height: 12px; background: #f39c12; border-radius: 2px; margin-right: 8px;"></div>
+                                            <span style="font-size: 13px; color: #495057;">OnPremise (10%)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Table -->
+                                <div>
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr style="background: #f8f9fa;">
+                                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6; font-size: 13px;">제품 유형</th>
+                                            <th style="padding: 10px; text-align: right; border-bottom: 2px solid #dee2e6; font-size: 13px;">매출액</th>
+                                            <th style="padding: 10px; text-align: right; border-bottom: 2px solid #dee2e6; font-size: 13px;">비중</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6; font-size: 13px;">
+                                                <span style="display: inline-block; width: 8px; height: 8px; background: #3498db; border-radius: 50%; margin-right: 5px;"></span>
+                                                SaaS
+                                            </td>
+                                            <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6; font-size: 13px; font-weight: bold;">₩1.5B</td>
+                                            <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6; font-size: 13px;">60%</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6; font-size: 13px;">
+                                                <span style="display: inline-block; width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; margin-right: 5px;"></span>
+                                                CSAP
+                                            </td>
+                                            <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6; font-size: 13px; font-weight: bold;">₩750M</td>
+                                            <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6; font-size: 13px;">30%</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6; font-size: 13px;">
+                                                <span style="display: inline-block; width: 8px; height: 8px; background: #f39c12; border-radius: 50%; margin-right: 5px;"></span>
+                                                OnPremise
+                                            </td>
+                                            <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6; font-size: 13px; font-weight: bold;">₩250M</td>
+                                            <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6; font-size: 13px;">10%</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     `;
                     break;

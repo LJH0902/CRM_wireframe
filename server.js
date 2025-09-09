@@ -32,14 +32,23 @@ const server = http.createServer((req, res) => {
     fs.readFile(filePath, (error, content) => {
         if (error) {
             if (error.code === 'ENOENT') {
-                res.writeHead(404, { 'Content-Type': 'text/html' });
+                res.writeHead(404, { 
+                    'Content-Type': 'text/html',
+                    'Access-Control-Allow-Origin': '*'
+                });
                 res.end('<h1>404 - File Not Found</h1>', 'utf-8');
             } else {
-                res.writeHead(500);
+                res.writeHead(500, {
+                    'Access-Control-Allow-Origin': '*'
+                });
                 res.end(`Server Error: ${error.code}`, 'utf-8');
             }
         } else {
-            res.writeHead(200, { 'Content-Type': contentType });
+            res.writeHead(200, { 
+                'Content-Type': contentType,
+                'Access-Control-Allow-Origin': '*',
+                'Cache-Control': 'no-cache'
+            });
             res.end(content, 'utf-8');
         }
     });

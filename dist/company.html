@@ -590,6 +590,22 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadCompanies();
             renderCompanies();
+            
+            // 매출 페이지에서 리다이렉션된 경우 처리
+            const viewMode = localStorage.getItem('viewMode');
+            const selectedCompanyId = localStorage.getItem('selectedCompanyId');
+            
+            if (viewMode === 'company-detail' && selectedCompanyId) {
+                // 선택된 회사 상세보기 모달 열기
+                setTimeout(() => {
+                    viewCompany(parseInt(selectedCompanyId));
+                }, 500);
+                
+                // localStorage 정리
+                localStorage.removeItem('viewMode');
+                localStorage.removeItem('selectedCompanyId');
+                localStorage.removeItem('selectedCompanyName');
+            }
         });
         
         // 로컬스토리지에서 데이터 로드
@@ -915,6 +931,120 @@
                 saveCompanies();
                 renderCompanies();
             }
+        }
+        
+        // 회사 상세보기
+        function viewCompany(id) {
+            const company = companies.find(c => c.id === id);
+            if (!company) {
+                // 샘플 데이터에 없는 경우 기본 데이터 생성
+                alert('해당 회사 정보를 찾을 수 없습니다.');
+                return;
+            }
+            
+            // 상세보기 모달 생성
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.id = 'viewCompanyModal';
+            
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">회사 상세정보</h3>
+                        <button class="modal-close" onclick="closeViewModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-label">회사명</label>
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                <strong>${company.name}</strong>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">사업자번호</label>
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                ${company.businessNumber}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">대표자</label>
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                ${company.ceo}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">업종</label>
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                ${company.industry}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">기업규모</label>
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                ${company.scale}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">연락처</label>
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                ${company.phone}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">이메일</label>
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                ${company.email || '-'}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">주소</label>
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                ${company.address}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">홈페이지</label>
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                ${company.website ? `<a href="${company.website}" target="_blank">${company.website}</a>` : '-'}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">상태</label>
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                <span class="status-badge status-${company.status}">
+                                    ${company.status === 'active' ? '활성' : '비활성'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">등록일</label>
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                ${company.registeredDate}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>
+                        <button class="btn btn-primary" onclick="editCompanyFromView(${company.id})">수정</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        // 상세보기 모달 닫기
+        function closeViewModal() {
+            const modal = document.getElementById('viewCompanyModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        // 상세보기에서 수정으로 전환
+        function editCompanyFromView(id) {
+            closeViewModal();
+            editCompany(id);
         }
         
         // Enter 키로 검색

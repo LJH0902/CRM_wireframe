@@ -850,67 +850,8 @@
                                     <th>계약(충전)건수</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2024-06-15</td>
-                                    <td>삼성전자</td>
-                                    <td>삼성그룹</td>
-                                    <td><span style="color: #3498db;">신규</span></td>
-                                    <td>Business</td>
-                                    <td>신용카드</td>
-                                    <td>김영희</td>
-                                    <td>₩150M</td>
-                                    <td>₩12.5M</td>
-                                    <td>-</td>
-                                </tr>
-                                <tr>
-                                    <td>2024-06-14</td>
-                                    <td>LG전자</td>
-                                    <td>LG그룹</td>
-                                    <td><span style="color: #27ae60;">갱신</span></td>
-                                    <td>Prepaid-Enterprise</td>
-                                    <td>계좌이체</td>
-                                    <td>박민수</td>
-                                    <td>₩85M</td>
-                                    <td>₩85M</td>
-                                    <td>2</td>
-                                </tr>
-                                <tr>
-                                    <td>2024-06-13</td>
-                                    <td>현대자동차</td>
-                                    <td>현대그룹</td>
-                                    <td><span style="color: #3498db;">신규</span></td>
-                                    <td>Personal</td>
-                                    <td>신용카드</td>
-                                    <td>이지은</td>
-                                    <td>₩45M</td>
-                                    <td>₩3.75M</td>
-                                    <td>-</td>
-                                </tr>
-                                <tr>
-                                    <td>2024-06-12</td>
-                                    <td>네이버</td>
-                                    <td>-</td>
-                                    <td><span style="color: #27ae60;">갱신</span></td>
-                                    <td>Prepaid</td>
-                                    <td>가상계좌</td>
-                                    <td>정현우</td>
-                                    <td>₩120M</td>
-                                    <td>₩120M</td>
-                                    <td>5</td>
-                                </tr>
-                                <tr>
-                                    <td>2024-06-11</td>
-                                    <td>카카오</td>
-                                    <td>-</td>
-                                    <td><span style="color: #3498db;">신규</span></td>
-                                    <td>Business</td>
-                                    <td>계좌이체</td>
-                                    <td>김민준</td>
-                                    <td>₩95M</td>
-                                    <td>₩7.9M</td>
-                                    <td>-</td>
-                                </tr>
+                            <tbody id="salesTableBody">
+                                <!-- 동적으로 생성됨 -->
                             </tbody>
                         </table>
                     </div>
@@ -1672,6 +1613,137 @@
         
         function closeKPIModal() {
             document.getElementById('kpiModal').classList.remove('active');
+        }
+        
+        // 매출 데이터 초기화 및 렌더링
+        document.addEventListener('DOMContentLoaded', function() {
+            // 샘플 매출 데이터
+            const salesData = [
+                {
+                    date: '2024-06-15',
+                    companyName: '삼성전자',
+                    companyId: 1,
+                    companyGroup: '삼성그룹',
+                    contractType: '신규',
+                    plan: 'Business',
+                    paymentMethod: '신용카드',
+                    manager: '김영희',
+                    contractAmount: '₩150M',
+                    revenue: '₩12.5M',
+                    chargeCount: '-'
+                },
+                {
+                    date: '2024-06-14',
+                    companyName: 'LG전자',
+                    companyId: 2,
+                    companyGroup: 'LG그룹',
+                    contractType: '갱신',
+                    plan: 'Prepaid-Enterprise',
+                    paymentMethod: '계좌이체',
+                    manager: '박민수',
+                    contractAmount: '₩85M',
+                    revenue: '₩85M',
+                    chargeCount: '2'
+                },
+                {
+                    date: '2024-06-13',
+                    companyName: '현대자동차',
+                    companyId: 6,
+                    companyGroup: '현대그룹',
+                    contractType: '신규',
+                    plan: 'Personal',
+                    paymentMethod: '신용카드',
+                    manager: '이지은',
+                    contractAmount: '₩45M',
+                    revenue: '₩3.75M',
+                    chargeCount: '-'
+                },
+                {
+                    date: '2024-06-12',
+                    companyName: '네이버',
+                    companyId: 3,
+                    companyGroup: '-',
+                    contractType: '갱신',
+                    plan: 'Prepaid',
+                    paymentMethod: '가상계좌',
+                    manager: '정현우',
+                    contractAmount: '₩120M',
+                    revenue: '₩120M',
+                    chargeCount: '5'
+                },
+                {
+                    date: '2024-06-11',
+                    companyName: '카카오',
+                    companyId: 4,
+                    companyGroup: '-',
+                    contractType: '신규',
+                    plan: 'Business',
+                    paymentMethod: '계좌이체',
+                    manager: '김민준',
+                    contractAmount: '₩95M',
+                    revenue: '₩7.9M',
+                    chargeCount: '-'
+                }
+            ];
+            
+            renderSalesTable(salesData);
+        });
+        
+        // 매출 테이블 렌더링 함수
+        function renderSalesTable(salesData) {
+            const tbody = document.getElementById('salesTableBody');
+            tbody.innerHTML = '';
+            
+            salesData.forEach(sale => {
+                const tr = document.createElement('tr');
+                
+                // 계약 타입 색상 설정
+                const contractTypeColor = sale.contractType === '신규' ? '#3498db' : '#27ae60';
+                
+                // 회사명 클릭 가능 스타일 및 이벤트 설정
+                const companyNameStyle = 'cursor: pointer; color: #3498db; text-decoration: none;';
+                const companyNameHover = 'text-decoration: underline;';
+                
+                tr.innerHTML = `
+                    <td>${sale.date}</td>
+                    <td>
+                        <a href="#" 
+                           onclick="handleCompanyClick('${sale.companyName}', ${sale.companyId}, '${sale.plan}'); return false;"
+                           style="${companyNameStyle}"
+                           onmouseover="this.style.textDecoration='underline'"
+                           onmouseout="this.style.textDecoration='none'">
+                            ${sale.companyName}
+                        </a>
+                    </td>
+                    <td>${sale.companyGroup}</td>
+                    <td><span style="color: ${contractTypeColor};">${sale.contractType}</span></td>
+                    <td>${sale.plan}</td>
+                    <td>${sale.paymentMethod}</td>
+                    <td>${sale.manager}</td>
+                    <td>${sale.contractAmount}</td>
+                    <td>${sale.revenue}</td>
+                    <td>${sale.chargeCount}</td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // 회사명 클릭 핸들러
+        function handleCompanyClick(companyName, companyId, plan) {
+            // localStorage에 선택된 회사 정보 저장
+            localStorage.setItem('selectedCompanyId', companyId);
+            localStorage.setItem('selectedCompanyName', companyName);
+            
+            if (plan === 'Prepaid-Enterprise') {
+                // Prepaid-Enterprise는 계약관리 페이지로 이동
+                localStorage.setItem('viewMode', 'contract-detail');
+                window.location.href = 'contract.html';
+            } else {
+                // 나머지는 회사관리 페이지로 이동
+                localStorage.setItem('viewMode', 'company-detail');
+                window.location.href = 'company.html';
+            }
         }
     </script>
 </body>

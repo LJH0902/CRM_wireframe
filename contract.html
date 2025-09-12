@@ -535,23 +535,19 @@
                     </div>
                     <div class="filter-row">
                         <div class="filter-item">
-                            <label>계약유형</label>
-                            <select id="typeFilter">
+                            <label>계약구분</label>
+                            <select id="divisionFilter">
                                 <option value="">전체</option>
-                                <option value="구매">구매계약</option>
-                                <option value="판매">판매계약</option>
-                                <option value="유지보수">유지보수계약</option>
-                                <option value="라이선스">라이선스계약</option>
+                                <option value="신규">신규</option>
+                                <option value="갱신">갱신</option>
                             </select>
                         </div>
                         <div class="filter-item">
                             <label>계약상태</label>
                             <select id="statusFilter">
                                 <option value="">전체</option>
-                                <option value="대기">대기</option>
-                                <option value="진행중">진행중</option>
-                                <option value="완료">완료</option>
-                                <option value="만료">만료</option>
+                                <option value="분할 납부">분할 납부</option>
+                                <option value="계약완료">계약완료</option>
                             </select>
                         </div>
                         <div class="filter-item">
@@ -582,15 +578,15 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>계약번호</th>
-                                <th>계약명</th>
-                                <th>계약유형</th>
-                                <th>고객사</th>
-                                <th>계약금액</th>
-                                <th>계약일</th>
-                                <th>만료일</th>
-                                <th>담당자</th>
-                                <th>상태</th>
+                                <th>계약구분</th>
+                                <th>계약상태</th>
+                                <th>영업담당자</th>
+                                <th>회사명</th>
+                                <th>그룹명</th>
+                                <th>계약기간</th>
+                                <th>계약건수</th>
+                                <th>잔여건수</th>
+                                <th>문서 사용량(%)</th>
                                 <th>관리</th>
                             </tr>
                         </thead>
@@ -623,13 +619,11 @@
                             <input type="text" class="form-control" id="contractNumber" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">계약유형 *</label>
-                            <select class="form-control" id="contractType" required>
+                            <label class="form-label">계약구분 *</label>
+                            <select class="form-control" id="contractDivision" required>
                                 <option value="">선택하세요</option>
-                                <option value="구매">구매계약</option>
-                                <option value="판매">판매계약</option>
-                                <option value="유지보수">유지보수계약</option>
-                                <option value="라이선스">라이선스계약</option>
+                                <option value="신규">신규</option>
+                                <option value="갱신">갱신</option>
                             </select>
                         </div>
                     </div>
@@ -642,32 +636,65 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">고객사 *</label>
-                            <select class="form-control" id="companyId" required>
+                            <select class="form-control" id="companyId" required onchange="updateGroupName()">
                                 <option value="">선택하세요</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">담당자 *</label>
-                            <input type="text" class="form-control" id="manager" required>
+                            <label class="form-label">그룹명</label>
+                            <input type="text" class="form-control" id="groupName" readonly>
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">계약일 *</label>
-                            <input type="date" class="form-control" id="contractDate" required>
+                            <label class="form-label">영업담당자 *</label>
+                            <input type="text" class="form-control" id="salesManager" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">만료일 *</label>
-                            <input type="date" class="form-control" id="expiryDate" required>
+                            <label class="form-label">계약상태 *</label>
+                            <select class="form-control" id="contractStatus" required>
+                                <option value="">선택하세요</option>
+                                <option value="분할 납부">분할 납부</option>
+                                <option value="계약완료">계약완료</option>
+                            </select>
                         </div>
                     </div>
                     
                     <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">계약시작일 *</label>
+                            <input type="date" class="form-control" id="contractStartDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">계약종료일 *</label>
+                            <input type="date" class="form-control" id="contractEndDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">계약건수 *</label>
+                            <input type="number" class="form-control" id="totalContracts" required min="1" onchange="updateRemainingContracts()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">잔여건수 *</label>
+                            <input type="number" class="form-control" id="remainingContracts" required min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">문서 사용량(%) *</label>
+                            <input type="number" class="form-control" id="documentUsage" required min="0" max="100">
+                        </div>
                         <div class="form-group">
                             <label class="form-label">계약금액 *</label>
                             <input type="number" class="form-control" id="amount" required>
                         </div>
+                    </div>
+                    
+                    <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">부가세</label>
                             <select class="form-control" id="vatType">
@@ -675,27 +702,15 @@
                                 <option value="포함">포함</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">결제조건</label>
+                            <input type="text" class="form-control" id="paymentTerms" placeholder="예: 계약 후 30일 이내">
+                        </div>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">계약내용</label>
                         <textarea class="form-control" id="contractContent" rows="4"></textarea>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">결제조건</label>
-                            <input type="text" class="form-control" id="paymentTerms" placeholder="예: 계약 후 30일 이내">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">계약상태</label>
-                            <select class="form-control" id="status">
-                                <option value="대기">대기</option>
-                                <option value="진행중">진행중</option>
-                                <option value="완료">완료</option>
-                                <option value="만료">만료</option>
-                            </select>
-                        </div>
                     </div>
                     
                     <div class="form-group">
@@ -798,17 +813,21 @@
                         id: 1,
                         contractNumber: 'CNT-2024-001',
                         contractName: 'ERP 시스템 구축 계약',
-                        contractType: '판매',
+                        contractDivision: '신규',  // 계약구분
+                        contractStatus: '분할 납부',  // 계약상태
+                        salesManager: '김영희',  // 영업담당자
                         companyId: 1,
                         companyName: '삼성전자',
+                        groupName: '삼성그룹',
+                        contractStartDate: '2024-01-15',
+                        contractEndDate: '2024-12-31',
+                        totalContracts: 10,  // 계약건수
+                        remainingContracts: 7,  // 잔여건수
+                        documentUsage: 30,  // 문서 사용량(%)
                         amount: 150000000,
                         vatType: '별도',
-                        contractDate: '2024-01-15',
-                        expiryDate: '2024-12-31',
-                        manager: '김영수',
-                        status: '진행중',
                         contractContent: 'ERP 시스템 구축 및 컨설팅',
-                        paymentTerms: '계약 후 30일 이내',
+                        paymentTerms: '분기별 분할 납부',
                         files: [],
                         notes: ''
                     },
@@ -816,17 +835,21 @@
                         id: 2,
                         contractNumber: 'CNT-2024-002',
                         contractName: 'Prepaid-Enterprise 서비스 계약',
-                        contractType: '판매',
+                        contractDivision: '갱신',  // 계약구분
+                        contractStatus: '계약완료',  // 계약상태
+                        salesManager: '박민수',  // 영업담당자
                         companyId: 2,
                         companyName: 'LG전자',
+                        groupName: 'LG그룹',
+                        contractStartDate: '2024-06-14',
+                        contractEndDate: '2025-06-13',
+                        totalContracts: 12,  // 계약건수
+                        remainingContracts: 10,  // 잔여건수
+                        documentUsage: 17,  // 문서 사용량(%)
                         amount: 85000000,
                         vatType: '별도',
-                        contractDate: '2024-06-14',
-                        expiryDate: '2025-06-13',
-                        manager: '박민수',
-                        status: '진행중',
                         contractContent: 'Prepaid-Enterprise 요금제 연간 계약\n- 무제한 사용자\n- 프리미엄 지원\n- 전용 서버 제공',
-                        paymentTerms: '분기별 선불',
+                        paymentTerms: '일시불',
                         files: [],
                         notes: '갱신 계약, 충전 건수: 2'
                     },
@@ -834,15 +857,19 @@
                         id: 3,
                         contractNumber: 'CNT-2024-003',
                         contractName: '소프트웨어 라이선스',
-                        contractType: '라이선스',
+                        contractDivision: '신규',
+                        contractStatus: '계약완료',
+                        salesManager: '이정희',
                         companyId: 3,
                         companyName: '네이버',
+                        groupName: '-',
+                        contractStartDate: '2024-03-01',
+                        contractEndDate: '2025-02-28',
+                        totalContracts: 5,
+                        remainingContracts: 5,
+                        documentUsage: 0,
                         amount: 30000000,
                         vatType: '별도',
-                        contractDate: '2024-03-01',
-                        expiryDate: '2025-02-28',
-                        manager: '박민수',
-                        status: '진행중',
                         contractContent: 'MS Office 365 라이선스',
                         paymentTerms: '연간 선불',
                         files: [],
@@ -852,15 +879,19 @@
                         id: 4,
                         contractNumber: 'CNT-2024-004',
                         contractName: '유지보수 계약',
-                        contractType: '유지보수',
+                        contractDivision: '갱신',
+                        contractStatus: '분할 납부',
+                        salesManager: '정현우',
                         companyId: 4,
                         companyName: '카카오',
+                        groupName: '-',
+                        contractStartDate: '2024-01-01',
+                        contractEndDate: '2024-12-31',
+                        totalContracts: 8,
+                        remainingContracts: 3,
+                        documentUsage: 63,
                         amount: 24000000,
                         vatType: '별도',
-                        contractDate: '2024-01-01',
-                        expiryDate: '2024-12-31',
-                        manager: '최지원',
-                        status: '진행중',
                         contractContent: '시스템 유지보수 및 기술지원',
                         paymentTerms: '분기별 정산',
                         files: [],
@@ -870,15 +901,19 @@
                         id: 5,
                         contractNumber: 'CNT-2023-010',
                         contractName: '하드웨어 구매계약',
-                        contractType: '구매',
+                        contractDivision: '신규',
+                        contractStatus: '계약완료',
+                        salesManager: '김민준',
                         companyId: 5,
                         companyName: '쿠팡',
+                        groupName: '-',
+                        contractStartDate: '2023-12-01',
+                        contractEndDate: '2023-12-31',
+                        totalContracts: 1,
+                        remainingContracts: 0,
+                        documentUsage: 100,
                         amount: 80000000,
                         vatType: '포함',
-                        contractDate: '2023-12-01',
-                        expiryDate: '2023-12-31',
-                        manager: '김태현',
-                        status: '완료',
                         contractContent: '서버 및 네트워크 장비 구매',
                         paymentTerms: '납품 후 30일',
                         files: [],
@@ -911,32 +946,63 @@
             pageData.forEach(contract => {
                 totalAmount += contract.amount;
                 
+                // 계약구분 배지 색상
+                const divisionBadgeClass = contract.contractDivision === '신규' ? 'type-구매' : 'type-판매';
+                
+                // 계약상태 배지 색상
+                const statusBadgeClass = contract.contractStatus === '계약완료' ? 'status-완료' : 'status-진행중';
+                
+                // 문서 사용량 색상
+                let usageColor = '#28a745';  // 녹색
+                if (contract.documentUsage >= 70) {
+                    usageColor = '#dc3545';  // 빨간색
+                } else if (contract.documentUsage >= 50) {
+                    usageColor = '#ffc107';  // 노란색
+                }
+                
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><strong>${contract.contractNumber}</strong></td>
+                    <td>
+                        <span class="contract-type-badge ${divisionBadgeClass}">
+                            ${contract.contractDivision}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge ${statusBadgeClass}">
+                            ${contract.contractStatus}
+                        </span>
+                    </td>
+                    <td>${contract.salesManager}</td>
                     <td>
                         <a href="#" 
                            onclick="viewContract(${contract.id}); return false;"
-                           style="cursor: pointer; color: #3498db; text-decoration: none;"
+                           style="cursor: pointer; color: #3498db; text-decoration: none; font-weight: 600;"
                            onmouseover="this.style.textDecoration='underline'"
                            onmouseout="this.style.textDecoration='none'">
-                            ${contract.contractName}
+                            ${contract.companyName}
                         </a>
                     </td>
-                    <td>
-                        <span class="contract-type-badge type-${contract.contractType}">
-                            ${contract.contractType}
+                    <td>${contract.groupName}</td>
+                    <td style="font-size: 13px;">
+                        ${contract.contractStartDate} ~ ${contract.contractEndDate}
+                    </td>
+                    <td style="text-align: center;">
+                        <strong>${contract.totalContracts}</strong>
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="color: ${contract.remainingContracts > 0 ? '#007bff' : '#6c757d'};">
+                            ${contract.remainingContracts}
                         </span>
                     </td>
-                    <td>${contract.companyName}</td>
-                    <td class="amount">${formatAmount(contract.amount)}원</td>
-                    <td>${contract.contractDate}</td>
-                    <td>${contract.expiryDate}</td>
-                    <td>${contract.manager}</td>
-                    <td>
-                        <span class="status-badge status-${contract.status}">
-                            ${contract.status}
-                        </span>
+                    <td style="text-align: center;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="flex: 1; background: #e9ecef; border-radius: 4px; height: 20px; position: relative; overflow: hidden;">
+                                <div style="background: ${usageColor}; width: ${contract.documentUsage}%; height: 100%; transition: width 0.3s;"></div>
+                            </div>
+                            <span style="font-size: 12px; font-weight: 600; color: ${usageColor};">
+                                ${contract.documentUsage}%
+                            </span>
+                        </div>
                     </td>
                     <td>
                         <div class="action-buttons">
@@ -972,30 +1038,32 @@
                 filtered = filtered.filter(contract => 
                     contract.contractNumber.toLowerCase().includes(searchTerm) ||
                     contract.contractName.toLowerCase().includes(searchTerm) ||
-                    contract.companyName.toLowerCase().includes(searchTerm)
+                    contract.companyName.toLowerCase().includes(searchTerm) ||
+                    contract.salesManager.toLowerCase().includes(searchTerm) ||
+                    contract.groupName.toLowerCase().includes(searchTerm)
                 );
             }
             
-            // 계약유형 필터
-            const type = document.getElementById('typeFilter').value;
-            if (type) {
-                filtered = filtered.filter(contract => contract.contractType === type);
+            // 계약구분 필터
+            const division = document.getElementById('divisionFilter').value;
+            if (division) {
+                filtered = filtered.filter(contract => contract.contractDivision === division);
             }
             
             // 상태 필터
             const status = document.getElementById('statusFilter').value;
             if (status) {
-                filtered = filtered.filter(contract => contract.status === status);
+                filtered = filtered.filter(contract => contract.contractStatus === status);
             }
             
             // 날짜 필터
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
             if (startDate) {
-                filtered = filtered.filter(contract => contract.contractDate >= startDate);
+                filtered = filtered.filter(contract => contract.contractStartDate >= startDate);
             }
             if (endDate) {
-                filtered = filtered.filter(contract => contract.contractDate <= endDate);
+                filtered = filtered.filter(contract => contract.contractEndDate <= endDate);
             }
             
             // 금액 필터
@@ -1078,7 +1146,7 @@
         // 필터 초기화
         function resetFilters() {
             document.getElementById('searchInput').value = '';
-            document.getElementById('typeFilter').value = '';
+            document.getElementById('divisionFilter').value = '';
             document.getElementById('statusFilter').value = '';
             document.getElementById('startDate').value = '';
             document.getElementById('endDate').value = '';
@@ -1086,6 +1154,39 @@
             document.getElementById('maxAmount').value = '';
             currentPage = 1;
             renderContracts();
+        }
+        
+        // 회사 선택 시 그룹명 자동 업데이트
+        function updateGroupName() {
+            const companyId = document.getElementById('companyId').value;
+            const groupNameInput = document.getElementById('groupName');
+            
+            if (companyId) {
+                const company = companies.find(c => c.id === parseInt(companyId));
+                if (company) {
+                    // 샘플 그룹 데이터 (실제로는 회사그룹 데이터에서 가져와야 함)
+                    const groupMap = {
+                        '삼성전자': '삼성그룹',
+                        'LG전자': 'LG그룹',
+                        '현대자동차': '현대그룹',
+                        'SK텔레콤': 'SK그룹'
+                    };
+                    groupNameInput.value = groupMap[company.name] || '-';
+                }
+            } else {
+                groupNameInput.value = '';
+            }
+        }
+        
+        // 계약건수 변경 시 잔여건수 자동 업데이트
+        function updateRemainingContracts() {
+            const totalContracts = document.getElementById('totalContracts').value;
+            const remainingContracts = document.getElementById('remainingContracts');
+            
+            if (!editingId) {
+                // 신규 등록 시 잔여건수를 총 건수와 동일하게 설정
+                remainingContracts.value = totalContracts;
+            }
         }
         
         // 모달 열기 (추가)
@@ -1130,15 +1231,19 @@
             const contract = {
                 contractNumber: document.getElementById('contractNumber').value,
                 contractName: document.getElementById('contractName').value,
-                contractType: document.getElementById('contractType').value,
+                contractDivision: document.getElementById('contractDivision').value,
+                contractStatus: document.getElementById('contractStatus').value,
+                salesManager: document.getElementById('salesManager').value,
                 companyId: parseInt(companyId),
                 companyName: company ? company.name : '',
+                groupName: document.getElementById('groupName').value || '-',
+                contractStartDate: document.getElementById('contractStartDate').value,
+                contractEndDate: document.getElementById('contractEndDate').value,
+                totalContracts: parseInt(document.getElementById('totalContracts').value),
+                remainingContracts: parseInt(document.getElementById('remainingContracts').value),
+                documentUsage: parseInt(document.getElementById('documentUsage').value),
                 amount: parseInt(document.getElementById('amount').value),
                 vatType: document.getElementById('vatType').value,
-                contractDate: document.getElementById('contractDate').value,
-                expiryDate: document.getElementById('expiryDate').value,
-                manager: document.getElementById('manager').value,
-                status: document.getElementById('status').value,
                 contractContent: document.getElementById('contractContent').value,
                 paymentTerms: document.getElementById('paymentTerms').value,
                 files: selectedFiles,
@@ -1146,10 +1251,12 @@
             };
             
             // 유효성 검사
-            if (!contract.contractNumber || !contract.contractName || !contract.contractType || 
-                !contract.companyId || !contract.amount || !contract.contractDate || 
-                !contract.expiryDate || !contract.manager) {
-                alert('필수 항목을 입력해주세요.');
+            if (!contract.contractNumber || !contract.contractName || !contract.contractDivision || 
+                !contract.contractStatus || !contract.salesManager || !contract.companyId || 
+                !contract.amount || !contract.contractStartDate || !contract.contractEndDate ||
+                contract.totalContracts < 1 || contract.remainingContracts < 0 || 
+                contract.documentUsage < 0 || contract.documentUsage > 100) {
+                alert('필수 항목을 올바르게 입력해주세요.');
                 return;
             }
             
@@ -1183,10 +1290,10 @@
                             <div style="font-size: 18px; font-weight: bold; color: #2c3e50;">${contract.contractNumber}</div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" style="color: #6c757d; font-size: 12px;">계약유형</label>
+                            <label class="form-label" style="color: #6c757d; font-size: 12px;">계약구분</label>
                             <div>
-                                <span class="contract-type-badge type-${contract.contractType}" style="font-size: 14px;">
-                                    ${contract.contractType}
+                                <span class="contract-type-badge type-${contract.contractDivision === '신규' ? '구매' : '판매'}" style="font-size: 14px;">
+                                    ${contract.contractDivision}
                                 </span>
                             </div>
                         </div>
@@ -1202,30 +1309,70 @@
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label" style="font-weight: 600; color: #495057;">고객사</label>
+                        <label class="form-label" style="font-weight: 600; color: #495057;">회사명</label>
                         <div style="padding: 10px; background: #e3f2fd; border-radius: 4px;">
                             <strong>${contract.companyName}</strong>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" style="font-weight: 600; color: #495057;">담당자</label>
+                        <label class="form-label" style="font-weight: 600; color: #495057;">그룹명</label>
                         <div style="padding: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px;">
-                            ${contract.manager}
+                            ${contract.groupName || '-'}
                         </div>
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label" style="font-weight: 600; color: #495057;">계약일</label>
+                        <label class="form-label" style="font-weight: 600; color: #495057;">영업담당자</label>
                         <div style="padding: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px;">
-                            📅 ${contract.contractDate}
+                            ${contract.salesManager}
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" style="font-weight: 600; color: #495057;">만료일</label>
+                        <label class="form-label" style="font-weight: 600; color: #495057;">계약상태</label>
+                        <div style="padding: 10px;">
+                            <span class="status-badge status-${contract.contractStatus === '계약완료' ? '완료' : '진행중'}" style="font-size: 14px;">
+                                ${contract.contractStatus}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600; color: #495057;">계약기간</label>
                         <div style="padding: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px;">
-                            📅 ${contract.expiryDate}
+                            📅 ${contract.contractStartDate} ~ ${contract.contractEndDate}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600; color: #495057;">계약건수</label>
+                        <div style="padding: 10px; background: #e8f5e9; border-radius: 4px;">
+                            <strong style="font-size: 16px; color: #2e7d32;">${contract.totalContracts}</strong>건
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600; color: #495057;">잔여건수</label>
+                        <div style="padding: 10px; background: ${contract.remainingContracts > 0 ? '#e3f2fd' : '#f5f5f5'}; border-radius: 4px;">
+                            <strong style="font-size: 16px; color: ${contract.remainingContracts > 0 ? '#1976d2' : '#757575'};">${contract.remainingContracts}</strong>건
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600; color: #495057;">문서 사용량</label>
+                    <div style="padding: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="flex: 1; background: #e9ecef; border-radius: 4px; height: 24px; position: relative; overflow: hidden;">
+                                <div style="background: ${contract.documentUsage >= 70 ? '#dc3545' : contract.documentUsage >= 50 ? '#ffc107' : '#28a745'}; width: ${contract.documentUsage}%; height: 100%; transition: width 0.3s;"></div>
+                            </div>
+                            <span style="font-size: 16px; font-weight: bold; color: ${contract.documentUsage >= 70 ? '#dc3545' : contract.documentUsage >= 50 ? '#ffc107' : '#28a745'};">
+                                ${contract.documentUsage}%
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -1241,11 +1388,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" style="font-weight: 600; color: #495057;">상태</label>
-                        <div style="padding: 10px;">
-                            <span class="status-badge status-${contract.status}" style="font-size: 14px;">
-                                ${contract.status}
-                            </span>
+                        <label class="form-label" style="font-weight: 600; color: #495057;">결제조건</label>
+                        <div style="padding: 10px; background: #fff3cd; border-radius: 4px; color: #856404;">
+                            💳 ${contract.paymentTerms || '-'}
                         </div>
                     </div>
                 </div>
@@ -1299,14 +1444,18 @@
             document.getElementById('modalTitle').textContent = '계약 수정';
             document.getElementById('contractNumber').value = contract.contractNumber;
             document.getElementById('contractName').value = contract.contractName;
-            document.getElementById('contractType').value = contract.contractType;
+            document.getElementById('contractDivision').value = contract.contractDivision;
+            document.getElementById('contractStatus').value = contract.contractStatus;
+            document.getElementById('salesManager').value = contract.salesManager;
             document.getElementById('companyId').value = contract.companyId;
+            document.getElementById('groupName').value = contract.groupName || '-';
+            document.getElementById('contractStartDate').value = contract.contractStartDate;
+            document.getElementById('contractEndDate').value = contract.contractEndDate;
+            document.getElementById('totalContracts').value = contract.totalContracts;
+            document.getElementById('remainingContracts').value = contract.remainingContracts;
+            document.getElementById('documentUsage').value = contract.documentUsage;
             document.getElementById('amount').value = contract.amount;
             document.getElementById('vatType').value = contract.vatType;
-            document.getElementById('contractDate').value = contract.contractDate;
-            document.getElementById('expiryDate').value = contract.expiryDate;
-            document.getElementById('manager').value = contract.manager;
-            document.getElementById('status').value = contract.status;
             document.getElementById('contractContent').value = contract.contractContent || '';
             document.getElementById('paymentTerms').value = contract.paymentTerms || '';
             document.getElementById('notes').value = contract.notes || '';

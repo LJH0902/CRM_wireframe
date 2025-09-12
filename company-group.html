@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회사그룹관리</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: #1a252f;
+            border-bottom: 1px solid #34495e;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            padding: 12px 20px;
+            display: block;
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background: #34495e;
+            border-left-color: #3498db;
+        }
+        
+        .nav-item.active {
+            background: #34495e;
+            border-left-color: #e74c3c;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        
+        /* Search and Filter Section */
+        .search-filter-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .search-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-item label {
+            font-size: 14px;
+            color: #666;
+            white-space: nowrap;
+        }
+        
+        .filter-item select,
+        .filter-item input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            min-width: 150px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #229954;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        /* Table Section */
+        .table-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .table-header {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .table-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .table-info {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        th {
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 14px;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .group-type-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .type-계열사 {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .type-협력사 {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .type-파트너 {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        
+        .btn-edit {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background: #e67e22;
+        }
+        
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+        
+        .btn-view {
+            background: #9b59b6;
+            color: white;
+        }
+        
+        .btn-view:hover {
+            background: #8e44ad;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* Company Selection */
+        .company-selection {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .company-checkbox {
+            display: block;
+            padding: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .company-checkbox:hover {
+            background: #f8f9fa;
+        }
+        
+        .selected-companies {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .selected-company-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #3498db;
+            color: white;
+            border-radius: 4px;
+            margin: 2px;
+            font-size: 12px;
+        }
+        
+        .selected-company-tag .remove {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            padding: 20px;
+        }
+        
+        .page-btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .page-btn:hover {
+            background: #f8f9fa;
+        }
+        
+        .page-btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>CRM System</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">매출 및 통계</a>
+                <a href="company.html" class="nav-item">회사관리</a>
+                <a href="company-group.html" class="nav-item active">회사그룹관리</a>
+                <a href="contract.html" class="nav-item">계약관리</a>
+                <a href="mypage.html" class="nav-item">마이페이지</a>
+            </nav>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>회사그룹관리</h1>
+                <div>
+                    <span id="currentUser">홍길동</span>
+                </div>
+            </div>
+            
+            <div class="content">
+                <!-- Search and Filter Section -->
+                <div class="search-filter-section">
+                    <div class="search-row">
+                        <input type="text" class="search-input" id="searchInput" placeholder="그룹명, 모회사명으로 검색">
+                        <button class="btn btn-primary" onclick="searchGroups()">검색</button>
+                        <button class="btn btn-success" onclick="openAddModal()">신규 그룹 등록</button>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-item">
+                            <label>그룹유형</label>
+                            <select id="typeFilter">
+                                <option value="">전체</option>
+                                <option value="계열사">계열사 그룹</option>
+                                <option value="협력사">협력사 그룹</option>
+                                <option value="파트너">파트너 그룹</option>
+                            </select>
+                        </div>
+                        <div class="filter-item">
+                            <label>상태</label>
+                            <select id="statusFilter">
+                                <option value="">전체</option>
+                                <option value="active">활성</option>
+                                <option value="inactive">비활성</option>
+                            </select>
+                        </div>
+                        <div class="filter-item">
+                            <label>생성일</label>
+                            <input type="date" id="startDate">
+                            <span>~</span>
+                            <input type="date" id="endDate">
+                        </div>
+                        <button class="btn btn-secondary" onclick="resetFilters()">초기화</button>
+                    </div>
+                </div>
+                
+                <!-- Table Section -->
+                <div class="table-section">
+                    <div class="table-header">
+                        <span class="table-title">회사그룹 목록</span>
+                        <span class="table-info">총 <span id="totalCount">0</span>개</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>그룹명</th>
+                                <th>그룹유형</th>
+                                <th>모회사</th>
+                                <th>소속회사 수</th>
+                                <th>설명</th>
+                                <th>상태</th>
+                                <th>생성일</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="groupTableBody">
+                            <!-- 동적으로 추가됨 -->
+                        </tbody>
+                    </table>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination" id="pagination">
+                        <!-- 동적으로 추가됨 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Group Modal -->
+    <div class="modal" id="groupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">그룹 등록</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="groupForm">
+                    <div class="form-group">
+                        <label class="form-label">그룹명 *</label>
+                        <input type="text" class="form-control" id="groupName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">그룹유형 *</label>
+                        <select class="form-control" id="groupType" required>
+                            <option value="계열사">계열사 그룹</option>
+                            <option value="협력사">협력사 그룹</option>
+                            <option value="파트너">파트너 그룹</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">모회사 선택 *</label>
+                        <select class="form-control" id="parentCompany" required>
+                            <option value="">선택하세요</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">소속회사 선택</label>
+                        <div class="company-selection" id="companySelection">
+                            <!-- 동적으로 추가됨 -->
+                        </div>
+                        <div class="selected-companies" id="selectedCompanies">
+                            <small>선택된 회사: <span id="selectedCount">0</span>개</small>
+                            <div id="selectedCompanyTags"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">설명</label>
+                        <textarea class="form-control" id="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">상태</label>
+                        <select class="form-control" id="status">
+                            <option value="active">활성</option>
+                            <option value="inactive">비활성</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">취소</button>
+                <button class="btn btn-primary" onclick="saveGroup()">저장</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- View Group Modal -->
+    <div class="modal" id="viewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">그룹 상세정보</h3>
+                <button class="modal-close" onclick="closeViewModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="viewModalBody">
+                <!-- 동적으로 추가됨 -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 데이터
+        let groups = [];
+        let companies = [];
+        let currentPage = 1;
+        let itemsPerPage = 10;
+        let editingId = null;
+        let selectedCompanyIds = [];
+        
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            renderGroups();
+        });
+        
+        // 데이터 로드
+        function loadData() {
+            // 회사 데이터 로드
+            const savedCompanies = localStorage.getItem('companies');
+            if (savedCompanies) {
+                companies = JSON.parse(savedCompanies);
+            }
+            
+            // 그룹 데이터 로드
+            const savedGroups = localStorage.getItem('companyGroups');
+            if (savedGroups) {
+                groups = JSON.parse(savedGroups);
+            } else {
+                // 샘플 데이터
+                groups = [
+                    {
+                        id: 1,
+                        name: '삼성그룹',
+                        type: '계열사',
+                        parentCompanyId: 1,
+                        parentCompanyName: '삼성전자',
+                        companyIds: [1],
+                        description: '삼성그룹 계열사',
+                        status: 'active',
+                        createdDate: '2024-01-15'
+                    },
+                    {
+                        id: 2,
+                        name: 'LG그룹',
+                        type: '계열사',
+                        parentCompanyId: 2,
+                        parentCompanyName: 'LG전자',
+                        companyIds: [2],
+                        description: 'LG그룹 계열사',
+                        status: 'active',
+                        createdDate: '2024-01-20'
+                    },
+                    {
+                        id: 3,
+                        name: '네이버 협력사',
+                        type: '협력사',
+                        parentCompanyId: 3,
+                        parentCompanyName: '네이버',
+                        companyIds: [4, 5],
+                        description: '네이버 주요 협력사 그룹',
+                        status: 'active',
+                        createdDate: '2024-02-01'
+                    }
+                ];
+                saveGroups();
+            }
+            
+            updateParentCompanySelect();
+        }
+        
+        // 로컬스토리지에 저장
+        function saveGroups() {
+            localStorage.setItem('companyGroups', JSON.stringify(groups));
+        }
+        
+        // 그룹 목록 렌더링
+        function renderGroups() {
+            const filtered = filterGroups();
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageData = filtered.slice(start, end);
+            
+            const tbody = document.getElementById('groupTableBody');
+            tbody.innerHTML = '';
+            
+            pageData.forEach(group => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${group.name}</strong></td>
+                    <td>
+                        <span class="group-type-badge type-${group.type}">
+                            ${group.type}
+                        </span>
+                    </td>
+                    <td>${group.parentCompanyName}</td>
+                    <td>${group.companyIds.length}개</td>
+                    <td>${group.description || '-'}</td>
+                    <td>
+                        <span class="status-badge status-${group.status}">
+                            ${group.status === 'active' ? '활성' : '비활성'}
+                        </span>
+                    </td>
+                    <td>${group.createdDate}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-view" onclick="viewGroup(${group.id})">보기</button>
+                            <button class="btn btn-sm btn-edit" onclick="editGroup(${group.id})">수정</button>
+                            <button class="btn btn-sm btn-delete" onclick="deleteGroup(${group.id})">삭제</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            document.getElementById('totalCount').textContent = filtered.length;
+            renderPagination(filtered.length);
+        }
+        
+        // 필터링
+        function filterGroups() {
+            let filtered = [...groups];
+            
+            // 검색어 필터
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(group => 
+                    group.name.toLowerCase().includes(searchTerm) ||
+                    group.parentCompanyName.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // 유형 필터
+            const type = document.getElementById('typeFilter').value;
+            if (type) {
+                filtered = filtered.filter(group => group.type === type);
+            }
+            
+            // 상태 필터
+            const status = document.getElementById('statusFilter').value;
+            if (status) {
+                filtered = filtered.filter(group => group.status === status);
+            }
+            
+            // 날짜 필터
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            if (startDate) {
+                filtered = filtered.filter(group => group.createdDate >= startDate);
+            }
+            if (endDate) {
+                filtered = filtered.filter(group => group.createdDate <= endDate);
+            }
+            
+            return filtered;
+        }
+        
+        // 페이지네이션 렌더링
+        function renderPagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            
+            // 이전 버튼
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.textContent = '이전';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderGroups();
+                }
+            };
+            pagination.appendChild(prevBtn);
+            
+            // 페이지 번호
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => {
+                    currentPage = i;
+                    renderGroups();
+                };
+                pagination.appendChild(pageBtn);
+            }
+            
+            // 다음 버튼
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.textContent = '다음';
+            nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+            nextBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderGroups();
+                }
+            };
+            pagination.appendChild(nextBtn);
+        }
+        
+        // 검색
+        function searchGroups() {
+            currentPage = 1;
+            renderGroups();
+        }
+        
+        // 필터 초기화
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('typeFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            currentPage = 1;
+            renderGroups();
+        }
+        
+        // 모회사 선택 업데이트
+        function updateParentCompanySelect() {
+            const select = document.getElementById('parentCompany');
+            select.innerHTML = '<option value="">선택하세요</option>';
+            
+            companies.forEach(company => {
+                const option = document.createElement('option');
+                option.value = company.id;
+                option.textContent = company.name;
+                select.appendChild(option);
+            });
+        }
+        
+        // 회사 선택 목록 업데이트
+        function updateCompanySelection(excludeId = null) {
+            const container = document.getElementById('companySelection');
+            container.innerHTML = '';
+            
+            companies.forEach(company => {
+                if (company.id !== parseInt(excludeId)) {
+                    const label = document.createElement('label');
+                    label.className = 'company-checkbox';
+                    label.innerHTML = `
+                        <input type="checkbox" value="${company.id}" 
+                               ${selectedCompanyIds.includes(company.id) ? 'checked' : ''}
+                               onchange="toggleCompany(${company.id})">
+                        ${company.name} (${company.businessNumber})
+                    `;
+                    container.appendChild(label);
+                }
+            });
+            
+            updateSelectedCompanyTags();
+        }
+        
+        // 회사 선택/해제
+        function toggleCompany(companyId) {
+            const index = selectedCompanyIds.indexOf(companyId);
+            if (index > -1) {
+                selectedCompanyIds.splice(index, 1);
+            } else {
+                selectedCompanyIds.push(companyId);
+            }
+            updateSelectedCompanyTags();
+        }
+        
+        // 선택된 회사 태그 업데이트
+        function updateSelectedCompanyTags() {
+            const container = document.getElementById('selectedCompanyTags');
+            container.innerHTML = '';
+            
+            selectedCompanyIds.forEach(id => {
+                const company = companies.find(c => c.id === id);
+                if (company) {
+                    const tag = document.createElement('span');
+                    tag.className = 'selected-company-tag';
+                    tag.innerHTML = `
+                        ${company.name}
+                        <span class="remove" onclick="removeCompany(${id})">&times;</span>
+                    `;
+                    container.appendChild(tag);
+                }
+            });
+            
+            document.getElementById('selectedCount').textContent = selectedCompanyIds.length;
+        }
+        
+        // 회사 제거
+        function removeCompany(companyId) {
+            selectedCompanyIds = selectedCompanyIds.filter(id => id !== companyId);
+            updateCompanySelection(document.getElementById('parentCompany').value);
+        }
+        
+        // 모달 열기 (추가)
+        function openAddModal() {
+            editingId = null;
+            selectedCompanyIds = [];
+            document.getElementById('modalTitle').textContent = '그룹 등록';
+            document.getElementById('groupForm').reset();
+            updateCompanySelection();
+            document.getElementById('groupModal').classList.add('active');
+        }
+        
+        // 모달 닫기
+        function closeModal() {
+            document.getElementById('groupModal').classList.remove('active');
+            document.getElementById('groupForm').reset();
+            selectedCompanyIds = [];
+            editingId = null;
+        }
+        
+        // 그룹 저장
+        function saveGroup() {
+            const parentCompanyId = document.getElementById('parentCompany').value;
+            const parentCompany = companies.find(c => c.id === parseInt(parentCompanyId));
+            
+            const group = {
+                name: document.getElementById('groupName').value,
+                type: document.getElementById('groupType').value,
+                parentCompanyId: parseInt(parentCompanyId),
+                parentCompanyName: parentCompany ? parentCompany.name : '',
+                companyIds: selectedCompanyIds,
+                description: document.getElementById('description').value,
+                status: document.getElementById('status').value,
+                createdDate: new Date().toISOString().split('T')[0]
+            };
+            
+            // 유효성 검사
+            if (!group.name || !group.type || !group.parentCompanyId) {
+                alert('필수 항목을 입력해주세요.');
+                return;
+            }
+            
+            if (editingId) {
+                // 수정
+                const index = groups.findIndex(g => g.id === editingId);
+                groups[index] = { ...group, id: editingId, createdDate: groups[index].createdDate };
+            } else {
+                // 추가
+                group.id = groups.length ? Math.max(...groups.map(g => g.id)) + 1 : 1;
+                groups.push(group);
+            }
+            
+            saveGroups();
+            renderGroups();
+            closeModal();
+        }
+        
+        // 그룹 보기
+        function viewGroup(id) {
+            const group = groups.find(g => g.id === id);
+            if (!group) return;
+            
+            const modalBody = document.getElementById('viewModalBody');
+            
+            const memberCompanies = group.companyIds.map(companyId => {
+                const company = companies.find(c => c.id === companyId);
+                return company ? company.name : '알 수 없음';
+            }).join(', ');
+            
+            modalBody.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">그룹명</label>
+                    <div>${group.name}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">그룹유형</label>
+                    <div><span class="group-type-badge type-${group.type}">${group.type}</span></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">모회사</label>
+                    <div>${group.parentCompanyName}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">소속회사 (${group.companyIds.length}개)</label>
+                    <div>${memberCompanies || '없음'}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">설명</label>
+                    <div>${group.description || '-'}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">상태</label>
+                    <div>
+                        <span class="status-badge status-${group.status}">
+                            ${group.status === 'active' ? '활성' : '비활성'}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">생성일</label>
+                    <div>${group.createdDate}</div>
+                </div>
+            `;
+            
+            document.getElementById('viewModal').classList.add('active');
+        }
+        
+        // 보기 모달 닫기
+        function closeViewModal() {
+            document.getElementById('viewModal').classList.remove('active');
+        }
+        
+        // 그룹 수정
+        function editGroup(id) {
+            const group = groups.find(g => g.id === id);
+            if (!group) return;
+            
+            editingId = id;
+            selectedCompanyIds = [...group.companyIds];
+            
+            document.getElementById('modalTitle').textContent = '그룹 수정';
+            document.getElementById('groupName').value = group.name;
+            document.getElementById('groupType').value = group.type;
+            document.getElementById('parentCompany').value = group.parentCompanyId;
+            document.getElementById('description').value = group.description || '';
+            document.getElementById('status').value = group.status;
+            
+            updateCompanySelection(group.parentCompanyId);
+            document.getElementById('groupModal').classList.add('active');
+        }
+        
+        // 그룹 삭제
+        function deleteGroup(id) {
+            if (confirm('정말 삭제하시겠습니까?')) {
+                groups = groups.filter(g => g.id !== id);
+                saveGroups();
+                renderGroups();
+            }
+        }
+        
+        // Enter 키로 검색
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchGroups();
+            }
+        });
+        
+        // 모회사 변경 시 회사 선택 목록 업데이트
+        document.getElementById('parentCompany').addEventListener('change', function(e) {
+            updateCompanySelection(e.target.value);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>계약관리</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: #1a252f;
+            border-bottom: 1px solid #34495e;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            padding: 12px 20px;
+            display: block;
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background: #34495e;
+            border-left-color: #3498db;
+        }
+        
+        .nav-item.active {
+            background: #34495e;
+            border-left-color: #e74c3c;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        
+        /* Search and Filter Section */
+        .search-filter-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .search-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-item label {
+            font-size: 14px;
+            color: #666;
+            white-space: nowrap;
+        }
+        
+        .filter-item select,
+        .filter-item input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            min-width: 150px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #229954;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background: #138496;
+        }
+        
+        /* Table Section */
+        .table-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .table-header {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .table-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .table-info {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        th {
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 14px;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-진행중 {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .status-완료 {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-만료 {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-대기 {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .contract-type-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .type-구매 {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .type-판매 {
+            background: #f3e5f5;
+            color: #6a1b9a;
+        }
+        
+        .type-유지보수 {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .type-라이선스 {
+            background: #fff9e6;
+            color: #f57f17;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        
+        .btn-edit {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background: #e67e22;
+        }
+        
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+        
+        .btn-view {
+            background: #9b59b6;
+            color: white;
+        }
+        
+        .btn-view:hover {
+            background: #8e44ad;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* Amount Display */
+        .amount {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            padding: 20px;
+        }
+        
+        .page-btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .page-btn:hover {
+            background: #f8f9fa;
+        }
+        
+        .page-btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .file-upload:hover {
+            border-color: #3498db;
+            background: #f8f9fa;
+        }
+        
+        .file-list {
+            margin-top: 10px;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        
+        .file-item .remove {
+            color: #e74c3c;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>CRM System</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">매출 및 통계</a>
+                <a href="company.html" class="nav-item">회사관리</a>
+                <a href="company-group.html" class="nav-item">회사그룹관리</a>
+                <a href="contract.html" class="nav-item active">계약관리</a>
+                <a href="mypage.html" class="nav-item">마이페이지</a>
+            </nav>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>계약관리</h1>
+                <div>
+                    <span id="currentUser">홍길동</span>
+                </div>
+            </div>
+            
+            <div class="content">
+                <!-- Search and Filter Section -->
+                <div class="search-filter-section">
+                    <div class="search-row">
+                        <input type="text" class="search-input" id="searchInput" placeholder="계약번호, 계약명, 고객사명으로 검색">
+                        <button class="btn btn-primary" onclick="searchContracts()">검색</button>
+                        <button class="btn btn-success" onclick="openAddModal()">신규 계약 등록</button>
+                        <button class="btn btn-info" onclick="exportContracts()">엑셀 다운로드</button>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-item">
+                            <label>계약유형</label>
+                            <select id="typeFilter">
+                                <option value="">전체</option>
+                                <option value="구매">구매계약</option>
+                                <option value="판매">판매계약</option>
+                                <option value="유지보수">유지보수계약</option>
+                                <option value="라이선스">라이선스계약</option>
+                            </select>
+                        </div>
+                        <div class="filter-item">
+                            <label>계약상태</label>
+                            <select id="statusFilter">
+                                <option value="">전체</option>
+                                <option value="대기">대기</option>
+                                <option value="진행중">진행중</option>
+                                <option value="완료">완료</option>
+                                <option value="만료">만료</option>
+                            </select>
+                        </div>
+                        <div class="filter-item">
+                            <label>계약일</label>
+                            <input type="date" id="startDate">
+                            <span>~</span>
+                            <input type="date" id="endDate">
+                        </div>
+                        <div class="filter-item">
+                            <label>금액범위</label>
+                            <input type="number" id="minAmount" placeholder="최소금액" style="min-width: 100px;">
+                            <span>~</span>
+                            <input type="number" id="maxAmount" placeholder="최대금액" style="min-width: 100px;">
+                        </div>
+                        <button class="btn btn-secondary" onclick="resetFilters()">초기화</button>
+                    </div>
+                </div>
+                
+                <!-- Table Section -->
+                <div class="table-section">
+                    <div class="table-header">
+                        <span class="table-title">계약 목록</span>
+                        <span class="table-info">
+                            총 <span id="totalCount">0</span>개 | 
+                            총 계약금액: <span id="totalAmount">0</span>원
+                        </span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>계약번호</th>
+                                <th>계약명</th>
+                                <th>계약유형</th>
+                                <th>고객사</th>
+                                <th>계약금액</th>
+                                <th>계약일</th>
+                                <th>만료일</th>
+                                <th>담당자</th>
+                                <th>상태</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contractTableBody">
+                            <!-- 동적으로 추가됨 -->
+                        </tbody>
+                    </table>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination" id="pagination">
+                        <!-- 동적으로 추가됨 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Contract Modal -->
+    <div class="modal" id="contractModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">계약 등록</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="contractForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">계약번호 *</label>
+                            <input type="text" class="form-control" id="contractNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">계약유형 *</label>
+                            <select class="form-control" id="contractType" required>
+                                <option value="">선택하세요</option>
+                                <option value="구매">구매계약</option>
+                                <option value="판매">판매계약</option>
+                                <option value="유지보수">유지보수계약</option>
+                                <option value="라이선스">라이선스계약</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">계약명 *</label>
+                        <input type="text" class="form-control" id="contractName" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">고객사 *</label>
+                            <select class="form-control" id="companyId" required>
+                                <option value="">선택하세요</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">담당자 *</label>
+                            <input type="text" class="form-control" id="manager" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">계약일 *</label>
+                            <input type="date" class="form-control" id="contractDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">만료일 *</label>
+                            <input type="date" class="form-control" id="expiryDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">계약금액 *</label>
+                            <input type="number" class="form-control" id="amount" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">부가세</label>
+                            <select class="form-control" id="vatType">
+                                <option value="별도">별도</option>
+                                <option value="포함">포함</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">계약내용</label>
+                        <textarea class="form-control" id="contractContent" rows="4"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">결제조건</label>
+                            <input type="text" class="form-control" id="paymentTerms" placeholder="예: 계약 후 30일 이내">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">계약상태</label>
+                            <select class="form-control" id="status">
+                                <option value="대기">대기</option>
+                                <option value="진행중">진행중</option>
+                                <option value="완료">완료</option>
+                                <option value="만료">만료</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">첨부파일</label>
+                        <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                            <input type="file" id="fileInput" style="display: none;" multiple onchange="handleFileSelect(event)">
+                            <div>파일을 선택하거나 여기에 드래그하세요</div>
+                        </div>
+                        <div class="file-list" id="fileList"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">비고</label>
+                        <textarea class="form-control" id="notes" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">취소</button>
+                <button class="btn btn-primary" onclick="saveContract()">저장</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- View Contract Modal -->
+    <div class="modal" id="viewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">계약 상세정보</h3>
+                <button class="modal-close" onclick="closeViewModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="viewModalBody">
+                <!-- 동적으로 추가됨 -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 데이터
+        let contracts = [];
+        let companies = [];
+        let currentPage = 1;
+        let itemsPerPage = 10;
+        let editingId = null;
+        let selectedFiles = [];
+        
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            renderContracts();
+        });
+        
+        // 데이터 로드
+        function loadData() {
+            // 회사 데이터 로드
+            const savedCompanies = localStorage.getItem('companies');
+            if (savedCompanies) {
+                companies = JSON.parse(savedCompanies);
+            }
+            
+            // 계약 데이터 로드
+            const savedContracts = localStorage.getItem('contracts');
+            if (savedContracts) {
+                contracts = JSON.parse(savedContracts);
+            } else {
+                // 샘플 데이터
+                contracts = [
+                    {
+                        id: 1,
+                        contractNumber: 'CNT-2024-001',
+                        contractName: 'ERP 시스템 구축 계약',
+                        contractType: '판매',
+                        companyId: 1,
+                        companyName: '삼성전자',
+                        amount: 150000000,
+                        vatType: '별도',
+                        contractDate: '2024-01-15',
+                        expiryDate: '2024-12-31',
+                        manager: '김영수',
+                        status: '진행중',
+                        contractContent: 'ERP 시스템 구축 및 컨설팅',
+                        paymentTerms: '계약 후 30일 이내',
+                        files: [],
+                        notes: ''
+                    },
+                    {
+                        id: 2,
+                        contractNumber: 'CNT-2024-002',
+                        contractName: '클라우드 서비스 계약',
+                        contractType: '판매',
+                        companyId: 2,
+                        companyName: 'LG전자',
+                        amount: 50000000,
+                        vatType: '포함',
+                        contractDate: '2024-02-01',
+                        expiryDate: '2025-01-31',
+                        manager: '이정희',
+                        status: '진행중',
+                        contractContent: 'AWS 클라우드 서비스 제공',
+                        paymentTerms: '월말 정산',
+                        files: [],
+                        notes: ''
+                    },
+                    {
+                        id: 3,
+                        contractNumber: 'CNT-2024-003',
+                        contractName: '소프트웨어 라이선스',
+                        contractType: '라이선스',
+                        companyId: 3,
+                        companyName: '네이버',
+                        amount: 30000000,
+                        vatType: '별도',
+                        contractDate: '2024-03-01',
+                        expiryDate: '2025-02-28',
+                        manager: '박민수',
+                        status: '진행중',
+                        contractContent: 'MS Office 365 라이선스',
+                        paymentTerms: '연간 선불',
+                        files: [],
+                        notes: ''
+                    },
+                    {
+                        id: 4,
+                        contractNumber: 'CNT-2024-004',
+                        contractName: '유지보수 계약',
+                        contractType: '유지보수',
+                        companyId: 4,
+                        companyName: '카카오',
+                        amount: 24000000,
+                        vatType: '별도',
+                        contractDate: '2024-01-01',
+                        expiryDate: '2024-12-31',
+                        manager: '최지원',
+                        status: '진행중',
+                        contractContent: '시스템 유지보수 및 기술지원',
+                        paymentTerms: '분기별 정산',
+                        files: [],
+                        notes: ''
+                    },
+                    {
+                        id: 5,
+                        contractNumber: 'CNT-2023-010',
+                        contractName: '하드웨어 구매계약',
+                        contractType: '구매',
+                        companyId: 5,
+                        companyName: '쿠팡',
+                        amount: 80000000,
+                        vatType: '포함',
+                        contractDate: '2023-12-01',
+                        expiryDate: '2023-12-31',
+                        manager: '김태현',
+                        status: '완료',
+                        contractContent: '서버 및 네트워크 장비 구매',
+                        paymentTerms: '납품 후 30일',
+                        files: [],
+                        notes: '납품 완료'
+                    }
+                ];
+                saveContracts();
+            }
+            
+            updateCompanySelect();
+        }
+        
+        // 로컬스토리지에 저장
+        function saveContracts() {
+            localStorage.setItem('contracts', JSON.stringify(contracts));
+        }
+        
+        // 계약 목록 렌더링
+        function renderContracts() {
+            const filtered = filterContracts();
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageData = filtered.slice(start, end);
+            
+            const tbody = document.getElementById('contractTableBody');
+            tbody.innerHTML = '';
+            
+            let totalAmount = 0;
+            
+            pageData.forEach(contract => {
+                totalAmount += contract.amount;
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${contract.contractNumber}</strong></td>
+                    <td>${contract.contractName}</td>
+                    <td>
+                        <span class="contract-type-badge type-${contract.contractType}">
+                            ${contract.contractType}
+                        </span>
+                    </td>
+                    <td>${contract.companyName}</td>
+                    <td class="amount">${formatAmount(contract.amount)}원</td>
+                    <td>${contract.contractDate}</td>
+                    <td>${contract.expiryDate}</td>
+                    <td>${contract.manager}</td>
+                    <td>
+                        <span class="status-badge status-${contract.status}">
+                            ${contract.status}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-view" onclick="viewContract(${contract.id})">보기</button>
+                            <button class="btn btn-sm btn-edit" onclick="editContract(${contract.id})">수정</button>
+                            <button class="btn btn-sm btn-delete" onclick="deleteContract(${contract.id})">삭제</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            // 전체 합계 계산
+            const allFilteredAmount = filtered.reduce((sum, contract) => sum + contract.amount, 0);
+            
+            document.getElementById('totalCount').textContent = filtered.length;
+            document.getElementById('totalAmount').textContent = formatAmount(allFilteredAmount);
+            renderPagination(filtered.length);
+        }
+        
+        // 금액 포맷
+        function formatAmount(amount) {
+            return amount.toLocaleString('ko-KR');
+        }
+        
+        // 필터링
+        function filterContracts() {
+            let filtered = [...contracts];
+            
+            // 검색어 필터
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(contract => 
+                    contract.contractNumber.toLowerCase().includes(searchTerm) ||
+                    contract.contractName.toLowerCase().includes(searchTerm) ||
+                    contract.companyName.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // 계약유형 필터
+            const type = document.getElementById('typeFilter').value;
+            if (type) {
+                filtered = filtered.filter(contract => contract.contractType === type);
+            }
+            
+            // 상태 필터
+            const status = document.getElementById('statusFilter').value;
+            if (status) {
+                filtered = filtered.filter(contract => contract.status === status);
+            }
+            
+            // 날짜 필터
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            if (startDate) {
+                filtered = filtered.filter(contract => contract.contractDate >= startDate);
+            }
+            if (endDate) {
+                filtered = filtered.filter(contract => contract.contractDate <= endDate);
+            }
+            
+            // 금액 필터
+            const minAmount = document.getElementById('minAmount').value;
+            const maxAmount = document.getElementById('maxAmount').value;
+            if (minAmount) {
+                filtered = filtered.filter(contract => contract.amount >= parseInt(minAmount));
+            }
+            if (maxAmount) {
+                filtered = filtered.filter(contract => contract.amount <= parseInt(maxAmount));
+            }
+            
+            return filtered;
+        }
+        
+        // 페이지네이션 렌더링
+        function renderPagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            
+            // 이전 버튼
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.textContent = '이전';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderContracts();
+                }
+            };
+            pagination.appendChild(prevBtn);
+            
+            // 페이지 번호
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => {
+                    currentPage = i;
+                    renderContracts();
+                };
+                pagination.appendChild(pageBtn);
+            }
+            
+            // 다음 버튼
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.textContent = '다음';
+            nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+            nextBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderContracts();
+                }
+            };
+            pagination.appendChild(nextBtn);
+        }
+        
+        // 회사 선택 업데이트
+        function updateCompanySelect() {
+            const select = document.getElementById('companyId');
+            select.innerHTML = '<option value="">선택하세요</option>';
+            
+            companies.forEach(company => {
+                const option = document.createElement('option');
+                option.value = company.id;
+                option.textContent = company.name;
+                select.appendChild(option);
+            });
+        }
+        
+        // 검색
+        function searchContracts() {
+            currentPage = 1;
+            renderContracts();
+        }
+        
+        // 필터 초기화
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('typeFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            document.getElementById('minAmount').value = '';
+            document.getElementById('maxAmount').value = '';
+            currentPage = 1;
+            renderContracts();
+        }
+        
+        // 모달 열기 (추가)
+        function openAddModal() {
+            editingId = null;
+            selectedFiles = [];
+            document.getElementById('modalTitle').textContent = '계약 등록';
+            document.getElementById('contractForm').reset();
+            document.getElementById('contractNumber').value = generateContractNumber();
+            document.getElementById('fileList').innerHTML = '';
+            document.getElementById('contractModal').classList.add('active');
+        }
+        
+        // 계약번호 생성
+        function generateContractNumber() {
+            const year = new Date().getFullYear();
+            const count = contracts.filter(c => c.contractNumber.includes(year)).length + 1;
+            return `CNT-${year}-${String(count).padStart(3, '0')}`;
+        }
+        
+        // 모달 닫기
+        function closeModal() {
+            document.getElementById('contractModal').classList.remove('active');
+            document.getElementById('contractForm').reset();
+            selectedFiles = [];
+            editingId = null;
+        }
+        
+        // 계약 저장
+        function saveContract() {
+            const companyId = document.getElementById('companyId').value;
+            const company = companies.find(c => c.id === parseInt(companyId));
+            
+            const contract = {
+                contractNumber: document.getElementById('contractNumber').value,
+                contractName: document.getElementById('contractName').value,
+                contractType: document.getElementById('contractType').value,
+                companyId: parseInt(companyId),
+                companyName: company ? company.name : '',
+                amount: parseInt(document.getElementById('amount').value),
+                vatType: document.getElementById('vatType').value,
+                contractDate: document.getElementById('contractDate').value,
+                expiryDate: document.getElementById('expiryDate').value,
+                manager: document.getElementById('manager').value,
+                status: document.getElementById('status').value,
+                contractContent: document.getElementById('contractContent').value,
+                paymentTerms: document.getElementById('paymentTerms').value,
+                files: selectedFiles,
+                notes: document.getElementById('notes').value
+            };
+            
+            // 유효성 검사
+            if (!contract.contractNumber || !contract.contractName || !contract.contractType || 
+                !contract.companyId || !contract.amount || !contract.contractDate || 
+                !contract.expiryDate || !contract.manager) {
+                alert('필수 항목을 입력해주세요.');
+                return;
+            }
+            
+            if (editingId) {
+                // 수정
+                const index = contracts.findIndex(c => c.id === editingId);
+                contracts[index] = { ...contract, id: editingId };
+            } else {
+                // 추가
+                contract.id = contracts.length ? Math.max(...contracts.map(c => c.id)) + 1 : 1;
+                contracts.push(contract);
+            }
+            
+            saveContracts();
+            renderContracts();
+            closeModal();
+        }
+        
+        // 계약 보기
+        function viewContract(id) {
+            const contract = contracts.find(c => c.id === id);
+            if (!contract) return;
+            
+            const modalBody = document.getElementById('viewModalBody');
+            
+            modalBody.innerHTML = `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">계약번호</label>
+                        <div><strong>${contract.contractNumber}</strong></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">계약유형</label>
+                        <div>
+                            <span class="contract-type-badge type-${contract.contractType}">
+                                ${contract.contractType}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">계약명</label>
+                    <div>${contract.contractName}</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">고객사</label>
+                        <div>${contract.companyName}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">담당자</label>
+                        <div>${contract.manager}</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">계약일</label>
+                        <div>${contract.contractDate}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">만료일</label>
+                        <div>${contract.expiryDate}</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">계약금액</label>
+                        <div class="amount">${formatAmount(contract.amount)}원 (부가세 ${contract.vatType})</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">상태</label>
+                        <div>
+                            <span class="status-badge status-${contract.status}">
+                                ${contract.status}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">계약내용</label>
+                    <div>${contract.contractContent || '-'}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">결제조건</label>
+                    <div>${contract.paymentTerms || '-'}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">첨부파일</label>
+                    <div>${contract.files && contract.files.length > 0 ? 
+                        contract.files.map(f => f.name).join(', ') : '없음'}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">비고</label>
+                    <div>${contract.notes || '-'}</div>
+                </div>
+            `;
+            
+            document.getElementById('viewModal').classList.add('active');
+        }
+        
+        // 보기 모달 닫기
+        function closeViewModal() {
+            document.getElementById('viewModal').classList.remove('active');
+        }
+        
+        // 계약 수정
+        function editContract(id) {
+            const contract = contracts.find(c => c.id === id);
+            if (!contract) return;
+            
+            editingId = id;
+            selectedFiles = contract.files || [];
+            
+            document.getElementById('modalTitle').textContent = '계약 수정';
+            document.getElementById('contractNumber').value = contract.contractNumber;
+            document.getElementById('contractName').value = contract.contractName;
+            document.getElementById('contractType').value = contract.contractType;
+            document.getElementById('companyId').value = contract.companyId;
+            document.getElementById('amount').value = contract.amount;
+            document.getElementById('vatType').value = contract.vatType;
+            document.getElementById('contractDate').value = contract.contractDate;
+            document.getElementById('expiryDate').value = contract.expiryDate;
+            document.getElementById('manager').value = contract.manager;
+            document.getElementById('status').value = contract.status;
+            document.getElementById('contractContent').value = contract.contractContent || '';
+            document.getElementById('paymentTerms').value = contract.paymentTerms || '';
+            document.getElementById('notes').value = contract.notes || '';
+            
+            updateFileList();
+            document.getElementById('contractModal').classList.add('active');
+        }
+        
+        // 계약 삭제
+        function deleteContract(id) {
+            if (confirm('정말 삭제하시겠습니까?')) {
+                contracts = contracts.filter(c => c.id !== id);
+                saveContracts();
+                renderContracts();
+            }
+        }
+        
+        // 파일 선택 처리
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            files.forEach(file => {
+                selectedFiles.push({
+                    name: file.name,
+                    size: file.size,
+                    type: file.type
+                });
+            });
+            updateFileList();
+        }
+        
+        // 파일 목록 업데이트
+        function updateFileList() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            
+            selectedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <span>${file.name}</span>
+                    <span class="remove" onclick="removeFile(${index})">&times;</span>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+        
+        // 파일 제거
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            updateFileList();
+        }
+        
+        // 엑셀 다운로드
+        function exportContracts() {
+            alert('엑셀 다운로드 기능은 실제 환경에서 구현됩니다.');
+        }
+        
+        // Enter 키로 검색
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchContracts();
+            }
+        });
+    </script>
+</body>
+</html>

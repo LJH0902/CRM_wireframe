@@ -756,11 +756,15 @@
             const selectedCompanyName = localStorage.getItem('selectedCompanyName');
             
             if (viewMode === 'contract-detail' && selectedCompanyId) {
-                // 해당 회사의 계약 찾기
+                // 해당 회사의 계약 찾기 (LG전자의 경우 companyId = 2)
                 setTimeout(() => {
-                    const contract = contracts.find(c => c.companyId === parseInt(selectedCompanyId));
-                    if (contract) {
-                        viewContract(contract.id);
+                    const companyContracts = contracts.filter(c => c.companyId === parseInt(selectedCompanyId));
+                    if (companyContracts.length > 0) {
+                        // 가장 최근 계약 표시
+                        const latestContract = companyContracts.sort((a, b) => 
+                            new Date(b.contractDate) - new Date(a.contractDate)
+                        )[0];
+                        viewContract(latestContract.id);
                     } else {
                         // 계약이 없으면 새 계약 생성 제안
                         alert(`${selectedCompanyName}의 계약 정보가 없습니다. 새 계약을 등록하시겠습니까?`);
@@ -811,20 +815,20 @@
                     {
                         id: 2,
                         contractNumber: 'CNT-2024-002',
-                        contractName: '클라우드 서비스 계약',
+                        contractName: 'Prepaid-Enterprise 서비스 계약',
                         contractType: '판매',
                         companyId: 2,
                         companyName: 'LG전자',
-                        amount: 50000000,
-                        vatType: '포함',
-                        contractDate: '2024-02-01',
-                        expiryDate: '2025-01-31',
-                        manager: '이정희',
+                        amount: 85000000,
+                        vatType: '별도',
+                        contractDate: '2024-06-14',
+                        expiryDate: '2025-06-13',
+                        manager: '박민수',
                         status: '진행중',
-                        contractContent: 'AWS 클라우드 서비스 제공',
-                        paymentTerms: '월말 정산',
+                        contractContent: 'Prepaid-Enterprise 요금제 연간 계약\n- 무제한 사용자\n- 프리미엄 지원\n- 전용 서버 제공',
+                        paymentTerms: '분기별 선불',
                         files: [],
-                        notes: ''
+                        notes: '갱신 계약, 충전 건수: 2'
                     },
                     {
                         id: 3,
@@ -910,7 +914,15 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${contract.contractNumber}</strong></td>
-                    <td>${contract.contractName}</td>
+                    <td>
+                        <a href="#" 
+                           onclick="viewContract(${contract.id}); return false;"
+                           style="cursor: pointer; color: #3498db; text-decoration: none;"
+                           onmouseover="this.style.textDecoration='underline'"
+                           onmouseout="this.style.textDecoration='none'">
+                            ${contract.contractName}
+                        </a>
+                    </td>
                     <td>
                         <span class="contract-type-badge type-${contract.contractType}">
                             ${contract.contractType}
@@ -1164,74 +1176,107 @@
             const modalBody = document.getElementById('viewModalBody');
             
             modalBody.innerHTML = `
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">계약번호</label>
-                        <div><strong>${contract.contractNumber}</strong></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">계약유형</label>
-                        <div>
-                            <span class="contract-type-badge type-${contract.contractType}">
-                                ${contract.contractType}
-                            </span>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" style="color: #6c757d; font-size: 12px;">계약번호</label>
+                            <div style="font-size: 18px; font-weight: bold; color: #2c3e50;">${contract.contractNumber}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="color: #6c757d; font-size: 12px;">계약유형</label>
+                            <div>
+                                <span class="contract-type-badge type-${contract.contractType}" style="font-size: 14px;">
+                                    ${contract.contractType}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
+                
                 <div class="form-group">
-                    <label class="form-label">계약명</label>
-                    <div>${contract.contractName}</div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">고객사</label>
-                        <div>${contract.companyName}</div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">담당자</label>
-                        <div>${contract.manager}</div>
+                    <label class="form-label" style="font-weight: 600; color: #495057;">계약명</label>
+                    <div style="padding: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px;">
+                        <strong style="color: #2c3e50; font-size: 16px;">${contract.contractName}</strong>
                     </div>
                 </div>
+                
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">계약일</label>
-                        <div>${contract.contractDate}</div>
+                        <label class="form-label" style="font-weight: 600; color: #495057;">고객사</label>
+                        <div style="padding: 10px; background: #e3f2fd; border-radius: 4px;">
+                            <strong>${contract.companyName}</strong>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">만료일</label>
-                        <div>${contract.expiryDate}</div>
+                        <label class="form-label" style="font-weight: 600; color: #495057;">담당자</label>
+                        <div style="padding: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px;">
+                            ${contract.manager}
+                        </div>
                     </div>
                 </div>
+                
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">계약금액</label>
-                        <div class="amount">${formatAmount(contract.amount)}원 (부가세 ${contract.vatType})</div>
+                        <label class="form-label" style="font-weight: 600; color: #495057;">계약일</label>
+                        <div style="padding: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px;">
+                            📅 ${contract.contractDate}
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">상태</label>
-                        <div>
-                            <span class="status-badge status-${contract.status}">
+                        <label class="form-label" style="font-weight: 600; color: #495057;">만료일</label>
+                        <div style="padding: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px;">
+                            📅 ${contract.expiryDate}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600; color: #495057;">계약금액</label>
+                        <div style="padding: 10px; background: #d4edda; border-radius: 4px;">
+                            <span class="amount" style="font-size: 18px; color: #155724;">
+                                💰 ${formatAmount(contract.amount)}원
+                            </span>
+                            <span style="font-size: 12px; color: #155724;">(부가세 ${contract.vatType})</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600; color: #495057;">상태</label>
+                        <div style="padding: 10px;">
+                            <span class="status-badge status-${contract.status}" style="font-size: 14px;">
                                 ${contract.status}
                             </span>
                         </div>
                     </div>
                 </div>
+                
                 <div class="form-group">
-                    <label class="form-label">계약내용</label>
-                    <div>${contract.contractContent || '-'}</div>
+                    <label class="form-label" style="font-weight: 600; color: #495057;">계약내용</label>
+                    <div style="padding: 15px; background: #f8f9fa; border-radius: 4px; white-space: pre-line;">
+                        ${contract.contractContent || '-'}
+                    </div>
                 </div>
+                
                 <div class="form-group">
-                    <label class="form-label">결제조건</label>
-                    <div>${contract.paymentTerms || '-'}</div>
+                    <label class="form-label" style="font-weight: 600; color: #495057;">결제조건</label>
+                    <div style="padding: 10px; background: #fff3cd; border-radius: 4px; color: #856404;">
+                        💳 ${contract.paymentTerms || '-'}
+                    </div>
                 </div>
+                
                 <div class="form-group">
-                    <label class="form-label">첨부파일</label>
-                    <div>${contract.files && contract.files.length > 0 ? 
-                        contract.files.map(f => f.name).join(', ') : '없음'}</div>
+                    <label class="form-label" style="font-weight: 600; color: #495057;">첨부파일</label>
+                    <div style="padding: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px;">
+                        📎 ${contract.files && contract.files.length > 0 ? 
+                        contract.files.map(f => f.name).join(', ') : '없음'}
+                    </div>
                 </div>
+                
                 <div class="form-group">
-                    <label class="form-label">비고</label>
-                    <div>${contract.notes || '-'}</div>
+                    <label class="form-label" style="font-weight: 600; color: #495057;">비고</label>
+                    <div style="padding: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px; font-style: italic; color: #6c757d;">
+                        ${contract.notes || '-'}
+                    </div>
                 </div>
             `;
             

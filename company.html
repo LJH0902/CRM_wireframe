@@ -149,10 +149,12 @@
         .multi-select-container {
             position: relative;
             min-width: 200px;
+            display: inline-block;
         }
         
         .multi-select-button {
             width: 100%;
+            min-width: 200px;
             padding: 8px 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -163,6 +165,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 38px;
         }
         
         .multi-select-dropdown {
@@ -621,7 +624,6 @@
                                 <th>가입일</th>
                                 <th>요금제</th>
                                 <th>영업담당자</th>
-                                <th>관리</th>
                             </tr>
                         </thead>
                         <tbody id="companyTableBody">
@@ -905,6 +907,201 @@
                         address: '서울시 중구',
                         isWithdrawn: false,
                         notes: '평가판 사용중'
+                    },
+                    {
+                        id: 8,
+                        name: '포스코',
+                        groupName: '',
+                        manager: '정탁',
+                        email: 'jung@posco.com',
+                        phone: '054-220-0114',
+                        registrationDate: '2024-05-10',
+                        plan: 'business',
+                        salesManager: '이정희',
+                        country: '한국',
+                        address: '경북 포항시',
+                        isWithdrawn: false,
+                        notes: ''
+                    },
+                    {
+                        id: 9,
+                        name: '한화솔루션',
+                        groupName: '한화그룹',
+                        manager: '김동관',
+                        email: 'kim@hanwha.com',
+                        phone: '02-729-1114',
+                        registrationDate: '2024-03-25',
+                        plan: 'prepaid',
+                        salesManager: '정현우',
+                        country: '한국',
+                        address: '서울시 중구',
+                        isWithdrawn: false,
+                        notes: ''
+                    },
+                    {
+                        id: 10,
+                        name: '롯데케미칼',
+                        groupName: '롯데그룹',
+                        manager: '김교현',
+                        email: 'kim@lottechem.com',
+                        phone: '02-829-4114',
+                        registrationDate: '2024-04-05',
+                        plan: 'personal',
+                        salesManager: '김민준',
+                        country: '한국',
+                        address: '서울시 송파구',
+                        isWithdrawn: false,
+                        notes: ''
+                    },
+                    {
+                        id: 11,
+                        name: '두산중공업',
+                        groupName: '두산그룹',
+                        manager: '박지원',
+                        email: 'park@doosan.com',
+                        phone: '055-278-2114',
+                        registrationDate: '2024-01-30',
+                        plan: 'business',
+                        salesManager: '김영희',
+                        country: '한국',
+                        address: '경남 창원시',
+                        isWithdrawn: false,
+                        notes: ''
+                    },
+                    {
+                        id: 12,
+                        name: '신세계',
+                        groupName: '신세계그룹',
+                        manager: '정용진',
+                        email: 'jung@shinsegae.com',
+                        phone: '02-727-1921',
+                        registrationDate: '2024-02-15',
+                        plan: 'prepaid-enterprise',
+                        salesManager: '박민수',
+                        country: '한국',
+                        address: '서울시 중구',
+                        isWithdrawn: false,
+                        notes: 'VIP 고객'
+                    },
+                    {
+                        id: 13,
+                        name: 'CJ제일제당',
+                        groupName: 'CJ그룹',
+                        manager: '손경식',
+                        email: 'son@cj.net',
+                        phone: '02-726-8114',
+                        registrationDate: '2024-05-20',
+                        plan: 'business',
+                        salesManager: '이정희',
+                        country: '한국',
+                        address: '서울시 중구',
+                        isWithdrawn: false,
+                        notes: ''
+                    },
+                    {
+                        id: 14,
+                        name: '아모레퍼시픽',
+                        groupName: '',
+                        manager: '서경배',
+                        email: 'seo@amorepacific.com',
+                        phone: '02-709-5114',
+                        registrationDate: '2024-06-01',
+                        plan: 'personal',
+                        salesManager: '정현우',
+                        country: '한국',
+                        address: '서울시 용산구',
+                        isWithdrawn: false,
+                        notes: ''
+                    },
+                    {
+                        id: 15,
+                        name: 'GS칼텍스',
+                        groupName: 'GS그룹',
+                        manager: '허세홍',
+                        email: 'heo@gscaltex.com',
+                        phone: '02-2005-1114',
+                        registrationDate: '2024-03-10',
+                        plan: 'prepaid',
+                        salesManager: '김민준',
+                        country: '한국',
+                        address: '서울시 강남구',
+                        isWithdrawn: false,
+                        notes: ''
+                    },
+                    {
+                        id: 16,
+                        name: '현대중공업',
+                        groupName: '현대중공업그룹',
+                        manager: '권오갑',
+                        email: 'kwon@hhi.co.kr',
+                        phone: '052-203-0114',
+                        registrationDate: '2024-04-15',
+                        plan: 'business',
+                        salesManager: '김영희',
+                        country: '한국',
+                        address: '울산광역시',
+                        isWithdrawn: false,
+                        notes: ''
+                    },
+                    {
+                        id: 17,
+                        name: '삼성물산',
+                        groupName: '삼성그룹',
+                        manager: '오세철',
+                        email: 'oh@samsung.com',
+                        phone: '02-2145-2114',
+                        registrationDate: '2024-01-05',
+                        plan: 'prepaid-enterprise',
+                        salesManager: '박민수',
+                        country: '한국',
+                        address: '서울시 서초구',
+                        isWithdrawn: false,
+                        notes: 'VIP 고객'
+                    },
+                    {
+                        id: 18,
+                        name: '대우건설',
+                        groupName: '',
+                        manager: '백정완',
+                        email: 'baek@daewooenc.com',
+                        phone: '02-2288-3114',
+                        registrationDate: '2024-05-15',
+                        plan: 'trial',
+                        salesManager: '이정희',
+                        country: '한국',
+                        address: '서울시 종로구',
+                        isWithdrawn: true,
+                        notes: '탈퇴 고객'
+                    },
+                    {
+                        id: 19,
+                        name: 'KT',
+                        groupName: '',
+                        manager: '김영섭',
+                        email: 'kim@kt.com',
+                        phone: '031-727-0114',
+                        registrationDate: '2024-02-10',
+                        plan: 'business',
+                        salesManager: '정현우',
+                        country: '한국',
+                        address: '경기도 성남시',
+                        isWithdrawn: false,
+                        notes: ''
+                    },
+                    {
+                        id: 20,
+                        name: '한국전력',
+                        groupName: '',
+                        manager: '김동철',
+                        email: 'kim@kepco.co.kr',
+                        phone: '061-345-0114',
+                        registrationDate: '2024-06-10',
+                        plan: 'prepaid',
+                        salesManager: '김민준',
+                        country: '한국',
+                        address: '전남 나주시',
+                        isWithdrawn: false,
+                        notes: '공기업'
                     }
                 ];
                 saveCompanies();
@@ -947,7 +1144,11 @@
                 tr.innerHTML = `
                     <td>${globalIndex}</td>
                     <td style="${withdrawnStyle}">
-                        <strong>${company.name}</strong>
+                        <strong style="cursor: pointer; color: #2c3e50;" onclick="viewCompany(${company.id})" 
+                                onmouseover="this.style.color='#3498db'; this.style.textDecoration='underline'"
+                                onmouseout="this.style.color='#2c3e50'; this.style.textDecoration='none'">
+                            ${company.name}
+                        </strong>
                         ${company.isWithdrawn ? ' (탈퇴)' : ''}
                     </td>
                     <td>${company.groupName || '--'}</td>
@@ -960,13 +1161,6 @@
                         </span>
                     </td>
                     <td>${company.salesManager}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-sm btn-view" onclick="viewCompany(${company.id})">보기</button>
-                            <button class="btn btn-sm btn-edit" onclick="editCompany(${company.id})">수정</button>
-                            <button class="btn btn-sm btn-delete" onclick="deleteCompany(${company.id})">삭제</button>
-                        </div>
-                    </td>
                 `;
                 tbody.appendChild(tr);
             });

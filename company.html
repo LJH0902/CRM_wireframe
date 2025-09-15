@@ -788,6 +788,26 @@
                 localStorage.removeItem('selectedCompanyName');
             }
             
+            // 계약관리 페이지에서 리다이렉션된 경우 처리
+            const viewCompanyMode = localStorage.getItem('viewCompanyMode');
+            const viewCompanyId = localStorage.getItem('viewCompanyId');
+            const viewCompanyName = localStorage.getItem('viewCompanyName');
+            
+            if (viewCompanyMode === 'detail' && viewCompanyId) {
+                // 해당 회사 상세보기 팝업 열기
+                setTimeout(() => {
+                    const company = companies.find(c => c.id === parseInt(viewCompanyId));
+                    if (company) {
+                        viewCompany(company.id);
+                    }
+                }, 500);
+                
+                // localStorage 정리
+                localStorage.removeItem('viewCompanyMode');
+                localStorage.removeItem('viewCompanyId');
+                localStorage.removeItem('viewCompanyName');
+            }
+            
             // 외부 클릭 시 드롭다운 닫기
             document.addEventListener('click', function(e) {
                 if (!e.target.closest('.multi-select-container')) {

@@ -908,7 +908,7 @@
                     {
                         id: 1,
                         contractNumber: 'CNT-2024-001',
-                        contractName: 'ERP 시스템 구축 계약',
+                        contractName: 'Prepaid-Enterprise 서비스 계약',
                         contractDivision: '신규',  // 계약구분
                         contractStatus: '분할 납부',  // 계약상태
                         country: '한국',  // 국가
@@ -928,10 +928,11 @@
                         contractorEmail: 'kim.cs@samsung.com',  // 계약자메일
                         amount: 150000000,
                         vatType: '별도',
-                        contractContent: 'ERP 시스템 구축 및 컨설팅',
+                        contractContent: 'Prepaid-Enterprise 요금제 연간 계약\n- 무제한 사용자\n- 프리미엄 지원\n- 전용 서버 제공',
                         paymentTerms: '분기별 분할 납부',
                         files: [],
-                        notes: ''
+                        notes: '',
+                        relatedCompanies: ['삼성전자', '삼성물산']  // 그룹 내 관련 회사들
                     },
                     {
                         id: 2,
@@ -1382,7 +1383,8 @@
                     contractContent: 'Prepaid-Enterprise 요금제 연간 계약\n- 무제한 사용자\n- 프리미엄 지원\n- 전용 서버 제공',
                     paymentTerms: '분기별 분할 납부',
                     files: [],
-                    notes: ''
+                    notes: '',
+                    relatedCompanies: ['삼성전자', '삼성물산']  // 그룹 내 관련 회사들
                 },
                 {
                     id: 2,
@@ -1442,31 +1444,32 @@
                 },
                 {
                     id: 4,
-                    contractNumber: 'CNT-2024-004',
+                    contractNumber: 'CNT-2024-001',  // 삼성전자와 동일
                     contractName: 'Prepaid-Enterprise 서비스 계약',
-                    contractDivision: '갱신',
-                    contractStatus: '분할 납부',
+                    contractDivision: '신규',  // 삼성전자와 동일
+                    contractStatus: '분할 납부',  // 삼성전자와 동일
                     country: '한국',
-                    salesManager: '정현우',
+                    salesManager: '김영희',  // 삼성전자와 동일
                     companyId: 15,
                     companyName: '삼성물산',
                     groupName: '삼성그룹',
-                    contractStartDate: '2024-01-01',
-                    contractEndDate: '2024-12-31',
-                    totalContracts: 8,
-                    remainingContracts: 3,  // 5건 사용 = 63%
-                    documentUsage: 63,  // 자동 계산됨
-                    contractCredit: 300,
-                    remainingCredit: 111,
-                    creditUsage: 63,
-                    contractorName: '최수진',
-                    contractorEmail: 'choi.sj@samsungct.com',
-                    amount: 24000000,
+                    contractStartDate: '2024-01-15',  // 삼성전자와 동일
+                    contractEndDate: '2024-12-31',  // 삼성전자와 동일
+                    totalContracts: 10,  // 삼성전자와 동일
+                    remainingContracts: 7,  // 삼성전자와 동일
+                    documentUsage: 30,  // 삼성전자와 동일
+                    contractCredit: 1000,  // 삼성전자와 동일
+                    remainingCredit: 700,  // 삼성전자와 동일
+                    creditUsage: 30,  // 삼성전자와 동일
+                    contractorName: '김철수',  // 삼성전자와 동일
+                    contractorEmail: 'kim.cs@samsung.com',  // 삼성전자와 동일
+                    amount: 150000000,  // 삼성전자와 동일
                     vatType: '별도',
-                    contractContent: 'Prepaid-Enterprise 요금제 연간 계약',
-                    paymentTerms: '분기별 정산',
+                    contractContent: 'Prepaid-Enterprise 요금제 연간 계약\n- 무제한 사용자\n- 프리미엄 지원\n- 전용 서버 제공',
+                    paymentTerms: '분기별 분할 납부',
                     files: [],
-                    notes: ''
+                    notes: '',
+                    relatedCompanies: ['삼성전자', '삼성물산']  // 그룹 내 관련 회사들
                 }
             ];
             saveContracts();
@@ -1650,12 +1653,25 @@
                     <div class="form-group">
                         <label class="form-label" style="font-weight: 600; color: #495057;">회사명</label>
                         <div style="padding: 10px; background: #e3f2fd; border-radius: 4px;">
-                            <a href="#" onclick="viewCompanyDetail(${contract.companyId}, '${contract.companyName}'); return false;" 
-                               style="color: #1565c0; text-decoration: none; font-weight: bold; font-size: 16px;"
-                               onmouseover="this.style.textDecoration='underline'"
-                               onmouseout="this.style.textDecoration='none'">
-                                ${contract.companyName}
-                            </a>
+                            ${contract.relatedCompanies && contract.relatedCompanies.length > 1 ? 
+                                contract.relatedCompanies.map((company, idx) => {
+                                    const companyData = idx === 0 ? 
+                                        {id: 1, name: '삼성전자'} : 
+                                        {id: 15, name: '삼성물산'};
+                                    return `<a href="#" onclick="viewCompanyDetail(${companyData.id}, '${companyData.name}'); return false;" 
+                                           style="color: #1565c0; text-decoration: none; font-weight: bold; font-size: 16px;"
+                                           onmouseover="this.style.textDecoration='underline'"
+                                           onmouseout="this.style.textDecoration='none'">
+                                            ${company}
+                                        </a>`;
+                                }).join(', ') : 
+                                `<a href="#" onclick="viewCompanyDetail(${contract.companyId}, '${contract.companyName}'); return false;" 
+                                   style="color: #1565c0; text-decoration: none; font-weight: bold; font-size: 16px;"
+                                   onmouseover="this.style.textDecoration='underline'"
+                                   onmouseout="this.style.textDecoration='none'">
+                                    ${contract.companyName}
+                                </a>`
+                            }
                         </div>
                     </div>
                     <div class="form-group">
@@ -1916,6 +1932,33 @@
         // 엑셀 다운로드
         function exportContracts() {
             alert('엑셀 다운로드 기능은 실제 환경에서 구현됩니다.');
+        }
+        
+        // 회사 상세보기 팝업 열기
+        function viewCompanyDetail(companyId, companyName) {
+            // localStorage에 회사 ID 저장
+            localStorage.setItem('viewCompanyId', companyId);
+            localStorage.setItem('viewCompanyName', companyName);
+            localStorage.setItem('viewCompanyMode', 'detail');
+            
+            // 회사관리 페이지로 이동 (새 탭에서 열기)
+            window.open('company.html', '_blank');
+        }
+        
+        // 그룹 상세보기 팝업 열기
+        function viewGroupDetail(groupName) {
+            // localStorage에 그룹명 저장
+            localStorage.setItem('viewGroupName', groupName);
+            localStorage.setItem('viewGroupMode', 'detail');
+            
+            // 회사그룹관리 페이지로 이동 (새 탭에서 열기)
+            window.open('company-group.html', '_blank');
+        }
+        
+        // 상세보기에서 수정 버튼 클릭
+        function editContractFromView(contractId) {
+            closeViewModal();
+            editContract(contractId);
         }
         
         // Enter 키로 검색

@@ -590,6 +590,24 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadData();
             renderGroups();
+            
+            // 계약관리 페이지에서 리다이렉션된 경우 처리
+            const viewGroupMode = localStorage.getItem('viewGroupMode');
+            const viewGroupName = localStorage.getItem('viewGroupName');
+            
+            if (viewGroupMode === 'detail' && viewGroupName) {
+                // 해당 그룹 상세보기 팝업 열기
+                setTimeout(() => {
+                    const group = groups.find(g => g.name === viewGroupName);
+                    if (group) {
+                        viewGroup(group.id);
+                    }
+                }, 500);
+                
+                // localStorage 정리
+                localStorage.removeItem('viewGroupMode');
+                localStorage.removeItem('viewGroupName');
+            }
         });
         
         // 데이터 로드

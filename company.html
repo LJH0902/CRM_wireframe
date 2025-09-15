@@ -100,6 +100,15 @@
             margin-bottom: 15px;
         }
         
+        .search-filter-select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            min-width: 140px;
+            background: white;
+        }
+        
         .search-input {
             flex: 1;
             padding: 10px 15px;
@@ -136,6 +145,63 @@
             min-width: 150px;
         }
         
+        /* Multi-select dropdown */
+        .multi-select-container {
+            position: relative;
+            min-width: 200px;
+        }
+        
+        .multi-select-button {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .multi-select-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 2px;
+        }
+        
+        .multi-select-dropdown.active {
+            display: block;
+        }
+        
+        .multi-select-option {
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .multi-select-option:hover {
+            background: #f8f9fa;
+        }
+        
+        .multi-select-option input[type="checkbox"] {
+            margin: 0;
+        }
+        
         .btn {
             padding: 10px 20px;
             border: none;
@@ -170,6 +236,15 @@
         
         .btn-secondary:hover {
             background: #7f8c8d;
+        }
+        
+        .btn-info {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background: #2980b9;
         }
         
         /* Table Section */
@@ -228,22 +303,37 @@
             background: #f8f9fa;
         }
         
-        .status-badge {
+        .plan-badge {
             display: inline-block;
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 12px;
             font-size: 12px;
             font-weight: 500;
         }
         
-        .status-active {
+        .plan-trial {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .plan-prepaid {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .plan-personal {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .plan-business {
             background: #d4edda;
             color: #155724;
         }
         
-        .status-inactive {
-            background: #f8d7da;
-            color: #721c24;
+        .plan-enterprise {
+            background: #e2e3e5;
+            color: #383d41;
         }
         
         .action-buttons {
@@ -254,6 +344,15 @@
         .btn-sm {
             padding: 5px 10px;
             font-size: 12px;
+        }
+        
+        .btn-view {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn-view:hover {
+            background: #138496;
         }
         
         .btn-edit {
@@ -319,11 +418,19 @@
             border: none;
             font-size: 24px;
             cursor: pointer;
-            color: #666;
+            color: #6c757d;
         }
         
         .modal-body {
             padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
         }
         
         .form-group {
@@ -339,42 +446,35 @@
         
         .form-control {
             width: 100%;
-            padding: 10px;
+            padding: 8px 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 14px;
         }
         
-        .form-control:focus {
-            outline: none;
-            border-color: #3498db;
-        }
-        
-        .modal-footer {
-            padding: 15px 20px;
-            border-top: 1px solid #dee2e6;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
         
         /* Pagination */
         .pagination {
             display: flex;
             justify-content: center;
-            align-items: center;
-            gap: 5px;
             padding: 20px;
+            gap: 5px;
         }
         
         .page-btn {
             padding: 8px 12px;
-            border: 1px solid #ddd;
+            border: 1px solid #dee2e6;
             background: white;
             color: #333;
             cursor: pointer;
             border-radius: 4px;
             font-size: 14px;
+            transition: all 0.3s;
         }
         
         .page-btn:hover {
@@ -422,46 +522,83 @@
                 <!-- Search and Filter Section -->
                 <div class="search-filter-section">
                     <div class="search-row">
-                        <input type="text" class="search-input" id="searchInput" placeholder="회사명, 사업자번호, 대표자명으로 검색">
+                        <select class="search-filter-select" id="searchFilter">
+                            <option value="name">회사명</option>
+                            <option value="groupName">회사그룹명</option>
+                            <option value="companyId">회사ID</option>
+                            <option value="manager">대표관리자명</option>
+                            <option value="email">이메일</option>
+                        </select>
+                        <input type="text" class="search-input" id="searchInput" placeholder="검색어를 입력하세요">
                         <button class="btn btn-primary" onclick="searchCompanies()">검색</button>
-                        <button class="btn btn-success" onclick="openAddModal()">신규 등록</button>
+                        <button class="btn btn-success" onclick="openAddModal()">신규 회사 등록</button>
+                        <button class="btn btn-info" onclick="exportCompanies()">엑셀 다운로드</button>
                     </div>
                     <div class="filter-row">
                         <div class="filter-item">
-                            <label>업종</label>
-                            <select id="industryFilter">
+                            <label>영업담당자</label>
+                            <select id="salesManagerFilter">
                                 <option value="">전체</option>
-                                <option value="IT">IT/소프트웨어</option>
-                                <option value="제조">제조업</option>
-                                <option value="서비스">서비스업</option>
-                                <option value="유통">유통/물류</option>
-                                <option value="금융">금융/보험</option>
-                                <option value="건설">건설/부동산</option>
+                                <option value="김영희">김영희</option>
+                                <option value="박민수">박민수</option>
+                                <option value="이정희">이정희</option>
+                                <option value="정현우">정현우</option>
+                                <option value="김민준">김민준</option>
                             </select>
                         </div>
                         <div class="filter-item">
-                            <label>상태</label>
-                            <select id="statusFilter">
+                            <label>국가</label>
+                            <select id="countryFilter">
+                                <option value="">전체</option>
+                                <option value="한국">한국</option>
+                                <option value="미국">미국</option>
+                                <option value="일본">일본</option>
+                                <option value="중국">중국</option>
+                                <option value="독일">독일</option>
+                            </select>
+                        </div>
+                        <div class="filter-item">
+                            <label>요금제</label>
+                            <div class="multi-select-container">
+                                <button type="button" class="multi-select-button" onclick="togglePlanDropdown()">
+                                    <span id="planButtonText">전체</span>
+                                    <span>▼</span>
+                                </button>
+                                <div class="multi-select-dropdown" id="planDropdown">
+                                    <div class="multi-select-option">
+                                        <input type="checkbox" id="plan-all" value="all" onchange="toggleAllPlans(this)">
+                                        <label for="plan-all">전체</label>
+                                    </div>
+                                    <div class="multi-select-option">
+                                        <input type="checkbox" id="plan-trial" value="trial" onchange="updatePlanSelection()">
+                                        <label for="plan-trial">Trial</label>
+                                    </div>
+                                    <div class="multi-select-option">
+                                        <input type="checkbox" id="plan-prepaid" value="prepaid" onchange="updatePlanSelection()">
+                                        <label for="plan-prepaid">Prepaid</label>
+                                    </div>
+                                    <div class="multi-select-option">
+                                        <input type="checkbox" id="plan-personal" value="personal" onchange="updatePlanSelection()">
+                                        <label for="plan-personal">Personal</label>
+                                    </div>
+                                    <div class="multi-select-option">
+                                        <input type="checkbox" id="plan-business" value="business" onchange="updatePlanSelection()">
+                                        <label for="plan-business">Business</label>
+                                    </div>
+                                    <div class="multi-select-option">
+                                        <input type="checkbox" id="plan-prepaid-enterprise" value="prepaid-enterprise" onchange="updatePlanSelection()">
+                                        <label for="plan-prepaid-enterprise">Prepaid-Enterprise</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="filter-item">
+                            <label>탈퇴 여부</label>
+                            <select id="withdrawalFilter">
                                 <option value="">전체</option>
                                 <option value="active">활성</option>
-                                <option value="inactive">비활성</option>
+                                <option value="withdrawn">탈퇴</option>
                             </select>
-                        </div>
-                        <div class="filter-item">
-                            <label>규모</label>
-                            <select id="scaleFilter">
-                                <option value="">전체</option>
-                                <option value="대기업">대기업</option>
-                                <option value="중견기업">중견기업</option>
-                                <option value="중소기업">중소기업</option>
-                                <option value="스타트업">스타트업</option>
-                            </select>
-                        </div>
-                        <div class="filter-item">
-                            <label>등록일</label>
-                            <input type="date" id="startDate">
-                            <span>~</span>
-                            <input type="date" id="endDate">
                         </div>
                         <button class="btn btn-secondary" onclick="resetFilters()">초기화</button>
                     </div>
@@ -476,15 +613,14 @@
                     <table>
                         <thead>
                             <tr>
+                                <th>No.</th>
                                 <th>회사명</th>
-                                <th>사업자번호</th>
-                                <th>대표자</th>
-                                <th>업종</th>
-                                <th>규모</th>
-                                <th>연락처</th>
-                                <th>주소</th>
-                                <th>상태</th>
-                                <th>등록일</th>
+                                <th>회사그룹명</th>
+                                <th>대표관리자</th>
+                                <th>이메일</th>
+                                <th>가입일</th>
+                                <th>요금제</th>
+                                <th>영업담당자</th>
                                 <th>관리</th>
                             </tr>
                         </thead>
@@ -511,61 +647,82 @@
             </div>
             <div class="modal-body">
                 <form id="companyForm">
-                    <div class="form-group">
-                        <label class="form-label">회사명 *</label>
-                        <input type="text" class="form-control" id="companyName" required>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">회사명 *</label>
+                            <input type="text" class="form-control" id="companyName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">회사그룹</label>
+                            <select class="form-control" id="companyGroup">
+                                <option value="">선택하세요</option>
+                                <option value="삼성그룹">삼성그룹</option>
+                                <option value="LG그룹">LG그룹</option>
+                                <option value="SK그룹">SK그룹</option>
+                                <option value="현대그룹">현대그룹</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">사업자번호 *</label>
-                        <input type="text" class="form-control" id="businessNumber" placeholder="000-00-00000" required>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">대표관리자 *</label>
+                            <input type="text" class="form-control" id="managerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">이메일 *</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">대표자명 *</label>
-                        <input type="text" class="form-control" id="ceoName" required>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">전화번호</label>
+                            <input type="tel" class="form-control" id="phone">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">영업담당자 *</label>
+                            <select class="form-control" id="salesManager" required>
+                                <option value="">선택하세요</option>
+                                <option value="김영희">김영희</option>
+                                <option value="박민수">박민수</option>
+                                <option value="이정희">이정희</option>
+                                <option value="정현우">정현우</option>
+                                <option value="김민준">김민준</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">업종</label>
-                        <select class="form-control" id="industry">
-                            <option value="IT">IT/소프트웨어</option>
-                            <option value="제조">제조업</option>
-                            <option value="서비스">서비스업</option>
-                            <option value="유통">유통/물류</option>
-                            <option value="금융">금융/보험</option>
-                            <option value="건설">건설/부동산</option>
-                        </select>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">요금제 *</label>
+                            <select class="form-control" id="plan" required>
+                                <option value="">선택하세요</option>
+                                <option value="trial">Trial</option>
+                                <option value="prepaid">Prepaid</option>
+                                <option value="personal">Personal</option>
+                                <option value="business">Business</option>
+                                <option value="prepaid-enterprise">Prepaid-Enterprise</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">국가 *</label>
+                            <select class="form-control" id="country" required>
+                                <option value="">선택하세요</option>
+                                <option value="한국">한국</option>
+                                <option value="미국">미국</option>
+                                <option value="일본">일본</option>
+                                <option value="중국">중국</option>
+                                <option value="독일">독일</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">기업규모</label>
-                        <select class="form-control" id="scale">
-                            <option value="대기업">대기업</option>
-                            <option value="중견기업">중견기업</option>
-                            <option value="중소기업">중소기업</option>
-                            <option value="스타트업">스타트업</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">대표전화</label>
-                        <input type="tel" class="form-control" id="phone" placeholder="02-0000-0000">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">이메일</label>
-                        <input type="email" class="form-control" id="email">
-                    </div>
+                    
                     <div class="form-group">
                         <label class="form-label">주소</label>
                         <input type="text" class="form-control" id="address">
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">홈페이지</label>
-                        <input type="url" class="form-control" id="website" placeholder="https://">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">상태</label>
-                        <select class="form-control" id="status">
-                            <option value="active">활성</option>
-                            <option value="inactive">비활성</option>
-                        </select>
-                    </div>
+                    
                     <div class="form-group">
                         <label class="form-label">비고</label>
                         <textarea class="form-control" id="notes" rows="3"></textarea>
@@ -579,12 +736,29 @@
         </div>
     </div>
     
+    <!-- View Company Modal -->
+    <div class="modal" id="viewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">회사 상세정보</h3>
+                <button class="modal-close" onclick="closeViewModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="viewModalBody">
+                <!-- 동적으로 추가됨 -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>
+            </div>
+        </div>
+    </div>
+    
     <script>
-        // 샘플 데이터
+        // 데이터
         let companies = [];
         let currentPage = 1;
         let itemsPerPage = 10;
         let editingId = null;
+        let selectedPlans = [];
         
         // 초기화
         document.addEventListener('DOMContentLoaded', function() {
@@ -594,11 +768,15 @@
             // 매출 페이지에서 리다이렉션된 경우 처리
             const viewMode = localStorage.getItem('viewMode');
             const selectedCompanyId = localStorage.getItem('selectedCompanyId');
+            const selectedCompanyName = localStorage.getItem('selectedCompanyName');
             
             if (viewMode === 'company-detail' && selectedCompanyId) {
-                // 선택된 회사 상세보기 모달 열기
+                // 해당 회사 정보 표시
                 setTimeout(() => {
-                    viewCompany(parseInt(selectedCompanyId));
+                    const company = companies.find(c => c.id === parseInt(selectedCompanyId));
+                    if (company) {
+                        viewCompany(company.id);
+                    }
                 }, 500);
                 
                 // localStorage 정리
@@ -606,90 +784,127 @@
                 localStorage.removeItem('selectedCompanyId');
                 localStorage.removeItem('selectedCompanyName');
             }
+            
+            // 외부 클릭 시 드롭다운 닫기
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.multi-select-container')) {
+                    document.getElementById('planDropdown').classList.remove('active');
+                }
+            });
         });
         
-        // 로컬스토리지에서 데이터 로드
+        // 회사 데이터 로드
         function loadCompanies() {
-            const saved = localStorage.getItem('companies');
-            if (saved) {
-                companies = JSON.parse(saved);
+            const savedCompanies = localStorage.getItem('companies');
+            if (savedCompanies) {
+                companies = JSON.parse(savedCompanies);
             } else {
                 // 샘플 데이터
                 companies = [
                     {
                         id: 1,
                         name: '삼성전자',
-                        businessNumber: '124-81-00998',
-                        ceo: '한종희',
-                        industry: 'IT',
-                        scale: '대기업',
-                        phone: '02-2255-0114',
-                        email: 'contact@samsung.com',
-                        address: '경기도 수원시 영통구 삼성로 129',
-                        website: 'https://www.samsung.com',
-                        status: 'active',
-                        registeredDate: '2024-01-15',
-                        notes: ''
+                        groupName: '삼성그룹',
+                        manager: '이재용',
+                        email: 'lee@samsung.com',
+                        phone: '02-2053-0000',
+                        registrationDate: '2024-01-15',
+                        plan: 'prepaid-enterprise',
+                        salesManager: '김영희',
+                        country: '한국',
+                        address: '경기도 수원시 영통구',
+                        isWithdrawn: false,
+                        notes: 'VIP 고객'
                     },
                     {
                         id: 2,
                         name: 'LG전자',
-                        businessNumber: '107-86-14075',
-                        ceo: '조주완',
-                        industry: 'IT',
-                        scale: '대기업',
+                        groupName: 'LG그룹',
+                        manager: '조주완',
+                        email: 'cho@lg.com',
                         phone: '02-3777-1114',
-                        email: 'contact@lge.com',
-                        address: '서울특별시 영등포구 여의대로 128',
-                        website: 'https://www.lge.co.kr',
-                        status: 'active',
-                        registeredDate: '2024-01-20',
-                        notes: ''
+                        registrationDate: '2024-02-01',
+                        plan: 'prepaid-enterprise',
+                        salesManager: '박민수',
+                        country: '한국',
+                        address: '서울시 영등포구',
+                        isWithdrawn: false,
+                        notes: 'Prepaid-Enterprise 요금제'
                     },
                     {
                         id: 3,
                         name: '네이버',
-                        businessNumber: '220-81-62517',
-                        ceo: '최수연',
-                        industry: 'IT',
-                        scale: '대기업',
-                        phone: '1588-3830',
-                        email: 'contact@navercorp.com',
-                        address: '경기도 성남시 분당구 불정로 6',
-                        website: 'https://www.navercorp.com',
-                        status: 'active',
-                        registeredDate: '2024-02-01',
+                        groupName: '',
+                        manager: '최수연',
+                        email: 'choi@naver.com',
+                        phone: '1588-3820',
+                        registrationDate: '2024-03-01',
+                        plan: 'business',
+                        salesManager: '이정희',
+                        country: '한국',
+                        address: '경기도 성남시 분당구',
+                        isWithdrawn: false,
                         notes: ''
                     },
                     {
                         id: 4,
                         name: '카카오',
-                        businessNumber: '120-81-47521',
-                        ceo: '홍은택',
-                        industry: 'IT',
-                        scale: '대기업',
-                        phone: '02-6718-1234',
-                        email: 'contact@kakaocorp.com',
-                        address: '제주특별자치도 제주시 첨단로 242',
-                        website: 'https://www.kakaocorp.com',
-                        status: 'active',
-                        registeredDate: '2024-02-10',
+                        groupName: '',
+                        manager: '홍은택',
+                        email: 'hong@kakao.com',
+                        phone: '1577-3754',
+                        registrationDate: '2024-01-20',
+                        plan: 'business',
+                        salesManager: '정현우',
+                        country: '한국',
+                        address: '제주특별자치도 제주시',
+                        isWithdrawn: false,
                         notes: ''
                     },
                     {
                         id: 5,
                         name: '쿠팡',
-                        businessNumber: '120-88-00767',
-                        ceo: '강한승',
-                        industry: '유통',
-                        scale: '대기업',
+                        groupName: '',
+                        manager: '강한승',
+                        email: 'kang@coupang.com',
                         phone: '1577-7011',
-                        email: 'contact@coupang.com',
-                        address: '서울특별시 송파구 송파대로 570',
-                        website: 'https://www.coupang.com',
-                        status: 'active',
-                        registeredDate: '2024-02-15',
+                        registrationDate: '2024-04-10',
+                        plan: 'personal',
+                        salesManager: '김민준',
+                        country: '한국',
+                        address: '서울시 송파구',
+                        isWithdrawn: false,
                         notes: ''
+                    },
+                    {
+                        id: 6,
+                        name: '현대자동차',
+                        groupName: '현대그룹',
+                        manager: '정의선',
+                        email: 'jung@hyundai.com',
+                        phone: '02-3464-1114',
+                        registrationDate: '2024-03-15',
+                        plan: 'prepaid',
+                        salesManager: '김영희',
+                        country: '한국',
+                        address: '서울시 서초구',
+                        isWithdrawn: false,
+                        notes: ''
+                    },
+                    {
+                        id: 7,
+                        name: 'SK텔레콤',
+                        groupName: 'SK그룹',
+                        manager: '유영상',
+                        email: 'yoo@sktelecom.com',
+                        phone: '02-6100-2114',
+                        registrationDate: '2024-02-20',
+                        plan: 'trial',
+                        salesManager: '박민수',
+                        country: '한국',
+                        address: '서울시 중구',
+                        isWithdrawn: false,
+                        notes: '평가판 사용중'
                     }
                 ];
                 saveCompanies();
@@ -711,24 +926,43 @@
             const tbody = document.getElementById('companyTableBody');
             tbody.innerHTML = '';
             
-            pageData.forEach(company => {
+            pageData.forEach((company, index) => {
+                const globalIndex = start + index + 1;
                 const tr = document.createElement('tr');
+                
+                // 요금제별 배지 색상 클래스
+                let planClass = 'plan-';
+                switch(company.plan) {
+                    case 'trial': planClass += 'trial'; break;
+                    case 'prepaid': planClass += 'prepaid'; break;
+                    case 'personal': planClass += 'personal'; break;
+                    case 'business': planClass += 'business'; break;
+                    case 'prepaid-enterprise': planClass += 'enterprise'; break;
+                    default: planClass += 'trial';
+                }
+                
+                // 탈퇴 여부에 따른 스타일
+                const withdrawnStyle = company.isWithdrawn ? 'opacity: 0.6; text-decoration: line-through;' : '';
+                
                 tr.innerHTML = `
-                    <td><strong>${company.name}</strong></td>
-                    <td>${company.businessNumber}</td>
-                    <td>${company.ceo}</td>
-                    <td>${company.industry}</td>
-                    <td>${company.scale}</td>
-                    <td>${company.phone}</td>
-                    <td>${company.address}</td>
+                    <td>${globalIndex}</td>
+                    <td style="${withdrawnStyle}">
+                        <strong>${company.name}</strong>
+                        ${company.isWithdrawn ? ' (탈퇴)' : ''}
+                    </td>
+                    <td>${company.groupName || '--'}</td>
+                    <td>${company.manager}</td>
+                    <td>${company.email}</td>
+                    <td>${company.registrationDate}</td>
                     <td>
-                        <span class="status-badge status-${company.status}">
-                            ${company.status === 'active' ? '활성' : '비활성'}
+                        <span class="plan-badge ${planClass}">
+                            ${company.plan.toUpperCase()}
                         </span>
                     </td>
-                    <td>${company.registeredDate}</td>
+                    <td>${company.salesManager}</td>
                     <td>
                         <div class="action-buttons">
+                            <button class="btn btn-sm btn-view" onclick="viewCompany(${company.id})">보기</button>
                             <button class="btn btn-sm btn-edit" onclick="editCompany(${company.id})">수정</button>
                             <button class="btn btn-sm btn-delete" onclick="deleteCompany(${company.id})">삭제</button>
                         </div>
@@ -747,43 +981,96 @@
             
             // 검색어 필터
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const searchFilter = document.getElementById('searchFilter').value;
+            
             if (searchTerm) {
-                filtered = filtered.filter(company => 
-                    company.name.toLowerCase().includes(searchTerm) ||
-                    company.businessNumber.includes(searchTerm) ||
-                    company.ceo.toLowerCase().includes(searchTerm)
-                );
+                filtered = filtered.filter(company => {
+                    switch(searchFilter) {
+                        case 'name':
+                            return company.name.toLowerCase().includes(searchTerm);
+                        case 'groupName':
+                            return company.groupName.toLowerCase().includes(searchTerm);
+                        case 'companyId':
+                            return company.id.toString().includes(searchTerm);
+                        case 'manager':
+                            return company.manager.toLowerCase().includes(searchTerm);
+                        case 'email':
+                            return company.email.toLowerCase().includes(searchTerm);
+                        default:
+                            return company.name.toLowerCase().includes(searchTerm);
+                    }
+                });
             }
             
-            // 업종 필터
-            const industry = document.getElementById('industryFilter').value;
-            if (industry) {
-                filtered = filtered.filter(company => company.industry === industry);
+            // 영업담당자 필터
+            const salesManager = document.getElementById('salesManagerFilter').value;
+            if (salesManager) {
+                filtered = filtered.filter(company => company.salesManager === salesManager);
             }
             
-            // 상태 필터
-            const status = document.getElementById('statusFilter').value;
-            if (status) {
-                filtered = filtered.filter(company => company.status === status);
+            // 국가 필터
+            const country = document.getElementById('countryFilter').value;
+            if (country) {
+                filtered = filtered.filter(company => company.country === country);
             }
             
-            // 규모 필터
-            const scale = document.getElementById('scaleFilter').value;
-            if (scale) {
-                filtered = filtered.filter(company => company.scale === scale);
+            // 요금제 필터 (다중 선택)
+            if (selectedPlans.length > 0 && !selectedPlans.includes('all')) {
+                filtered = filtered.filter(company => selectedPlans.includes(company.plan));
             }
             
-            // 날짜 필터
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-            if (startDate) {
-                filtered = filtered.filter(company => company.registeredDate >= startDate);
-            }
-            if (endDate) {
-                filtered = filtered.filter(company => company.registeredDate <= endDate);
+            // 탈퇴 여부 필터
+            const withdrawalStatus = document.getElementById('withdrawalFilter').value;
+            if (withdrawalStatus) {
+                if (withdrawalStatus === 'active') {
+                    filtered = filtered.filter(company => !company.isWithdrawn);
+                } else if (withdrawalStatus === 'withdrawn') {
+                    filtered = filtered.filter(company => company.isWithdrawn);
+                }
             }
             
             return filtered;
+        }
+        
+        // 요금제 드롭다운 토글
+        function togglePlanDropdown() {
+            const dropdown = document.getElementById('planDropdown');
+            dropdown.classList.toggle('active');
+        }
+        
+        // 전체 요금제 선택/해제
+        function toggleAllPlans(checkbox) {
+            const checkboxes = document.querySelectorAll('#planDropdown input[type="checkbox"]:not(#plan-all)');
+            checkboxes.forEach(cb => {
+                cb.checked = checkbox.checked;
+            });
+            updatePlanSelection();
+        }
+        
+        // 요금제 선택 업데이트
+        function updatePlanSelection() {
+            const checkboxes = document.querySelectorAll('#planDropdown input[type="checkbox"]:not(#plan-all):checked');
+            selectedPlans = Array.from(checkboxes).map(cb => cb.value);
+            
+            const allCheckbox = document.getElementById('plan-all');
+            const totalCheckboxes = document.querySelectorAll('#planDropdown input[type="checkbox"]:not(#plan-all)').length;
+            
+            // 모든 개별 체크박스가 선택되면 전체 체크박스도 선택
+            allCheckbox.checked = selectedPlans.length === totalCheckboxes;
+            
+            // 버튼 텍스트 업데이트
+            const buttonText = document.getElementById('planButtonText');
+            if (selectedPlans.length === 0 || allCheckbox.checked) {
+                buttonText.textContent = '전체';
+            } else if (selectedPlans.length === 1) {
+                buttonText.textContent = selectedPlans[0].toUpperCase();
+            } else {
+                buttonText.textContent = `${selectedPlans.length}개 선택`;
+            }
+            
+            // 필터 적용
+            currentPage = 1;
+            renderCompanies();
         }
         
         // 페이지네이션 렌더링
@@ -840,11 +1127,17 @@
         // 필터 초기화
         function resetFilters() {
             document.getElementById('searchInput').value = '';
-            document.getElementById('industryFilter').value = '';
-            document.getElementById('statusFilter').value = '';
-            document.getElementById('scaleFilter').value = '';
-            document.getElementById('startDate').value = '';
-            document.getElementById('endDate').value = '';
+            document.getElementById('searchFilter').value = 'name';
+            document.getElementById('salesManagerFilter').value = '';
+            document.getElementById('countryFilter').value = '';
+            document.getElementById('withdrawalFilter').value = '';
+            
+            // 요금제 체크박스 초기화
+            const checkboxes = document.querySelectorAll('#planDropdown input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = false);
+            selectedPlans = [];
+            document.getElementById('planButtonText').textContent = '전체';
+            
             currentPage = 1;
             renderCompanies();
         }
@@ -868,21 +1161,24 @@
         function saveCompany() {
             const company = {
                 name: document.getElementById('companyName').value,
-                businessNumber: document.getElementById('businessNumber').value,
-                ceo: document.getElementById('ceoName').value,
-                industry: document.getElementById('industry').value,
-                scale: document.getElementById('scale').value,
-                phone: document.getElementById('phone').value,
+                groupName: document.getElementById('companyGroup').value,
+                manager: document.getElementById('managerName').value,
                 email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                registrationDate: editingId ? 
+                    companies.find(c => c.id === editingId).registrationDate : 
+                    new Date().toISOString().split('T')[0],
+                plan: document.getElementById('plan').value,
+                salesManager: document.getElementById('salesManager').value,
+                country: document.getElementById('country').value,
                 address: document.getElementById('address').value,
-                website: document.getElementById('website').value,
-                status: document.getElementById('status').value,
-                notes: document.getElementById('notes').value,
-                registeredDate: new Date().toISOString().split('T')[0]
+                isWithdrawn: false,
+                notes: document.getElementById('notes').value
             };
             
             // 유효성 검사
-            if (!company.name || !company.businessNumber || !company.ceo) {
+            if (!company.name || !company.manager || !company.email || 
+                !company.plan || !company.salesManager || !company.country) {
                 alert('필수 항목을 입력해주세요.');
                 return;
             }
@@ -890,7 +1186,7 @@
             if (editingId) {
                 // 수정
                 const index = companies.findIndex(c => c.id === editingId);
-                companies[index] = { ...company, id: editingId };
+                companies[index] = { ...company, id: editingId, isWithdrawn: companies[index].isWithdrawn };
             } else {
                 // 추가
                 company.id = companies.length ? Math.max(...companies.map(c => c.id)) + 1 : 1;
@@ -902,6 +1198,81 @@
             closeModal();
         }
         
+        // 회사 보기
+        function viewCompany(id) {
+            const company = companies.find(c => c.id === id);
+            if (!company) return;
+            
+            const modalBody = document.getElementById('viewModalBody');
+            modalBody.innerHTML = `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">회사명</label>
+                        <div><strong>${company.name}</strong></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">회사그룹</label>
+                        <div>${company.groupName || '--'}</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">대표관리자</label>
+                        <div>${company.manager}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">이메일</label>
+                        <div>${company.email}</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">전화번호</label>
+                        <div>${company.phone || '--'}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">영업담당자</label>
+                        <div>${company.salesManager}</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">요금제</label>
+                        <div><span class="plan-badge plan-${company.plan}">${company.plan.toUpperCase()}</span></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">국가</label>
+                        <div>${company.country}</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">가입일</label>
+                        <div>${company.registrationDate}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">상태</label>
+                        <div>${company.isWithdrawn ? '탈퇴' : '활성'}</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">주소</label>
+                    <div>${company.address || '--'}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">비고</label>
+                    <div>${company.notes || '--'}</div>
+                </div>
+            `;
+            
+            document.getElementById('viewModal').classList.add('active');
+        }
+        
+        // 보기 모달 닫기
+        function closeViewModal() {
+            document.getElementById('viewModal').classList.remove('active');
+        }
+        
         // 회사 수정
         function editCompany(id) {
             const company = companies.find(c => c.id === id);
@@ -910,15 +1281,14 @@
             editingId = id;
             document.getElementById('modalTitle').textContent = '회사 수정';
             document.getElementById('companyName').value = company.name;
-            document.getElementById('businessNumber').value = company.businessNumber;
-            document.getElementById('ceoName').value = company.ceo;
-            document.getElementById('industry').value = company.industry;
-            document.getElementById('scale').value = company.scale;
-            document.getElementById('phone').value = company.phone;
-            document.getElementById('email').value = company.email || '';
-            document.getElementById('address').value = company.address;
-            document.getElementById('website').value = company.website || '';
-            document.getElementById('status').value = company.status;
+            document.getElementById('companyGroup').value = company.groupName || '';
+            document.getElementById('managerName').value = company.manager;
+            document.getElementById('email').value = company.email;
+            document.getElementById('phone').value = company.phone || '';
+            document.getElementById('plan').value = company.plan;
+            document.getElementById('salesManager').value = company.salesManager;
+            document.getElementById('country').value = company.country;
+            document.getElementById('address').value = company.address || '';
             document.getElementById('notes').value = company.notes || '';
             
             document.getElementById('companyModal').classList.add('active');
@@ -933,118 +1303,9 @@
             }
         }
         
-        // 회사 상세보기
-        function viewCompany(id) {
-            const company = companies.find(c => c.id === id);
-            if (!company) {
-                // 샘플 데이터에 없는 경우 기본 데이터 생성
-                alert('해당 회사 정보를 찾을 수 없습니다.');
-                return;
-            }
-            
-            // 상세보기 모달 생성
-            const modal = document.createElement('div');
-            modal.className = 'modal active';
-            modal.id = 'viewCompanyModal';
-            
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">회사 상세정보</h3>
-                        <button class="modal-close" onclick="closeViewModal()">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label class="form-label">회사명</label>
-                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
-                                <strong>${company.name}</strong>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">사업자번호</label>
-                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
-                                ${company.businessNumber}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">대표자</label>
-                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
-                                ${company.ceo}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">업종</label>
-                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
-                                ${company.industry}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">기업규모</label>
-                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
-                                ${company.scale}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">연락처</label>
-                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
-                                ${company.phone}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">이메일</label>
-                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
-                                ${company.email || '-'}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">주소</label>
-                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
-                                ${company.address}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">홈페이지</label>
-                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
-                                ${company.website ? `<a href="${company.website}" target="_blank">${company.website}</a>` : '-'}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">상태</label>
-                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
-                                <span class="status-badge status-${company.status}">
-                                    ${company.status === 'active' ? '활성' : '비활성'}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">등록일</label>
-                            <div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">
-                                ${company.registeredDate}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>
-                        <button class="btn btn-primary" onclick="editCompanyFromView(${company.id})">수정</button>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-        }
-        
-        // 상세보기 모달 닫기
-        function closeViewModal() {
-            const modal = document.getElementById('viewCompanyModal');
-            if (modal) {
-                modal.remove();
-            }
-        }
-        
-        // 상세보기에서 수정으로 전환
-        function editCompanyFromView(id) {
-            closeViewModal();
-            editCompany(id);
+        // 엑셀 다운로드
+        function exportCompanies() {
+            alert('엑셀 다운로드 기능은 실제 환경에서 구현됩니다.');
         }
         
         // Enter 키로 검색

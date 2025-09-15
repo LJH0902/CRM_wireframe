@@ -650,7 +650,7 @@
                     parentCompanyId: 1,
                     parentCompanyName: '삼성전자',
                     companies: [1, 17],  // 삼성전자, 삼성물산
-                    description: '한국 최대 기업집단, 전자·금융·건설 등 다양한 사업 영역',
+                    description: '분할납부 중 - 12월까지 매달 5일 납부',
                     createdDate: '2024-01-15'
                 },
                 {
@@ -659,7 +659,7 @@
                     parentCompanyId: 2,
                     parentCompanyName: 'LG전자',
                     companies: [2],  // LG전자
-                    description: '전자·화학·통신 사업을 주력으로 하는 대기업 그룹',
+                    description: '',
                     createdDate: '2024-01-20'
                 },
                 {
@@ -668,7 +668,7 @@
                     parentCompanyId: 6,
                     parentCompanyName: '현대자동차',
                     companies: [6],  // 현대자동차
-                    description: '자동차·조선·건설 중심의 글로벌 기업집단',
+                    description: '차량리스 조건부 계약',
                     createdDate: '2024-02-01'
                 },
                 {
@@ -677,7 +677,7 @@
                     parentCompanyId: 7,
                     parentCompanyName: 'SK텔레콤',
                     companies: [7],  // SK텔레콤
-                    description: '에너지·통신·반도체 사업 중심 기업집단',
+                    description: '',
                     createdDate: '2024-02-10'
                 },
                 {
@@ -686,7 +686,7 @@
                     parentCompanyId: 10,
                     parentCompanyName: '롯데케미칼',
                     companies: [10],  // 롯데케미칼
-                    description: '유통·식품·화학·건설 등 다각화된 사업 포트폴리오',
+                    description: '연간 선납 완료',
                     createdDate: '2024-02-15'
                 },
                 {
@@ -695,7 +695,7 @@
                     parentCompanyId: 13,
                     parentCompanyName: 'CJ제일제당',
                     companies: [13],  // CJ제일제당
-                    description: '식품·생명공학·엔터테인먼트·물류 사업',
+                    description: '3년 장기계약 체결',
                     createdDate: '2024-03-01'
                 },
                 {
@@ -704,7 +704,7 @@
                     parentCompanyId: 9,
                     parentCompanyName: '한화솔루션',
                     companies: [9],  // 한화솔루션
-                    description: '화학·방산·금융·건설 사업 영위',
+                    description: '',
                     createdDate: '2024-03-10'
                 },
                 {
@@ -713,7 +713,7 @@
                     parentCompanyId: 15,
                     parentCompanyName: 'GS칼텍스',
                     companies: [15],  // GS칼텍스
-                    description: '에너지·유통·건설 중심 기업집단',
+                    description: '특별할인 적용중 (20%)',
                     createdDate: '2024-03-15'
                 },
                 {
@@ -722,7 +722,7 @@
                     parentCompanyId: 11,
                     parentCompanyName: '두산중공업',
                     companies: [11],  // 두산중공업
-                    description: '중공업·인프라·소비재 사업',
+                    description: '',
                     createdDate: '2024-03-20'
                 },
                 {
@@ -731,7 +731,7 @@
                     parentCompanyId: 12,
                     parentCompanyName: '신세계',
                     companies: [12],  // 신세계
-                    description: '백화점·대형마트·면세점 등 유통 사업',
+                    description: 'VIP 고객 - 전담 매니저 배정',
                     createdDate: '2024-04-01'
                 },
                 {
@@ -740,7 +740,7 @@
                     parentCompanyId: 16,
                     parentCompanyName: '현대중공업',
                     companies: [16],  // 현대중공업
-                    description: '조선·해양·플랜트 사업 중심',
+                    description: '프로젝트 단위 계약',
                     createdDate: '2024-04-05'
                 }
             ];
@@ -866,15 +866,28 @@
             
             const modalBody = document.getElementById('viewModalBody');
             
-            // 소속 회사 목록 생성
-            let companiesList = '-';
+            // 소속 회사 목록 생성 (리스트 형식)
+            let companiesList = '<div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">';
             if (group.companies && group.companies.length > 0) {
-                const companyNames = group.companies.map(cId => {
+                const companyItems = group.companies.map(cId => {
                     const company = companies.find(c => c.id === cId);
-                    return company ? company.name : '';
-                }).filter(name => name);
-                companiesList = companyNames.join(', ');
+                    if (company) {
+                        return `<div style="padding: 5px 0; border-bottom: 1px solid #e9ecef;">
+                                    <span style="cursor: pointer; color: #2c3e50; font-weight: 500;"
+                                          onclick="redirectToCompanyDetail(${company.id}, '${company.name}')"
+                                          onmouseover="this.style.color='#3498db'; this.style.textDecoration='underline'"
+                                          onmouseout="this.style.color='#2c3e50'; this.style.textDecoration='none'">
+                                        • ${company.name}
+                                    </span>
+                                </div>`;
+                    }
+                    return '';
+                }).filter(item => item);
+                companiesList += companyItems.length > 0 ? companyItems.join('') : '소속 회사 없음';
+            } else {
+                companiesList += '소속 회사 없음';
             }
+            companiesList += '</div>';
             
             modalBody.innerHTML = `
                 <div class="detail-grid">
@@ -898,9 +911,7 @@
                 
                 <div class="form-group">
                     <label class="form-label">소속회사 목록</label>
-                    <div class="company-list">
-                        ${companiesList}
-                    </div>
+                    ${companiesList}
                 </div>
                 
                 <div class="form-group">
@@ -1064,6 +1075,16 @@
                 renderGroups();
                 alert('샘플 데이터가 로드되었습니다.');
             }
+        }
+        
+        // 회사 상세보기로 리다이렉션
+        function redirectToCompanyDetail(companyId, companyName) {
+            // localStorage에 선택된 회사 정보 저장
+            localStorage.setItem('viewMode', 'company-detail');
+            localStorage.setItem('selectedCompanyId', companyId);
+            localStorage.setItem('selectedCompanyName', companyName);
+            // 회사관리 페이지로 이동
+            window.location.href = 'company.html';
         }
         
         // Enter 키로 검색

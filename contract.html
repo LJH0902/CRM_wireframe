@@ -528,7 +528,14 @@
                 <!-- Search and Filter Section -->
                 <div class="search-filter-section">
                     <div class="search-row">
-                        <input type="text" class="search-input" id="searchInput" placeholder="계약번호, 계약명, 고객사명으로 검색">
+                        <select class="search-filter-select" id="searchFilter" style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; min-width: 140px;">
+                            <option value="companyName">회사명</option>
+                            <option value="groupName">회사그룹명</option>
+                            <option value="companyId">회사ID</option>
+                            <option value="contractorName">계약자이름</option>
+                            <option value="contractorEmail">계약자메일</option>
+                        </select>
+                        <input type="text" class="search-input" id="searchInput" placeholder="검색어를 입력하세요" style="flex: 1;">
                         <button class="btn btn-primary" onclick="searchContracts()">검색</button>
                         <button class="btn btn-success" onclick="openAddModal()">신규 계약 등록</button>
                         <button class="btn btn-info" onclick="exportContracts()">엑셀 다운로드</button>
@@ -557,10 +564,26 @@
                             <input type="date" id="endDate">
                         </div>
                         <div class="filter-item">
-                            <label>금액범위</label>
-                            <input type="number" id="minAmount" placeholder="최소금액" style="min-width: 100px;">
-                            <span>~</span>
-                            <input type="number" id="maxAmount" placeholder="최대금액" style="min-width: 100px;">
+                            <label>국가</label>
+                            <select id="countryFilter">
+                                <option value="">전체</option>
+                                <option value="한국">한국</option>
+                                <option value="미국">미국</option>
+                                <option value="일본">일본</option>
+                                <option value="중국">중국</option>
+                                <option value="독일">독일</option>
+                            </select>
+                        </div>
+                        <div class="filter-item">
+                            <label>영업담당자</label>
+                            <select id="salesManagerFilter">
+                                <option value="">전체</option>
+                                <option value="김영희">김영희</option>
+                                <option value="박민수">박민수</option>
+                                <option value="이정희">이정희</option>
+                                <option value="정현우">정현우</option>
+                                <option value="김민준">김민준</option>
+                            </select>
                         </div>
                         <button class="btn btn-secondary" onclick="resetFilters()">초기화</button>
                     </div>
@@ -578,16 +601,21 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>계약구분</th>
-                                <th>계약상태</th>
-                                <th>영업담당자</th>
-                                <th>회사명</th>
-                                <th>그룹명</th>
-                                <th>계약기간</th>
-                                <th>계약건수</th>
-                                <th>잔여건수</th>
-                                <th>문서 사용량(%)</th>
-                                <th>관리</th>
+                                <th style="width: 50px;">No.</th>
+                                <th style="width: 70px;">계약구분</th>
+                                <th style="width: 80px;">계약상태</th>
+                                <th style="width: 60px;">국가</th>
+                                <th style="width: 80px;">영업담당자</th>
+                                <th style="width: 100px;">회사명</th>
+                                <th style="width: 100px;">회사그룹명</th>
+                                <th style="width: 140px;">계약기간</th>
+                                <th style="width: 90px;">계약금액</th>
+                                <th style="width: 70px;">계약건수</th>
+                                <th style="width: 70px;">잔여건수</th>
+                                <th style="width: 90px;">문서사용량</th>
+                                <th style="width: 90px;">계약 크레디트</th>
+                                <th style="width: 90px;">잔여 크레디트</th>
+                                <th style="width: 100px;">크레디트 사용량</th>
                             </tr>
                         </thead>
                         <tbody id="contractTableBody">
@@ -648,9 +676,41 @@
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">영업담당자 *</label>
-                            <input type="text" class="form-control" id="salesManager" required>
+                            <label class="form-label">계약자이름 *</label>
+                            <input type="text" class="form-control" id="contractorName" required>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">계약자메일 *</label>
+                            <input type="email" class="form-control" id="contractorEmail" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">영업담당자 *</label>
+                            <select class="form-control" id="salesManager" required>
+                                <option value="">선택하세요</option>
+                                <option value="김영희">김영희</option>
+                                <option value="박민수">박민수</option>
+                                <option value="이정희">이정희</option>
+                                <option value="정현우">정현우</option>
+                                <option value="김민준">김민준</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">국가 *</label>
+                            <select class="form-control" id="country" required>
+                                <option value="">선택하세요</option>
+                                <option value="한국">한국</option>
+                                <option value="미국">미국</option>
+                                <option value="일본">일본</option>
+                                <option value="중국">중국</option>
+                                <option value="독일">독일</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">계약상태 *</label>
                             <select class="form-control" id="contractStatus" required>
@@ -658,6 +718,10 @@
                                 <option value="분할 납부">분할 납부</option>
                                 <option value="계약완료">계약완료</option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">계약금액 *</label>
+                            <input type="number" class="form-control" id="amount" required>
                         </div>
                     </div>
                     
@@ -689,8 +753,19 @@
                             <input type="number" class="form-control" id="documentUsage" required min="0" max="100">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">계약금액 *</label>
-                            <input type="number" class="form-control" id="amount" required>
+                            <label class="form-label">크레디트 사용량(%) *</label>
+                            <input type="number" class="form-control" id="creditUsage" required min="0" max="100">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">계약 크레디트 *</label>
+                            <input type="number" class="form-control" id="contractCredit" required min="0" onchange="updateRemainingCredit()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">잔여 크레디트 *</label>
+                            <input type="number" class="form-control" id="remainingCredit" required min="0">
                         </div>
                     </div>
                     
@@ -763,6 +838,7 @@
         // 초기화
         document.addEventListener('DOMContentLoaded', function() {
             loadData();
+            loadSampleData(); // 강제로 샘플 데이터 로드
             renderContracts();
             
             // 매출 페이지에서 리다이렉션된 경우 처리
@@ -815,6 +891,7 @@
                         contractName: 'ERP 시스템 구축 계약',
                         contractDivision: '신규',  // 계약구분
                         contractStatus: '분할 납부',  // 계약상태
+                        country: '한국',  // 국가
                         salesManager: '김영희',  // 영업담당자
                         companyId: 1,
                         companyName: '삼성전자',
@@ -824,6 +901,11 @@
                         totalContracts: 10,  // 계약건수
                         remainingContracts: 7,  // 잔여건수
                         documentUsage: 30,  // 문서 사용량(%)
+                        contractCredit: 1000,  // 계약 크레딧
+                        remainingCredit: 700,  // 잔여 크레딧
+                        creditUsage: 30,  // 크레딧 사용량(%)
+                        contractorName: '김철수',  // 계약자이름
+                        contractorEmail: 'kim.cs@samsung.com',  // 계약자메일
                         amount: 150000000,
                         vatType: '별도',
                         contractContent: 'ERP 시스템 구축 및 컨설팅',
@@ -837,6 +919,7 @@
                         contractName: 'Prepaid-Enterprise 서비스 계약',
                         contractDivision: '갱신',  // 계약구분
                         contractStatus: '계약완료',  // 계약상태
+                        country: '한국',  // 국가
                         salesManager: '박민수',  // 영업담당자
                         companyId: 2,
                         companyName: 'LG전자',
@@ -846,6 +929,11 @@
                         totalContracts: 12,  // 계약건수
                         remainingContracts: 10,  // 잔여건수
                         documentUsage: 17,  // 문서 사용량(%)
+                        contractCredit: 500,  // 계약 크레딧
+                        remainingCredit: 415,  // 잔여 크레딧
+                        creditUsage: 17,  // 크레딧 사용량(%)
+                        contractorName: '이영희',  // 계약자이름
+                        contractorEmail: 'lee.yh@lg.com',  // 계약자메일
                         amount: 85000000,
                         vatType: '별도',
                         contractContent: 'Prepaid-Enterprise 요금제 연간 계약\n- 무제한 사용자\n- 프리미엄 지원\n- 전용 서버 제공',
@@ -859,6 +947,7 @@
                         contractName: '소프트웨어 라이선스',
                         contractDivision: '신규',
                         contractStatus: '계약완료',
+                        country: '미국',  // 국가
                         salesManager: '이정희',
                         companyId: 3,
                         companyName: '네이버',
@@ -868,6 +957,11 @@
                         totalContracts: 5,
                         remainingContracts: 5,
                         documentUsage: 0,
+                        contractCredit: 200,  // 계약 크레딧
+                        remainingCredit: 200,  // 잔여 크레딧
+                        creditUsage: 0,  // 크레딧 사용량(%)
+                        contractorName: '박지민',  // 계약자이름
+                        contractorEmail: 'park.jm@naver.com',  // 계약자메일
                         amount: 30000000,
                         vatType: '별도',
                         contractContent: 'MS Office 365 라이선스',
@@ -881,6 +975,7 @@
                         contractName: '유지보수 계약',
                         contractDivision: '갱신',
                         contractStatus: '분할 납부',
+                        country: '일본',  // 국가
                         salesManager: '정현우',
                         companyId: 4,
                         companyName: '카카오',
@@ -890,6 +985,11 @@
                         totalContracts: 8,
                         remainingContracts: 3,
                         documentUsage: 63,
+                        contractCredit: 300,  // 계약 크레딧
+                        remainingCredit: 111,  // 잔여 크레딧
+                        creditUsage: 63,  // 크레딧 사용량(%)
+                        contractorName: '최수진',  // 계약자이름
+                        contractorEmail: 'choi.sj@kakao.com',  // 계약자메일
                         amount: 24000000,
                         vatType: '별도',
                         contractContent: '시스템 유지보수 및 기술지원',
@@ -903,6 +1003,7 @@
                         contractName: '하드웨어 구매계약',
                         contractDivision: '신규',
                         contractStatus: '계약완료',
+                        country: '독일',  // 국가
                         salesManager: '김민준',
                         companyId: 5,
                         companyName: '쿠팡',
@@ -912,6 +1013,11 @@
                         totalContracts: 1,
                         remainingContracts: 0,
                         documentUsage: 100,
+                        contractCredit: 100,  // 계약 크레딧
+                        remainingCredit: 0,  // 잔여 크레딧
+                        creditUsage: 100,  // 크레딧 사용량(%)
+                        contractorName: '정민호',  // 계약자이름
+                        contractorEmail: 'jung.mh@coupang.com',  // 계약자메일
                         amount: 80000000,
                         vatType: '포함',
                         contractContent: '서버 및 네트워크 장비 구매',
@@ -943,8 +1049,9 @@
             
             let totalAmount = 0;
             
-            pageData.forEach(contract => {
+            pageData.forEach((contract, index) => {
                 totalAmount += contract.amount;
+                const globalIndex = start + index + 1;
                 
                 // 계약구분 배지 색상
                 const divisionBadgeClass = contract.contractDivision === '신규' ? 'type-구매' : 'type-판매';
@@ -960,55 +1067,80 @@
                     usageColor = '#ffc107';  // 노란색
                 }
                 
+                // 크레디트 사용량 색상
+                const creditUsage = contract.creditUsage || 0;
+                let creditColor = '#28a745';
+                if (creditUsage >= 70) {
+                    creditColor = '#dc3545';
+                } else if (creditUsage >= 50) {
+                    creditColor = '#ffc107';
+                }
+                
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
+                    <td style="text-align: center; font-size: 13px;">${globalIndex}</td>
                     <td>
-                        <span class="contract-type-badge ${divisionBadgeClass}">
+                        <span class="contract-type-badge ${divisionBadgeClass}" style="font-size: 11px;">
                             ${contract.contractDivision}
                         </span>
                     </td>
                     <td>
-                        <span class="status-badge ${statusBadgeClass}">
+                        <span class="status-badge ${statusBadgeClass}" style="font-size: 11px;">
                             ${contract.contractStatus}
                         </span>
                     </td>
-                    <td>${contract.salesManager}</td>
+                    <td style="text-align: center; font-size: 12px;">${contract.country || '한국'}</td>
+                    <td style="font-size: 12px;">${contract.salesManager}</td>
                     <td>
                         <a href="#" 
                            onclick="viewContract(${contract.id}); return false;"
-                           style="cursor: pointer; color: #3498db; text-decoration: none; font-weight: 600;"
+                           style="cursor: pointer; color: #3498db; text-decoration: none; font-weight: 600; font-size: 13px;"
                            onmouseover="this.style.textDecoration='underline'"
                            onmouseout="this.style.textDecoration='none'">
                             ${contract.companyName}
                         </a>
                     </td>
-                    <td>${contract.groupName}</td>
-                    <td style="font-size: 13px;">
+                    <td style="font-size: 12px;">${contract.groupName || '-'}</td>
+                    <td style="font-size: 11px;">
                         ${contract.contractStartDate} ~ ${contract.contractEndDate}
                     </td>
-                    <td style="text-align: center;">
+                    <td style="text-align: right; font-size: 12px;">
+                        ${formatAmount(contract.amount)}원
+                    </td>
+                    <td style="text-align: center; font-size: 12px;">
                         <strong>${contract.totalContracts}</strong>
                     </td>
-                    <td style="text-align: center;">
+                    <td style="text-align: center; font-size: 12px;">
                         <span style="color: ${contract.remainingContracts > 0 ? '#007bff' : '#6c757d'};">
                             ${contract.remainingContracts}
                         </span>
                     </td>
                     <td style="text-align: center;">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <div style="flex: 1; background: #e9ecef; border-radius: 4px; height: 20px; position: relative; overflow: hidden;">
+                        <div style="display: flex; align-items: center; gap: 3px;">
+                            <div style="flex: 1; background: #e9ecef; border-radius: 3px; height: 14px; position: relative; overflow: hidden;">
                                 <div style="background: ${usageColor}; width: ${contract.documentUsage}%; height: 100%; transition: width 0.3s;"></div>
                             </div>
-                            <span style="font-size: 12px; font-weight: 600; color: ${usageColor};">
+                            <span style="font-size: 10px; font-weight: 600; color: ${usageColor}; min-width: 25px;">
                                 ${contract.documentUsage}%
                             </span>
                         </div>
                     </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-sm btn-view" onclick="viewContract(${contract.id})">보기</button>
-                            <button class="btn btn-sm btn-edit" onclick="editContract(${contract.id})">수정</button>
-                            <button class="btn btn-sm btn-delete" onclick="deleteContract(${contract.id})">삭제</button>
+                    <td style="text-align: center; font-size: 12px;">
+                        <strong>${contract.contractCredit || 0}</strong>
+                    </td>
+                    <td style="text-align: center; font-size: 12px;">
+                        <span style="color: ${(contract.remainingCredit || 0) > 0 ? '#28a745' : '#6c757d'};">
+                            ${contract.remainingCredit || 0}
+                        </span>
+                    </td>
+                    <td style="text-align: center;">
+                        <div style="display: flex; align-items: center; gap: 3px;">
+                            <div style="flex: 1; background: #e9ecef; border-radius: 3px; height: 14px; position: relative; overflow: hidden;">
+                                <div style="background: ${creditColor}; width: ${creditUsage}%; height: 100%; transition: width 0.3s;"></div>
+                            </div>
+                            <span style="font-size: 10px; font-weight: 600; color: ${creditColor}; min-width: 25px;">
+                                ${creditUsage}%
+                            </span>
                         </div>
                     </td>
                 `;
@@ -1032,16 +1164,27 @@
         function filterContracts() {
             let filtered = [...contracts];
             
-            // 검색어 필터
+            // 검색어 필터 (드롭다운 선택에 따라)
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const searchFilter = document.getElementById('searchFilter').value;
+            
             if (searchTerm) {
-                filtered = filtered.filter(contract => 
-                    contract.contractNumber.toLowerCase().includes(searchTerm) ||
-                    contract.contractName.toLowerCase().includes(searchTerm) ||
-                    contract.companyName.toLowerCase().includes(searchTerm) ||
-                    contract.salesManager.toLowerCase().includes(searchTerm) ||
-                    contract.groupName.toLowerCase().includes(searchTerm)
-                );
+                filtered = filtered.filter(contract => {
+                    switch(searchFilter) {
+                        case 'companyName':
+                            return contract.companyName.toLowerCase().includes(searchTerm);
+                        case 'groupName':
+                            return contract.groupName.toLowerCase().includes(searchTerm);
+                        case 'companyId':
+                            return contract.companyId.toString().includes(searchTerm);
+                        case 'contractorName':
+                            return (contract.contractorName || '').toLowerCase().includes(searchTerm);
+                        case 'contractorEmail':
+                            return (contract.contractorEmail || '').toLowerCase().includes(searchTerm);
+                        default:
+                            return contract.companyName.toLowerCase().includes(searchTerm);
+                    }
+                });
             }
             
             // 계약구분 필터
@@ -1066,14 +1209,16 @@
                 filtered = filtered.filter(contract => contract.contractEndDate <= endDate);
             }
             
-            // 금액 필터
-            const minAmount = document.getElementById('minAmount').value;
-            const maxAmount = document.getElementById('maxAmount').value;
-            if (minAmount) {
-                filtered = filtered.filter(contract => contract.amount >= parseInt(minAmount));
+            // 국가 필터
+            const country = document.getElementById('countryFilter').value;
+            if (country) {
+                filtered = filtered.filter(contract => (contract.country || '한국') === country);
             }
-            if (maxAmount) {
-                filtered = filtered.filter(contract => contract.amount <= parseInt(maxAmount));
+            
+            // 영업담당자 필터
+            const salesManager = document.getElementById('salesManagerFilter').value;
+            if (salesManager) {
+                filtered = filtered.filter(contract => contract.salesManager === salesManager);
             }
             
             return filtered;
@@ -1146,14 +1291,162 @@
         // 필터 초기화
         function resetFilters() {
             document.getElementById('searchInput').value = '';
+            document.getElementById('searchFilter').value = 'companyName';
             document.getElementById('divisionFilter').value = '';
             document.getElementById('statusFilter').value = '';
             document.getElementById('startDate').value = '';
             document.getElementById('endDate').value = '';
-            document.getElementById('minAmount').value = '';
-            document.getElementById('maxAmount').value = '';
+            document.getElementById('countryFilter').value = '';
+            document.getElementById('salesManagerFilter').value = '';
             currentPage = 1;
             renderContracts();
+        }
+        
+        // 샘플 데이터 강제 로드
+        function loadSampleData() {
+            contracts = [
+                {
+                    id: 1,
+                    contractNumber: 'CNT-2024-001',
+                    contractName: 'ERP 시스템 구축 계약',
+                    contractDivision: '신규',
+                    contractStatus: '분할 납부',
+                    country: '한국',
+                    salesManager: '김영희',
+                    companyId: 1,
+                    companyName: '삼성전자',
+                    groupName: '삼성그룹',
+                    contractStartDate: '2024-01-15',
+                    contractEndDate: '2024-12-31',
+                    totalContracts: 10,
+                    remainingContracts: 7,
+                    documentUsage: 30,
+                    contractCredit: 1000,
+                    remainingCredit: 700,
+                    creditUsage: 30,
+                    contractorName: '김철수',
+                    contractorEmail: 'kim.cs@samsung.com',
+                    amount: 150000000,
+                    vatType: '별도',
+                    contractContent: 'ERP 시스템 구축 및 컨설팅',
+                    paymentTerms: '분기별 분할 납부',
+                    files: [],
+                    notes: ''
+                },
+                {
+                    id: 2,
+                    contractNumber: 'CNT-2024-002',
+                    contractName: 'Prepaid-Enterprise 서비스 계약',
+                    contractDivision: '갱신',
+                    contractStatus: '계약완료',
+                    country: '한국',
+                    salesManager: '박민수',
+                    companyId: 2,
+                    companyName: 'LG전자',
+                    groupName: 'LG그룹',
+                    contractStartDate: '2024-06-14',
+                    contractEndDate: '2025-06-13',
+                    totalContracts: 12,
+                    remainingContracts: 10,
+                    documentUsage: 17,
+                    contractCredit: 500,
+                    remainingCredit: 415,
+                    creditUsage: 17,
+                    contractorName: '이영희',
+                    contractorEmail: 'lee.yh@lg.com',
+                    amount: 85000000,
+                    vatType: '별도',
+                    contractContent: 'Prepaid-Enterprise 요금제 연간 계약\n- 무제한 사용자\n- 프리미엄 지원\n- 전용 서버 제공',
+                    paymentTerms: '일시불',
+                    files: [],
+                    notes: '갱신 계약, 충전 건수: 2'
+                },
+                {
+                    id: 3,
+                    contractNumber: 'CNT-2024-003',
+                    contractName: '소프트웨어 라이선스',
+                    contractDivision: '신규',
+                    contractStatus: '계약완료',
+                    country: '미국',
+                    salesManager: '이정희',
+                    companyId: 3,
+                    companyName: '네이버',
+                    groupName: '-',
+                    contractStartDate: '2024-03-01',
+                    contractEndDate: '2025-02-28',
+                    totalContracts: 5,
+                    remainingContracts: 5,
+                    documentUsage: 0,
+                    contractCredit: 200,
+                    remainingCredit: 200,
+                    creditUsage: 0,
+                    contractorName: '박지민',
+                    contractorEmail: 'park.jm@naver.com',
+                    amount: 30000000,
+                    vatType: '별도',
+                    contractContent: 'MS Office 365 라이선스',
+                    paymentTerms: '연간 선불',
+                    files: [],
+                    notes: ''
+                },
+                {
+                    id: 4,
+                    contractNumber: 'CNT-2024-004',
+                    contractName: '유지보수 계약',
+                    contractDivision: '갱신',
+                    contractStatus: '분할 납부',
+                    country: '일본',
+                    salesManager: '정현우',
+                    companyId: 4,
+                    companyName: '카카오',
+                    groupName: '-',
+                    contractStartDate: '2024-01-01',
+                    contractEndDate: '2024-12-31',
+                    totalContracts: 8,
+                    remainingContracts: 3,
+                    documentUsage: 63,
+                    contractCredit: 300,
+                    remainingCredit: 111,
+                    creditUsage: 63,
+                    contractorName: '최수진',
+                    contractorEmail: 'choi.sj@kakao.com',
+                    amount: 24000000,
+                    vatType: '별도',
+                    contractContent: '시스템 유지보수 및 기술지원',
+                    paymentTerms: '분기별 정산',
+                    files: [],
+                    notes: ''
+                },
+                {
+                    id: 5,
+                    contractNumber: 'CNT-2023-010',
+                    contractName: '하드웨어 구매계약',
+                    contractDivision: '신규',
+                    contractStatus: '계약완료',
+                    country: '독일',
+                    salesManager: '김민준',
+                    companyId: 5,
+                    companyName: '쿠팡',
+                    groupName: '-',
+                    contractStartDate: '2023-12-01',
+                    contractEndDate: '2023-12-31',
+                    totalContracts: 1,
+                    remainingContracts: 0,
+                    documentUsage: 100,
+                    contractCredit: 100,
+                    remainingCredit: 0,
+                    creditUsage: 100,
+                    contractorName: '정민호',
+                    contractorEmail: 'jung.mh@coupang.com',
+                    amount: 80000000,
+                    vatType: '포함',
+                    contractContent: '서버 및 네트워크 장비 구매',
+                    paymentTerms: '납품 후 30일',
+                    files: [],
+                    notes: '납품 완료'
+                }
+            ];
+            saveContracts();
         }
         
         // 회사 선택 시 그룹명 자동 업데이트
@@ -1186,6 +1479,19 @@
             if (!editingId) {
                 // 신규 등록 시 잔여건수를 총 건수와 동일하게 설정
                 remainingContracts.value = totalContracts;
+            }
+        }
+        
+        // 계약 크레디트 변경 시 잔여 크레디트 자동 업데이트
+        function updateRemainingCredit() {
+            const contractCredit = document.getElementById('contractCredit').value;
+            const creditUsage = document.getElementById('creditUsage').value || 0;
+            const remainingCredit = document.getElementById('remainingCredit');
+            
+            if (!editingId) {
+                // 신규 등록 시 잔여 크레디트 계산
+                const used = Math.floor(contractCredit * (creditUsage / 100));
+                remainingCredit.value = contractCredit - used;
             }
         }
         
@@ -1233,6 +1539,7 @@
                 contractName: document.getElementById('contractName').value,
                 contractDivision: document.getElementById('contractDivision').value,
                 contractStatus: document.getElementById('contractStatus').value,
+                country: document.getElementById('country').value,
                 salesManager: document.getElementById('salesManager').value,
                 companyId: parseInt(companyId),
                 companyName: company ? company.name : '',
@@ -1242,6 +1549,11 @@
                 totalContracts: parseInt(document.getElementById('totalContracts').value),
                 remainingContracts: parseInt(document.getElementById('remainingContracts').value),
                 documentUsage: parseInt(document.getElementById('documentUsage').value),
+                contractCredit: parseInt(document.getElementById('contractCredit').value),
+                remainingCredit: parseInt(document.getElementById('remainingCredit').value),
+                creditUsage: parseInt(document.getElementById('creditUsage').value),
+                contractorName: document.getElementById('contractorName').value,
+                contractorEmail: document.getElementById('contractorEmail').value,
                 amount: parseInt(document.getElementById('amount').value),
                 vatType: document.getElementById('vatType').value,
                 contractContent: document.getElementById('contractContent').value,
@@ -1253,9 +1565,12 @@
             // 유효성 검사
             if (!contract.contractNumber || !contract.contractName || !contract.contractDivision || 
                 !contract.contractStatus || !contract.salesManager || !contract.companyId || 
+                !contract.country || !contract.contractorName || !contract.contractorEmail ||
                 !contract.amount || !contract.contractStartDate || !contract.contractEndDate ||
                 contract.totalContracts < 1 || contract.remainingContracts < 0 || 
-                contract.documentUsage < 0 || contract.documentUsage > 100) {
+                contract.documentUsage < 0 || contract.documentUsage > 100 ||
+                contract.creditUsage < 0 || contract.creditUsage > 100 ||
+                contract.contractCredit < 0 || contract.remainingCredit < 0) {
                 alert('필수 항목을 올바르게 입력해주세요.');
                 return;
             }
@@ -1324,6 +1639,26 @@
                 
                 <div class="form-row">
                     <div class="form-group">
+                        <label class="form-label" style="font-weight: 600; color: #495057;">계약자 정보</label>
+                        <div style="padding: 10px; background: #f0f8ff; border: 1px solid #b0d4ff; border-radius: 4px;">
+                            <div style="margin-bottom: 5px;">
+                                <strong>이름:</strong> ${contract.contractorName || '-'}
+                            </div>
+                            <div>
+                                <strong>이메일:</strong> ${contract.contractorEmail || '-'}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600; color: #495057;">국가</label>
+                        <div style="padding: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px;">
+                            🌍 ${contract.country || '한국'}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
                         <label class="form-label" style="font-weight: 600; color: #495057;">영업담당자</label>
                         <div style="padding: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px;">
                             ${contract.salesManager}
@@ -1372,6 +1707,35 @@
                             </div>
                             <span style="font-size: 16px; font-weight: bold; color: ${contract.documentUsage >= 70 ? '#dc3545' : contract.documentUsage >= 50 ? '#ffc107' : '#28a745'};">
                                 ${contract.documentUsage}%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600; color: #495057;">계약 크레디트</label>
+                        <div style="padding: 10px; background: #e1f5fe; border-radius: 4px;">
+                            <strong style="font-size: 16px; color: #0277bd;">${contract.contractCredit || 0}</strong> 크레디트
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight: 600; color: #495057;">잔여 크레디트</label>
+                        <div style="padding: 10px; background: ${(contract.remainingCredit || 0) > 0 ? '#e8f5e9' : '#f5f5f5'}; border-radius: 4px;">
+                            <strong style="font-size: 16px; color: ${(contract.remainingCredit || 0) > 0 ? '#2e7d32' : '#757575'};">${contract.remainingCredit || 0}</strong> 크레디트
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 600; color: #495057;">크레디트 사용량</label>
+                    <div style="padding: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="flex: 1; background: #e9ecef; border-radius: 4px; height: 24px; position: relative; overflow: hidden;">
+                                <div style="background: ${(contract.creditUsage || 0) >= 70 ? '#dc3545' : (contract.creditUsage || 0) >= 50 ? '#ffc107' : '#28a745'}; width: ${contract.creditUsage || 0}%; height: 100%; transition: width 0.3s;"></div>
+                            </div>
+                            <span style="font-size: 16px; font-weight: bold; color: ${(contract.creditUsage || 0) >= 70 ? '#dc3545' : (contract.creditUsage || 0) >= 50 ? '#ffc107' : '#28a745'};">
+                                ${contract.creditUsage || 0}%
                             </span>
                         </div>
                     </div>
@@ -1446,14 +1810,20 @@
             document.getElementById('contractName').value = contract.contractName;
             document.getElementById('contractDivision').value = contract.contractDivision;
             document.getElementById('contractStatus').value = contract.contractStatus;
+            document.getElementById('country').value = contract.country || '한국';
             document.getElementById('salesManager').value = contract.salesManager;
             document.getElementById('companyId').value = contract.companyId;
             document.getElementById('groupName').value = contract.groupName || '-';
+            document.getElementById('contractorName').value = contract.contractorName || '';
+            document.getElementById('contractorEmail').value = contract.contractorEmail || '';
             document.getElementById('contractStartDate').value = contract.contractStartDate;
             document.getElementById('contractEndDate').value = contract.contractEndDate;
             document.getElementById('totalContracts').value = contract.totalContracts;
             document.getElementById('remainingContracts').value = contract.remainingContracts;
             document.getElementById('documentUsage').value = contract.documentUsage;
+            document.getElementById('contractCredit').value = contract.contractCredit || 0;
+            document.getElementById('remainingCredit').value = contract.remainingCredit || 0;
+            document.getElementById('creditUsage').value = contract.creditUsage || 0;
             document.getElementById('amount').value = contract.amount;
             document.getElementById('vatType').value = contract.vatType;
             document.getElementById('contractContent').value = contract.contractContent || '';

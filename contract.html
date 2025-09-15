@@ -621,12 +621,12 @@
                         <thead>
                             <tr>
                                 <th style="width: 50px;">No.</th>
+                                <th style="width: 100px;">회사명</th>
+                                <th style="width: 100px;">회사그룹명</th>
                                 <th style="width: 70px;">계약구분</th>
                                 <th style="width: 80px;">계약상태</th>
                                 <th style="width: 60px;">국가</th>
                                 <th style="width: 80px;">영업담당자</th>
-                                <th style="width: 100px;">회사명</th>
-                                <th style="width: 100px;">회사그룹명</th>
                                 <th style="width: 140px;">계약기간</th>
                                 <th style="width: 90px;">계약금액</th>
                                 <th style="width: 70px;">계약건수</th>
@@ -840,6 +840,7 @@
                 <!-- 동적으로 추가됨 -->
             </div>
             <div class="modal-footer">
+                <button class="btn btn-edit" onclick="editContractFromView(${contract.id})">수정</button>
                 <button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>
             </div>
         </div>
@@ -1103,6 +1104,16 @@
                 tr.innerHTML = `
                     <td style="text-align: center; font-size: 13px;">${globalIndex}</td>
                     <td>
+                        <a href="#" 
+                           onclick="viewContract(${contract.id}); return false;"
+                           style="cursor: pointer; color: #3498db; text-decoration: none; font-weight: 600; font-size: 13px;"
+                           onmouseover="this.style.textDecoration='underline'"
+                           onmouseout="this.style.textDecoration='none'">
+                            ${contract.companyName}
+                        </a>
+                    </td>
+                    <td style="font-size: 12px;">${contract.groupName || '-'}</td>
+                    <td>
                         <span class="contract-type-badge ${divisionBadgeClass}" style="font-size: 11px;">
                             ${contract.contractDivision}
                         </span>
@@ -1114,16 +1125,6 @@
                     </td>
                     <td style="text-align: center; font-size: 12px;">${contract.country || '한국'}</td>
                     <td style="font-size: 12px;">${contract.salesManager}</td>
-                    <td>
-                        <a href="#" 
-                           onclick="viewContract(${contract.id}); return false;"
-                           style="cursor: pointer; color: #3498db; text-decoration: none; font-weight: 600; font-size: 13px;"
-                           onmouseover="this.style.textDecoration='underline'"
-                           onmouseout="this.style.textDecoration='none'">
-                            ${contract.companyName}
-                        </a>
-                    </td>
-                    <td style="font-size: 12px;">${contract.groupName || '-'}</td>
                     <td style="font-size: 11px;">
                         ${contract.contractStartDate} ~ ${contract.contractEndDate}
                     </td>
@@ -1352,13 +1353,13 @@
             renderContracts();
         }
         
-        // 샘플 데이터 강제 로드
+        // 샘플 데이터 강제 로드 (prepaid-enterprise 요금제 회사들만)
         function loadSampleData() {
             contracts = [
                 {
                     id: 1,
                     contractNumber: 'CNT-2024-001',
-                    contractName: 'ERP 시스템 구축 계약',
+                    contractName: 'Prepaid-Enterprise 서비스 계약',
                     contractDivision: '신규',
                     contractStatus: '분할 납부',
                     country: '한국',
@@ -1378,7 +1379,7 @@
                     contractorEmail: 'kim.cs@samsung.com',
                     amount: 150000000,
                     vatType: '별도',
-                    contractContent: 'ERP 시스템 구축 및 컨설팅',
+                    contractContent: 'Prepaid-Enterprise 요금제 연간 계약\n- 무제한 사용자\n- 프리미엄 지원\n- 전용 서버 제공',
                     paymentTerms: '분기별 분할 납부',
                     files: [],
                     notes: ''
@@ -1414,14 +1415,14 @@
                 {
                     id: 3,
                     contractNumber: 'CNT-2024-003',
-                    contractName: '소프트웨어 라이선스',
+                    contractName: 'Prepaid-Enterprise 서비스 계약',
                     contractDivision: '신규',
                     contractStatus: '계약완료',
-                    country: '미국',
+                    country: '한국',
                     salesManager: '이정희',
-                    companyId: 3,
-                    companyName: '네이버',
-                    groupName: '-',
+                    companyId: 7,
+                    companyName: '신세계',
+                    groupName: '신세계그룹',
                     contractStartDate: '2024-03-01',
                     contractEndDate: '2025-02-28',
                     totalContracts: 5,
@@ -1431,10 +1432,10 @@
                     remainingCredit: 200,
                     creditUsage: 0,
                     contractorName: '박지민',
-                    contractorEmail: 'park.jm@naver.com',
+                    contractorEmail: 'park.jm@shinsegae.com',
                     amount: 30000000,
                     vatType: '별도',
-                    contractContent: 'MS Office 365 라이선스',
+                    contractContent: 'Prepaid-Enterprise 요금제 연간 계약',
                     paymentTerms: '연간 선불',
                     files: [],
                     notes: ''
@@ -1442,14 +1443,14 @@
                 {
                     id: 4,
                     contractNumber: 'CNT-2024-004',
-                    contractName: '유지보수 계약',
+                    contractName: 'Prepaid-Enterprise 서비스 계약',
                     contractDivision: '갱신',
                     contractStatus: '분할 납부',
-                    country: '일본',
+                    country: '한국',
                     salesManager: '정현우',
-                    companyId: 4,
-                    companyName: '카카오',
-                    groupName: '-',
+                    companyId: 15,
+                    companyName: '삼성물산',
+                    groupName: '삼성그룹',
                     contractStartDate: '2024-01-01',
                     contractEndDate: '2024-12-31',
                     totalContracts: 8,
@@ -1459,41 +1460,13 @@
                     remainingCredit: 111,
                     creditUsage: 63,
                     contractorName: '최수진',
-                    contractorEmail: 'choi.sj@kakao.com',
+                    contractorEmail: 'choi.sj@samsungct.com',
                     amount: 24000000,
                     vatType: '별도',
-                    contractContent: '시스템 유지보수 및 기술지원',
+                    contractContent: 'Prepaid-Enterprise 요금제 연간 계약',
                     paymentTerms: '분기별 정산',
                     files: [],
                     notes: ''
-                },
-                {
-                    id: 5,
-                    contractNumber: 'CNT-2023-010',
-                    contractName: '하드웨어 구매계약',
-                    contractDivision: '신규',
-                    contractStatus: '계약완료',
-                    country: '독일',
-                    salesManager: '김민준',
-                    companyId: 5,
-                    companyName: '쿠팡',
-                    groupName: '-',
-                    contractStartDate: '2023-12-01',
-                    contractEndDate: '2023-12-31',
-                    totalContracts: 1,
-                    remainingContracts: 0,  // 1건 사용 = 100%
-                    documentUsage: 100,  // 자동 계산됨
-                    contractCredit: 100,
-                    remainingCredit: 0,
-                    creditUsage: 100,
-                    contractorName: '정민호',
-                    contractorEmail: 'jung.mh@coupang.com',
-                    amount: 80000000,
-                    vatType: '포함',
-                    contractContent: '서버 및 네트워크 장비 구매',
-                    paymentTerms: '납품 후 30일',
-                    files: [],
-                    notes: '납품 완료'
                 }
             ];
             saveContracts();
@@ -1560,8 +1533,9 @@
         function openAddModalForCompany(companyId, companyName) {
             openAddModal();
             document.getElementById('companyId').value = companyId;
-            // Prepaid-Enterprise 요금제로 자동 설정
-            document.getElementById('contractType').value = '판매';
+            updateGroupName();
+            // 기본값 설정
+            document.getElementById('contractDivision').value = '신규';
         }
         
         // 계약번호 생성
@@ -1676,13 +1650,24 @@
                     <div class="form-group">
                         <label class="form-label" style="font-weight: 600; color: #495057;">회사명</label>
                         <div style="padding: 10px; background: #e3f2fd; border-radius: 4px;">
-                            <strong>${contract.companyName}</strong>
+                            <a href="#" onclick="viewCompanyDetail(${contract.companyId}, '${contract.companyName}'); return false;" 
+                               style="color: #1565c0; text-decoration: none; font-weight: bold; font-size: 16px;"
+                               onmouseover="this.style.textDecoration='underline'"
+                               onmouseout="this.style.textDecoration='none'">
+                                ${contract.companyName}
+                            </a>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" style="font-weight: 600; color: #495057;">그룹명</label>
                         <div style="padding: 10px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px;">
-                            ${contract.groupName || '-'}
+                            ${contract.groupName && contract.groupName !== '-' ? 
+                                `<a href="#" onclick="viewGroupDetail('${contract.groupName}'); return false;" 
+                                   style="color: #1565c0; text-decoration: none; font-weight: 600;"
+                                   onmouseover="this.style.textDecoration='underline'"
+                                   onmouseout="this.style.textDecoration='none'">
+                                    ${contract.groupName}
+                                </a>` : '-'}
                         </div>
                     </div>
                 </div>

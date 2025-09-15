@@ -536,6 +536,7 @@
                         <button class="btn btn-primary" onclick="searchCompanies()">검색</button>
                         <button class="btn btn-success" onclick="openAddModal()">신규 회사 등록</button>
                         <button class="btn btn-info" onclick="exportCompanies()">엑셀 다운로드</button>
+                        <button class="btn btn-secondary" onclick="resetSampleData()" title="샘플 데이터 초기화">🔄</button>
                     </div>
                     <div class="filter-row">
                         <div class="filter-item">
@@ -798,7 +799,7 @@
         // 회사 데이터 로드
         function loadCompanies() {
             const savedCompanies = localStorage.getItem('companies');
-            if (savedCompanies) {
+            if (savedCompanies && JSON.parse(savedCompanies).length > 0) {
                 companies = JSON.parse(savedCompanies);
             } else {
                 // 샘플 데이터
@@ -1106,6 +1107,317 @@
                 ];
                 saveCompanies();
             }
+            // 데이터가 비어있으면 샘플 데이터 강제 로드
+            if (companies.length === 0) {
+                initializeSampleData();
+            }
+        }
+        
+        // 샘플 데이터 초기화 함수
+        function initializeSampleData() {
+            companies = [
+                {
+                    id: 1,
+                    name: '삼성전자',
+                    groupName: '삼성그룹',
+                    manager: '이재용',
+                    email: 'lee@samsung.com',
+                    phone: '02-2053-0000',
+                    registrationDate: '2024-01-15',
+                    plan: 'prepaid-enterprise',
+                    salesManager: '김영희',
+                    country: '한국',
+                    address: '경기도 수원시 영통구',
+                    isWithdrawn: false,
+                    notes: 'VIP 고객'
+                },
+                {
+                    id: 2,
+                    name: 'LG전자',
+                    groupName: 'LG그룹',
+                    manager: '조주완',
+                    email: 'cho@lg.com',
+                    phone: '02-3777-1114',
+                    registrationDate: '2024-02-01',
+                    plan: 'prepaid-enterprise',
+                    salesManager: '박민수',
+                    country: '한국',
+                    address: '서울시 영등포구',
+                    isWithdrawn: false,
+                    notes: 'Prepaid-Enterprise 요금제'
+                },
+                {
+                    id: 3,
+                    name: '네이버',
+                    groupName: '',
+                    manager: '최수연',
+                    email: 'choi@naver.com',
+                    phone: '1588-3820',
+                    registrationDate: '2024-03-01',
+                    plan: 'business',
+                    salesManager: '이정희',
+                    country: '한국',
+                    address: '경기도 성남시 분당구',
+                    isWithdrawn: false,
+                    notes: ''
+                },
+                {
+                    id: 4,
+                    name: '카카오',
+                    groupName: '',
+                    manager: '홍은택',
+                    email: 'hong@kakao.com',
+                    phone: '1577-3754',
+                    registrationDate: '2024-01-20',
+                    plan: 'business',
+                    salesManager: '정현우',
+                    country: '한국',
+                    address: '제주특별자치도 제주시',
+                    isWithdrawn: false,
+                    notes: ''
+                },
+                {
+                    id: 5,
+                    name: '쿠팡',
+                    groupName: '',
+                    manager: '강한승',
+                    email: 'kang@coupang.com',
+                    phone: '1577-7011',
+                    registrationDate: '2024-04-10',
+                    plan: 'personal',
+                    salesManager: '김민준',
+                    country: '한국',
+                    address: '서울시 송파구',
+                    isWithdrawn: false,
+                    notes: ''
+                },
+                {
+                    id: 6,
+                    name: '현대자동차',
+                    groupName: '현대그룹',
+                    manager: '정의선',
+                    email: 'jung@hyundai.com',
+                    phone: '02-3464-1114',
+                    registrationDate: '2024-03-15',
+                    plan: 'prepaid',
+                    salesManager: '김영희',
+                    country: '한국',
+                    address: '서울시 서초구',
+                    isWithdrawn: false,
+                    notes: ''
+                },
+                {
+                    id: 7,
+                    name: 'SK텔레콤',
+                    groupName: 'SK그룹',
+                    manager: '유영상',
+                    email: 'yoo@sktelecom.com',
+                    phone: '02-6100-2114',
+                    registrationDate: '2024-02-20',
+                    plan: 'trial',
+                    salesManager: '박민수',
+                    country: '한국',
+                    address: '서울시 중구',
+                    isWithdrawn: false,
+                    notes: '평가판 사용중'
+                },
+                {
+                    id: 8,
+                    name: '포스코',
+                    groupName: '',
+                    manager: '정탁',
+                    email: 'jung@posco.com',
+                    phone: '054-220-0114',
+                    registrationDate: '2024-05-10',
+                    plan: 'business',
+                    salesManager: '이정희',
+                    country: '한국',
+                    address: '경북 포항시',
+                    isWithdrawn: false,
+                    notes: ''
+                },
+                {
+                    id: 9,
+                    name: '한화솔루션',
+                    groupName: '한화그룹',
+                    manager: '김동관',
+                    email: 'kim@hanwha.com',
+                    phone: '02-729-1114',
+                    registrationDate: '2024-03-25',
+                    plan: 'prepaid',
+                    salesManager: '정현우',
+                    country: '한국',
+                    address: '서울시 중구',
+                    isWithdrawn: false,
+                    notes: ''
+                },
+                {
+                    id: 10,
+                    name: '롯데케미칼',
+                    groupName: '롯데그룹',
+                    manager: '김교현',
+                    email: 'kim@lottechem.com',
+                    phone: '02-829-4114',
+                    registrationDate: '2024-04-05',
+                    plan: 'personal',
+                    salesManager: '김민준',
+                    country: '한국',
+                    address: '서울시 송파구',
+                    isWithdrawn: false,
+                    notes: ''
+                },
+                {
+                    id: 11,
+                    name: '두산중공업',
+                    groupName: '두산그룹',
+                    manager: '박지원',
+                    email: 'park@doosan.com',
+                    phone: '055-278-2114',
+                    registrationDate: '2024-01-30',
+                    plan: 'business',
+                    salesManager: '김영희',
+                    country: '한국',
+                    address: '경남 창원시',
+                    isWithdrawn: false,
+                    notes: ''
+                },
+                {
+                    id: 12,
+                    name: '신세계',
+                    groupName: '신세계그룹',
+                    manager: '정용진',
+                    email: 'jung@shinsegae.com',
+                    phone: '02-727-1921',
+                    registrationDate: '2024-02-15',
+                    plan: 'prepaid-enterprise',
+                    salesManager: '박민수',
+                    country: '한국',
+                    address: '서울시 중구',
+                    isWithdrawn: false,
+                    notes: 'VIP 고객'
+                },
+                {
+                    id: 13,
+                    name: 'CJ제일제당',
+                    groupName: 'CJ그룹',
+                    manager: '손경식',
+                    email: 'son@cj.net',
+                    phone: '02-726-8114',
+                    registrationDate: '2024-05-20',
+                    plan: 'business',
+                    salesManager: '이정희',
+                    country: '한국',
+                    address: '서울시 중구',
+                    isWithdrawn: false,
+                    notes: ''
+                },
+                {
+                    id: 14,
+                    name: '아모레퍼시픽',
+                    groupName: '',
+                    manager: '서경배',
+                    email: 'seo@amorepacific.com',
+                    phone: '02-709-5114',
+                    registrationDate: '2024-06-01',
+                    plan: 'personal',
+                    salesManager: '정현우',
+                    country: '한국',
+                    address: '서울시 용산구',
+                    isWithdrawn: false,
+                    notes: ''
+                },
+                {
+                    id: 15,
+                    name: 'GS칼텍스',
+                    groupName: 'GS그룹',
+                    manager: '허세홍',
+                    email: 'heo@gscaltex.com',
+                    phone: '02-2005-1114',
+                    registrationDate: '2024-03-10',
+                    plan: 'prepaid',
+                    salesManager: '김민준',
+                    country: '한국',
+                    address: '서울시 강남구',
+                    isWithdrawn: false,
+                    notes: ''
+                },
+                {
+                    id: 16,
+                    name: '현대중공업',
+                    groupName: '현대중공업그룹',
+                    manager: '권오갑',
+                    email: 'kwon@hhi.co.kr',
+                    phone: '052-203-0114',
+                    registrationDate: '2024-04-15',
+                    plan: 'business',
+                    salesManager: '김영희',
+                    country: '한국',
+                    address: '울산광역시',
+                    isWithdrawn: false,
+                    notes: ''
+                },
+                {
+                    id: 17,
+                    name: '삼성물산',
+                    groupName: '삼성그룹',
+                    manager: '오세철',
+                    email: 'oh@samsung.com',
+                    phone: '02-2145-2114',
+                    registrationDate: '2024-01-05',
+                    plan: 'prepaid-enterprise',
+                    salesManager: '박민수',
+                    country: '한국',
+                    address: '서울시 서초구',
+                    isWithdrawn: false,
+                    notes: 'VIP 고객'
+                },
+                {
+                    id: 18,
+                    name: '대우건설',
+                    groupName: '',
+                    manager: '백정완',
+                    email: 'baek@daewooenc.com',
+                    phone: '02-2288-3114',
+                    registrationDate: '2024-05-15',
+                    plan: 'trial',
+                    salesManager: '이정희',
+                    country: '한국',
+                    address: '서울시 종로구',
+                    isWithdrawn: true,
+                    notes: '탈퇴 고객'
+                },
+                {
+                    id: 19,
+                    name: 'KT',
+                    groupName: '',
+                    manager: '김영섭',
+                    email: 'kim@kt.com',
+                    phone: '031-727-0114',
+                    registrationDate: '2024-02-10',
+                    plan: 'business',
+                    salesManager: '정현우',
+                    country: '한국',
+                    address: '경기도 성남시',
+                    isWithdrawn: false,
+                    notes: ''
+                },
+                {
+                    id: 20,
+                    name: '한국전력',
+                    groupName: '',
+                    manager: '김동철',
+                    email: 'kim@kepco.co.kr',
+                    phone: '061-345-0114',
+                    registrationDate: '2024-06-10',
+                    plan: 'prepaid',
+                    salesManager: '김민준',
+                    country: '한국',
+                    address: '전남 나주시',
+                    isWithdrawn: false,
+                    notes: '공기업'
+                }
+            ];
+            saveCompanies();
         }
         
         // 로컬스토리지에 저장
@@ -1500,6 +1812,18 @@
         // 엑셀 다운로드
         function exportCompanies() {
             alert('엑셀 다운로드 기능은 실제 환경에서 구현됩니다.');
+        }
+        
+        // 샘플 데이터 리셋
+        function resetSampleData() {
+            if (confirm('모든 데이터를 삭제하고 샘플 데이터로 초기화하시겠습니까?')) {
+                localStorage.removeItem('companies');
+                initializeSampleData();
+                currentPage = 1;
+                resetFilters();
+                renderCompanies();
+                alert('샘플 데이터가 로드되었습니다.');
+            }
         }
         
         // Enter 키로 검색

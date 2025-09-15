@@ -534,6 +534,9 @@
                             <option value="companyId">회사ID</option>
                             <option value="contractorName">계약자이름</option>
                             <option value="contractorEmail">계약자메일</option>
+                            <option value="country">국가</option>
+                            <option value="documentUsage">문서사용량</option>
+                            <option value="creditUsage">크레딧사용량</option>
                         </select>
                         <input type="text" class="search-input" id="searchInput" placeholder="검색어를 입력하세요" style="flex: 1;">
                         <button class="btn btn-primary" onclick="searchContracts()">검색</button>
@@ -900,7 +903,7 @@
                         contractEndDate: '2024-12-31',
                         totalContracts: 10,  // 계약건수
                         remainingContracts: 7,  // 잔여건수
-                        documentUsage: 30,  // 문서 사용량(%)
+                        documentUsage: 30,  // 문서 사용량(%) - 이제 자동 계산됨
                         contractCredit: 1000,  // 계약 크레딧
                         remainingCredit: 700,  // 잔여 크레딧
                         creditUsage: 30,  // 크레딧 사용량(%)
@@ -927,8 +930,8 @@
                         contractStartDate: '2024-06-14',
                         contractEndDate: '2025-06-13',
                         totalContracts: 12,  // 계약건수
-                        remainingContracts: 10,  // 잔여건수
-                        documentUsage: 17,  // 문서 사용량(%)
+                        remainingContracts: 10,  // 잔여건수  (2건 사용 = 17%)
+                        documentUsage: 17,  // 문서 사용량(%) - 이제 자동 계산됨
                         contractCredit: 500,  // 계약 크레딧
                         remainingCredit: 415,  // 잔여 크레딧
                         creditUsage: 17,  // 크레딧 사용량(%)
@@ -955,8 +958,8 @@
                         contractStartDate: '2024-03-01',
                         contractEndDate: '2025-02-28',
                         totalContracts: 5,
-                        remainingContracts: 5,
-                        documentUsage: 0,
+                        remainingContracts: 5,  // 0건 사용 = 0%
+                        documentUsage: 0,  // 자동 계산됨
                         contractCredit: 200,  // 계약 크레딧
                         remainingCredit: 200,  // 잔여 크레딧
                         creditUsage: 0,  // 크레딧 사용량(%)
@@ -983,8 +986,8 @@
                         contractStartDate: '2024-01-01',
                         contractEndDate: '2024-12-31',
                         totalContracts: 8,
-                        remainingContracts: 3,
-                        documentUsage: 63,
+                        remainingContracts: 3,  // 5건 사용 = 63%
+                        documentUsage: 63,  // 자동 계산됨
                         contractCredit: 300,  // 계약 크레딧
                         remainingCredit: 111,  // 잔여 크레딧
                         creditUsage: 63,  // 크레딧 사용량(%)
@@ -1011,8 +1014,8 @@
                         contractStartDate: '2023-12-01',
                         contractEndDate: '2023-12-31',
                         totalContracts: 1,
-                        remainingContracts: 0,
-                        documentUsage: 100,
+                        remainingContracts: 0,  // 1건 사용 = 100%
+                        documentUsage: 100,  // 자동 계산됨
                         contractCredit: 100,  // 계약 크레딧
                         remainingCredit: 0,  // 잔여 크레딧
                         creditUsage: 100,  // 크레딧 사용량(%)
@@ -1059,11 +1062,15 @@
                 // 계약상태 배지 색상
                 const statusBadgeClass = contract.contractStatus === '계약완료' ? 'status-완료' : 'status-진행중';
                 
+                // 문서 사용량 계산 (계약건수 대비 사용건수)
+                const usedContracts = contract.totalContracts - contract.remainingContracts;
+                const documentUsagePercent = contract.totalContracts > 0 ? Math.round((usedContracts / contract.totalContracts) * 100) : 0;
+                
                 // 문서 사용량 색상
                 let usageColor = '#28a745';  // 녹색
-                if (contract.documentUsage >= 70) {
+                if (documentUsagePercent >= 70) {
                     usageColor = '#dc3545';  // 빨간색
-                } else if (contract.documentUsage >= 50) {
+                } else if (documentUsagePercent >= 50) {
                     usageColor = '#ffc107';  // 노란색
                 }
                 
@@ -1115,15 +1122,10 @@
                             ${contract.remainingContracts}
                         </span>
                     </td>
-                    <td style="text-align: center;">
-                        <div style="display: flex; align-items: center; gap: 3px;">
-                            <div style="flex: 1; background: #e9ecef; border-radius: 3px; height: 14px; position: relative; overflow: hidden;">
-                                <div style="background: ${usageColor}; width: ${contract.documentUsage}%; height: 100%; transition: width 0.3s;"></div>
-                            </div>
-                            <span style="font-size: 10px; font-weight: 600; color: ${usageColor}; min-width: 25px;">
-                                ${contract.documentUsage}%
-                            </span>
-                        </div>
+                    <td style="text-align: center; font-size: 12px;">
+                        <span style="font-weight: 600; color: ${usageColor};">
+                            ${documentUsagePercent}%
+                        </span>
                     </td>
                     <td style="text-align: center; font-size: 12px;">
                         <strong>${contract.contractCredit || 0}</strong>
@@ -1133,15 +1135,10 @@
                             ${contract.remainingCredit || 0}
                         </span>
                     </td>
-                    <td style="text-align: center;">
-                        <div style="display: flex; align-items: center; gap: 3px;">
-                            <div style="flex: 1; background: #e9ecef; border-radius: 3px; height: 14px; position: relative; overflow: hidden;">
-                                <div style="background: ${creditColor}; width: ${creditUsage}%; height: 100%; transition: width 0.3s;"></div>
-                            </div>
-                            <span style="font-size: 10px; font-weight: 600; color: ${creditColor}; min-width: 25px;">
-                                ${creditUsage}%
-                            </span>
-                        </div>
+                    <td style="text-align: center; font-size: 12px;">
+                        <span style="font-weight: 600; color: ${creditColor};">
+                            ${creditUsage}%
+                        </span>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -1181,6 +1178,14 @@
                             return (contract.contractorName || '').toLowerCase().includes(searchTerm);
                         case 'contractorEmail':
                             return (contract.contractorEmail || '').toLowerCase().includes(searchTerm);
+                        case 'country':
+                            return (contract.country || '한국').toLowerCase().includes(searchTerm);
+                        case 'documentUsage':
+                            const usedContracts = contract.totalContracts - contract.remainingContracts;
+                            const docUsagePercent = contract.totalContracts > 0 ? Math.round((usedContracts / contract.totalContracts) * 100) : 0;
+                            return docUsagePercent.toString().includes(searchTerm);
+                        case 'creditUsage':
+                            return (contract.creditUsage || 0).toString().includes(searchTerm);
                         default:
                             return contract.companyName.toLowerCase().includes(searchTerm);
                     }
@@ -1219,6 +1224,31 @@
             const salesManager = document.getElementById('salesManagerFilter').value;
             if (salesManager) {
                 filtered = filtered.filter(contract => contract.salesManager === salesManager);
+            }
+            
+            // 문서사용량 필터 (숫자 범위 필터링 - 옵션)
+            const docUsageMin = document.getElementById('docUsageMin')?.value;
+            const docUsageMax = document.getElementById('docUsageMax')?.value;
+            if (docUsageMin || docUsageMax) {
+                filtered = filtered.filter(contract => {
+                    const usedContracts = contract.totalContracts - contract.remainingContracts;
+                    const docUsagePercent = contract.totalContracts > 0 ? Math.round((usedContracts / contract.totalContracts) * 100) : 0;
+                    if (docUsageMin && docUsagePercent < parseInt(docUsageMin)) return false;
+                    if (docUsageMax && docUsagePercent > parseInt(docUsageMax)) return false;
+                    return true;
+                });
+            }
+            
+            // 크레딧사용량 필터 (숫자 범위 필터링 - 옵션)
+            const creditUsageMin = document.getElementById('creditUsageMin')?.value;
+            const creditUsageMax = document.getElementById('creditUsageMax')?.value;
+            if (creditUsageMin || creditUsageMax) {
+                filtered = filtered.filter(contract => {
+                    const creditUsage = contract.creditUsage || 0;
+                    if (creditUsageMin && creditUsage < parseInt(creditUsageMin)) return false;
+                    if (creditUsageMax && creditUsage > parseInt(creditUsageMax)) return false;
+                    return true;
+                });
             }
             
             return filtered;
@@ -1319,8 +1349,8 @@
                     contractStartDate: '2024-01-15',
                     contractEndDate: '2024-12-31',
                     totalContracts: 10,
-                    remainingContracts: 7,
-                    documentUsage: 30,
+                    remainingContracts: 7,  // 3건 사용 = 30%
+                    documentUsage: 30,  // 자동 계산됨
                     contractCredit: 1000,
                     remainingCredit: 700,
                     creditUsage: 30,
@@ -1347,8 +1377,8 @@
                     contractStartDate: '2024-06-14',
                     contractEndDate: '2025-06-13',
                     totalContracts: 12,
-                    remainingContracts: 10,
-                    documentUsage: 17,
+                    remainingContracts: 10,  // 2건 사용 = 17%
+                    documentUsage: 17,  // 자동 계산됨
                     contractCredit: 500,
                     remainingCredit: 415,
                     creditUsage: 17,
@@ -1375,8 +1405,8 @@
                     contractStartDate: '2024-03-01',
                     contractEndDate: '2025-02-28',
                     totalContracts: 5,
-                    remainingContracts: 5,
-                    documentUsage: 0,
+                    remainingContracts: 5,  // 0건 사용 = 0%
+                    documentUsage: 0,  // 자동 계산됨
                     contractCredit: 200,
                     remainingCredit: 200,
                     creditUsage: 0,
@@ -1403,8 +1433,8 @@
                     contractStartDate: '2024-01-01',
                     contractEndDate: '2024-12-31',
                     totalContracts: 8,
-                    remainingContracts: 3,
-                    documentUsage: 63,
+                    remainingContracts: 3,  // 5건 사용 = 63%
+                    documentUsage: 63,  // 자동 계산됨
                     contractCredit: 300,
                     remainingCredit: 111,
                     creditUsage: 63,
@@ -1431,8 +1461,8 @@
                     contractStartDate: '2023-12-01',
                     contractEndDate: '2023-12-31',
                     totalContracts: 1,
-                    remainingContracts: 0,
-                    documentUsage: 100,
+                    remainingContracts: 0,  // 1건 사용 = 100%
+                    documentUsage: 100,  // 자동 계산됨
                     contractCredit: 100,
                     remainingCredit: 0,
                     creditUsage: 100,

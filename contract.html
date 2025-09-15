@@ -588,6 +588,22 @@
                                 <option value="김민준">김민준</option>
                             </select>
                         </div>
+                        <div class="filter-item">
+                            <label>문서사용량(%)</label>
+                            <div style="display: flex; gap: 5px; align-items: center;">
+                                <input type="number" id="docUsageMin" placeholder="최소" style="width: 70px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;" min="0" max="100">
+                                <span>~</span>
+                                <input type="number" id="docUsageMax" placeholder="최대" style="width: 70px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;" min="0" max="100">
+                            </div>
+                        </div>
+                        <div class="filter-item">
+                            <label>크레딧사용량(%)</label>
+                            <div style="display: flex; gap: 5px; align-items: center;">
+                                <input type="number" id="creditUsageMin" placeholder="최소" style="width: 70px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;" min="0" max="100">
+                                <span>~</span>
+                                <input type="number" id="creditUsageMax" placeholder="최대" style="width: 70px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;" min="0" max="100">
+                            </div>
+                        </div>
                         <button class="btn btn-secondary" onclick="resetFilters()">초기화</button>
                     </div>
                 </div>
@@ -1226,9 +1242,9 @@
                 filtered = filtered.filter(contract => contract.salesManager === salesManager);
             }
             
-            // 문서사용량 필터 (숫자 범위 필터링 - 옵션)
-            const docUsageMin = document.getElementById('docUsageMin')?.value;
-            const docUsageMax = document.getElementById('docUsageMax')?.value;
+            // 문서사용량 필터
+            const docUsageMin = document.getElementById('docUsageMin').value;
+            const docUsageMax = document.getElementById('docUsageMax').value;
             if (docUsageMin || docUsageMax) {
                 filtered = filtered.filter(contract => {
                     const usedContracts = contract.totalContracts - contract.remainingContracts;
@@ -1239,9 +1255,9 @@
                 });
             }
             
-            // 크레딧사용량 필터 (숫자 범위 필터링 - 옵션)
-            const creditUsageMin = document.getElementById('creditUsageMin')?.value;
-            const creditUsageMax = document.getElementById('creditUsageMax')?.value;
+            // 크레딧사용량 필터
+            const creditUsageMin = document.getElementById('creditUsageMin').value;
+            const creditUsageMax = document.getElementById('creditUsageMax').value;
             if (creditUsageMin || creditUsageMax) {
                 filtered = filtered.filter(contract => {
                     const creditUsage = contract.creditUsage || 0;
@@ -1328,6 +1344,10 @@
             document.getElementById('endDate').value = '';
             document.getElementById('countryFilter').value = '';
             document.getElementById('salesManagerFilter').value = '';
+            document.getElementById('docUsageMin').value = '';
+            document.getElementById('docUsageMax').value = '';
+            document.getElementById('creditUsageMin').value = '';
+            document.getElementById('creditUsageMax').value = '';
             currentPage = 1;
             renderContracts();
         }
@@ -1918,6 +1938,37 @@
             if (e.key === 'Enter') {
                 searchContracts();
             }
+        });
+        
+        // 필터 변경 시 자동 검색
+        document.addEventListener('DOMContentLoaded', function() {
+            // 모든 필터에 change 이벤트 리스너 추가
+            const filterElements = [
+                'divisionFilter', 'statusFilter', 'countryFilter', 'salesManagerFilter',
+                'startDate', 'endDate', 'docUsageMin', 'docUsageMax', 
+                'creditUsageMin', 'creditUsageMax'
+            ];
+            
+            filterElements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', function() {
+                        currentPage = 1;
+                        renderContracts();
+                    });
+                }
+            });
+            
+            // 문서사용량과 크레디트사용량 입력 필드에 입력 제한 추가
+            ['docUsageMin', 'docUsageMax', 'creditUsageMin', 'creditUsageMax'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', function() {
+                        if (this.value < 0) this.value = 0;
+                        if (this.value > 100) this.value = 100;
+                    });
+                }
+            });
         });
     </script>
 </body>

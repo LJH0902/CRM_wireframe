@@ -1725,8 +1725,17 @@
             closeModal();
         }
         
-        // 회사 보기
+        // 회사 보기 - 상세 페이지로 이동
         function viewCompany(id) {
+            const company = companies.find(c => c.id === id);
+            if (!company) return;
+            
+            // 상세 페이지로 리다이렉션
+            window.location.href = `company-detail.html?id=${id}&name=${encodeURIComponent(company.name)}`;
+        }
+        
+        // 이전 모달 보기 함수 (더 이상 사용하지 않음)
+        function viewCompanyModal(id) {
             const company = companies.find(c => c.id === id);
             if (!company) return;
             

@@ -397,6 +397,16 @@
             <!-- Filter Section -->
             <div class="filter-section">
                 <div class="filter-item">
+                    <span class="filter-label">검색:</span>
+                    <input type="text" class="filter-select" placeholder="회사명, 담당자 검색" style="width: 180px;">
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">날짜:</span>
+                    <input type="date" class="filter-select" style="width: 140px;">
+                    <span style="padding: 0 5px;">~</span>
+                    <input type="date" class="filter-select" style="width: 140px;">
+                </div>
+                <div class="filter-item">
                     <span class="filter-label">담당자:</span>
                     <select class="filter-select">
                         <option>전체</option>
@@ -405,28 +415,14 @@
                         <option>이지은</option>
                     </select>
                 </div>
-                <div class="filter-item">
-                    <span class="filter-label">제품:</span>
-                    <select class="filter-select">
-                        <option>전체</option>
-                        <option>SaaS</option>
-                        <option>CSAP</option>
-                        <option>OnPremise</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <span class="filter-label">기간:</span>
-                    <select class="filter-select">
-                        <option>이번 분기</option>
-                        <option>이번 달</option>
-                        <option>지난 달</option>
-                    </select>
+                <div class="filter-item" style="margin-left: auto;">
+                    <button class="btn btn-primary">조회</button>
                 </div>
             </div>
             
             <!-- KPI Section -->
             <div class="kpi-section">
-                <div class="kpi-grid">
+                <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr); max-width: 800px;">
                     <div class="kpi-card">
                         <div class="kpi-value">47건</div>
                         <div class="kpi-label">총 영업 건수</div>
@@ -438,19 +434,9 @@
                         <div class="kpi-change change-positive">▲ 5% vs 지난달</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-value">23일</div>
-                        <div class="kpi-label">평균 소요 기간</div>
-                        <div class="kpi-change change-negative">▼ 2일 vs 지난달</div>
-                    </div>
-                    <div class="kpi-card">
                         <div class="kpi-value">₩2.8B</div>
                         <div class="kpi-label">예상 매출액</div>
                         <div class="kpi-change change-positive">▲ 23% vs 지난달</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-value">₩183M</div>
-                        <div class="kpi-label">평균 거래 규모</div>
-                        <div class="kpi-change change-positive">▲ 12% vs 지난달</div>
                     </div>
                 </div>
             </div>
@@ -458,11 +444,11 @@
             <!-- Pipeline Board -->
             <div class="pipeline-container">
                 <div class="pipeline-board">
-                    <!-- Column 1: 리드 -->
+                    <!-- Column 1: 고객 1차 컨택 -->
                     <div class="pipeline-column">
                         <div class="column-header">
-                            <span class="column-title">리드</span>
-                            <span class="column-count">8</span>
+                            <span class="column-title">고객 1차 컨택</span>
+                            <span class="column-count">5</span>
                         </div>
                         <div class="column-stats">
                             <div class="stats-row">
@@ -471,7 +457,7 @@
                             </div>
                             <div class="stats-row">
                                 <span class="stats-label">평균:</span>
-                                <span class="stats-value">₩67.5M</span>
+                                <span class="stats-value">₩108M</span>
                             </div>
                         </div>
                         <div class="cards-container">
@@ -485,7 +471,7 @@
                                     <span class="badge badge-business">Business</span>
                                 </div>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 20%;"></div>
+                                    <div class="progress-fill" style="width: 12.5%;"></div>
                                 </div>
                             </div>
                             <div class="deal-card">
@@ -498,30 +484,17 @@
                                     <span class="badge badge-prepaid">Prepaid</span>
                                 </div>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 20%;"></div>
-                                </div>
-                            </div>
-                            <div class="deal-card">
-                                <div class="deal-company">현대자동차</div>
-                                <div class="deal-info">담당: 이지은</div>
-                                <div class="deal-info">예상 마감: 2024-07-10</div>
-                                <div class="deal-amount">₩120M</div>
-                                <div class="deal-badges">
-                                    <span class="badge badge-new">신규</span>
-                                    <span class="badge badge-urgent">긴급</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 20%;"></div>
+                                    <div class="progress-fill" style="width: 12.5%;"></div>
                                 </div>
                             </div>
                             <button class="add-deal-btn">+ 새 영업 건 추가</button>
                         </div>
                     </div>
                     
-                    <!-- Column 2: 연락 진행 -->
+                    <!-- Column 2: 견적/제안 -->
                     <div class="pipeline-column">
                         <div class="column-header">
-                            <span class="column-title">연락 진행</span>
+                            <span class="column-title">견적/제안</span>
                             <span class="column-count">5</span>
                         </div>
                         <div class="column-stats">
@@ -544,7 +517,7 @@
                                     <span class="badge badge-new">신규</span>
                                 </div>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 35%;"></div>
+                                    <div class="progress-fill" style="width: 25%;"></div>
                                 </div>
                             </div>
                             <div class="deal-card">
@@ -556,17 +529,17 @@
                                     <span class="badge badge-renewal">갱신</span>
                                 </div>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 35%;"></div>
+                                    <div class="progress-fill" style="width: 25%;"></div>
                                 </div>
                             </div>
                             <button class="add-deal-btn">+ 새 영업 건 추가</button>
                         </div>
                     </div>
                     
-                    <!-- Column 3: 제안/견적 -->
+                    <!-- Column 3: 계약 진행 예정 -->
                     <div class="pipeline-column">
                         <div class="column-header">
-                            <span class="column-title">제안/견적</span>
+                            <span class="column-title">계약 진행 예정</span>
                             <span class="column-count">6</span>
                         </div>
                         <div class="column-stats">
@@ -590,7 +563,7 @@
                                     <span class="badge badge-urgent">긴급</span>
                                 </div>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 50%;"></div>
+                                    <div class="progress-fill" style="width: 37.5%;"></div>
                                 </div>
                             </div>
                             <div class="deal-card">
@@ -602,17 +575,17 @@
                                     <span class="badge badge-renewal">갱신</span>
                                 </div>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 50%;"></div>
+                                    <div class="progress-fill" style="width: 37.5%;"></div>
                                 </div>
                             </div>
                             <button class="add-deal-btn">+ 새 영업 건 추가</button>
                         </div>
                     </div>
                     
-                    <!-- Column 4: 협상 -->
+                    <!-- Column 4: 수주보고서 작성 -->
                     <div class="pipeline-column">
                         <div class="column-header">
-                            <span class="column-title">협상</span>
+                            <span class="column-title">수주보고서 작성</span>
                             <span class="column-count">4</span>
                         </div>
                         <div class="column-stats">
@@ -636,7 +609,7 @@
                                     <span class="badge badge-business">Business</span>
                                 </div>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 75%;"></div>
+                                    <div class="progress-fill" style="width: 50%;"></div>
                                 </div>
                             </div>
                             <div class="deal-card">
@@ -648,17 +621,17 @@
                                     <span class="badge badge-renewal">갱신</span>
                                 </div>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 75%;"></div>
+                                    <div class="progress-fill" style="width: 50%;"></div>
                                 </div>
                             </div>
                             <button class="add-deal-btn">+ 새 영업 건 추가</button>
                         </div>
                     </div>
                     
-                    <!-- Column 5: 계약 완료 -->
+                    <!-- Column 5: 계약서발송완료 -->
                     <div class="pipeline-column">
                         <div class="column-header">
-                            <span class="column-title">계약 완료</span>
+                            <span class="column-title">계약서발송완료</span>
                             <span class="column-count">12</span>
                         </div>
                         <div class="column-stats">
@@ -676,57 +649,135 @@
                                 <div class="deal-company">한국전력</div>
                                 <div class="deal-info">담당: 김영희</div>
                                 <div class="deal-info">완료: 2024-06-25</div>
-                                <div class="deal-amount" style="color: #27ae60;">₩250M</div>
+                                <div class="deal-amount">₩250M</div>
                                 <div class="deal-badges">
                                     <span class="badge badge-new">신규</span>
                                 </div>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 100%; background: #27ae60;"></div>
+                                    <div class="progress-fill" style="width: 62.5%;"></div>
                                 </div>
                             </div>
-                            <div class="deal-card" style="opacity: 0.8;">
+                            <div class="deal-card">
                                 <div class="deal-company">KT</div>
                                 <div class="deal-info">담당: 박민수</div>
-                                <div class="deal-info">완료: 2024-06-20</div>
-                                <div class="deal-amount" style="color: #27ae60;">₩180M</div>
+                                <div class="deal-info">발송일: 2024-06-20</div>
+                                <div class="deal-amount">₩180M</div>
                                 <div class="deal-badges">
                                     <span class="badge badge-renewal">갱신</span>
                                 </div>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 100%; background: #27ae60;"></div>
+                                    <div class="progress-fill" style="width: 62.5%;"></div>
                                 </div>
                             </div>
                             <button class="add-deal-btn">+ 새 영업 건 추가</button>
                         </div>
                     </div>
                     
-                    <!-- Column 6: 실패/보류 -->
+                    <!-- Column 6: 계약확정 -->
                     <div class="pipeline-column">
                         <div class="column-header">
-                            <span class="column-title">실패/보류</span>
-                            <span class="column-count">3</span>
+                            <span class="column-title">계약확정</span>
+                            <span class="column-count">8</span>
                         </div>
                         <div class="column-stats">
                             <div class="stats-row">
                                 <span class="stats-label">총액:</span>
-                                <span class="stats-value">₩210M</span>
+                                <span class="stats-value">₩980M</span>
                             </div>
                             <div class="stats-row">
                                 <span class="stats-label">평균:</span>
-                                <span class="stats-value">₩70M</span>
+                                <span class="stats-value">₩122.5M</span>
                             </div>
                         </div>
                         <div class="cards-container">
-                            <div class="deal-card" style="opacity: 0.6;">
+                            <div class="deal-card">
                                 <div class="deal-company">두산그룹</div>
                                 <div class="deal-info">담당: 이지은</div>
-                                <div class="deal-info">종료: 2024-06-15</div>
-                                <div class="deal-amount" style="color: #e74c3c;">₩90M</div>
+                                <div class="deal-info">계약일: 2024-06-15</div>
+                                <div class="deal-amount">₩190M</div>
                                 <div class="deal-badges">
                                     <span class="badge badge-new">신규</span>
                                 </div>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 100%; background: #e74c3c;"></div>
+                                    <div class="progress-fill" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                            <div class="deal-card">
+                                <div class="deal-company">한화그룹</div>
+                                <div class="deal-info">담당: 정현우</div>
+                                <div class="deal-info">계약일: 2024-06-18</div>
+                                <div class="deal-amount">₩145M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-renewal">갱신</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                            <button class="add-deal-btn">+ 새 영업 건 추가</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Column 7: 납품완료 -->
+                    <div class="pipeline-column">
+                        <div class="column-header">
+                            <span class="column-title">납품완료</span>
+                            <span class="column-count">6</span>
+                        </div>
+                        <div class="column-stats">
+                            <div class="stats-row">
+                                <span class="stats-label">총액:</span>
+                                <span class="stats-value">₩720M</span>
+                            </div>
+                            <div class="stats-row">
+                                <span class="stats-label">평균:</span>
+                                <span class="stats-value">₩120M</span>
+                            </div>
+                        </div>
+                        <div class="cards-container">
+                            <div class="deal-card">
+                                <div class="deal-company">GS그룹</div>
+                                <div class="deal-info">담당: 김영희</div>
+                                <div class="deal-info">납품일: 2024-06-20</div>
+                                <div class="deal-amount">₩165M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-new">신규</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 87.5%;"></div>
+                                </div>
+                            </div>
+                            <button class="add-deal-btn">+ 새 영업 건 추가</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Column 8: 세금계산서 발행완료 -->
+                    <div class="pipeline-column">
+                        <div class="column-header">
+                            <span class="column-title">세금계산서 발행완료</span>
+                            <span class="column-count">12</span>
+                        </div>
+                        <div class="column-stats">
+                            <div class="stats-row">
+                                <span class="stats-label">총액:</span>
+                                <span class="stats-value">₩1.5B</span>
+                            </div>
+                            <div class="stats-row">
+                                <span class="stats-label">평균:</span>
+                                <span class="stats-value">₩125M</span>
+                            </div>
+                        </div>
+                        <div class="cards-container">
+                            <div class="deal-card" style="opacity: 0.8;">
+                                <div class="deal-company">롯데그룹</div>
+                                <div class="deal-info">담당: 박민수</div>
+                                <div class="deal-info">완료: 2024-06-10</div>
+                                <div class="deal-amount" style="color: #27ae60;">₩210M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-renewal">갱신</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 100%; background: #27ae60;"></div>
                                 </div>
                             </div>
                             <button class="add-deal-btn">+ 새 영업 건 추가</button>

@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영업 파이프라인 - CRM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', sans-serif;
+            background: #f5f5f7;
+            color: #333;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: #1a252f;
+            border-bottom: 1px solid #34495e;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            padding: 12px 20px;
+            display: block;
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background: #34495e;
+            border-left-color: #3498db;
+        }
+        
+        .nav-item.active {
+            background: #34495e;
+            border-left-color: #e74c3c;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            padding: 15px 30px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-label {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .filter-select {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            background: white;
+        }
+        
+        /* KPI Section */
+        .kpi-section {
+            padding: 20px 30px;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+        
+        .kpi-card {
+            text-align: center;
+        }
+        
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .kpi-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .kpi-change {
+            font-size: 11px;
+            margin-top: 5px;
+        }
+        
+        .change-positive {
+            color: #27ae60;
+        }
+        
+        .change-negative {
+            color: #e74c3c;
+        }
+        
+        /* Pipeline Section */
+        .pipeline-container {
+            flex: 1;
+            overflow-x: auto;
+            padding: 20px;
+            background: #f5f5f7;
+        }
+        
+        .pipeline-board {
+            display: flex;
+            gap: 15px;
+            min-width: fit-content;
+            height: 100%;
+        }
+        
+        .pipeline-column {
+            width: 280px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .column-header {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .column-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .column-count {
+            background: #e0e0e0;
+            color: #666;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+        
+        .column-stats {
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .stats-label {
+            color: #7f8c8d;
+        }
+        
+        .stats-value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .cards-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .deal-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .deal-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .deal-company {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .deal-info {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 3px;
+        }
+        
+        .deal-amount {
+            font-size: 14px;
+            font-weight: 600;
+            color: #3498db;
+            margin-top: 8px;
+        }
+        
+        .deal-badges {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+        
+        .badge-new {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .badge-renewal {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        .badge-urgent {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .badge-prepaid {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .badge-business {
+            background: #fff3e0;
+            color: #e65100;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #3498db;
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+        
+        /* Add deal button */
+        .add-deal-btn {
+            padding: 8px;
+            margin: 10px;
+            border: 2px dashed #ddd;
+            border-radius: 6px;
+            background: transparent;
+            color: #999;
+            cursor: pointer;
+            font-size: 13px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .add-deal-btn:hover {
+            border-color: #3498db;
+            color: #3498db;
+            background: #f0f8ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>eformsign CRM</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="company.html" class="nav-item">회사관리</a>
+                <a href="company-group.html" class="nav-item">회사그룹관리</a>
+                <a href="contract.html" class="nav-item">계약관리</a>
+                <a href="sales-pipeline.html" class="nav-item active">영업 파이프라인</a>
+                <a href="index.html" class="nav-item">매출 및 통계</a>
+                <a href="mypage.html" class="nav-item">마이페이지</a>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1>영업 파이프라인</h1>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">엑셀 다운로드</button>
+                    <button class="btn btn-primary" onclick="openNewDealModal()">+ 새 영업 건</button>
+                </div>
+            </header>
+            
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="filter-item">
+                    <span class="filter-label">담당자:</span>
+                    <select class="filter-select">
+                        <option>전체</option>
+                        <option>김영희</option>
+                        <option>박민수</option>
+                        <option>이지은</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">제품:</span>
+                    <select class="filter-select">
+                        <option>전체</option>
+                        <option>SaaS</option>
+                        <option>CSAP</option>
+                        <option>OnPremise</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">기간:</span>
+                    <select class="filter-select">
+                        <option>이번 분기</option>
+                        <option>이번 달</option>
+                        <option>지난 달</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- KPI Section -->
+            <div class="kpi-section">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value">47건</div>
+                        <div class="kpi-label">총 영업 건수</div>
+                        <div class="kpi-change change-positive">▲ 15% vs 지난달</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">78%</div>
+                        <div class="kpi-label">수주 성공률</div>
+                        <div class="kpi-change change-positive">▲ 5% vs 지난달</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">23일</div>
+                        <div class="kpi-label">평균 소요 기간</div>
+                        <div class="kpi-change change-negative">▼ 2일 vs 지난달</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">₩2.8B</div>
+                        <div class="kpi-label">예상 매출액</div>
+                        <div class="kpi-change change-positive">▲ 23% vs 지난달</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">₩183M</div>
+                        <div class="kpi-label">평균 거래 규모</div>
+                        <div class="kpi-change change-positive">▲ 12% vs 지난달</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pipeline Board -->
+            <div class="pipeline-container">
+                <div class="pipeline-board">
+                    <!-- Column 1: 리드 -->
+                    <div class="pipeline-column">
+                        <div class="column-header">
+                            <span class="column-title">리드</span>
+                            <span class="column-count">8</span>
+                        </div>
+                        <div class="column-stats">
+                            <div class="stats-row">
+                                <span class="stats-label">총액:</span>
+                                <span class="stats-value">₩540M</span>
+                            </div>
+                            <div class="stats-row">
+                                <span class="stats-label">평균:</span>
+                                <span class="stats-value">₩67.5M</span>
+                            </div>
+                        </div>
+                        <div class="cards-container">
+                            <div class="deal-card">
+                                <div class="deal-company">삼성전자</div>
+                                <div class="deal-info">담당: 김영희</div>
+                                <div class="deal-info">예상 마감: 2024-07-15</div>
+                                <div class="deal-amount">₩150M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-new">신규</span>
+                                    <span class="badge badge-business">Business</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 20%;"></div>
+                                </div>
+                            </div>
+                            <div class="deal-card">
+                                <div class="deal-company">LG전자</div>
+                                <div class="deal-info">담당: 박민수</div>
+                                <div class="deal-info">예상 마감: 2024-07-20</div>
+                                <div class="deal-amount">₩85M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-renewal">갱신</span>
+                                    <span class="badge badge-prepaid">Prepaid</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 20%;"></div>
+                                </div>
+                            </div>
+                            <div class="deal-card">
+                                <div class="deal-company">현대자동차</div>
+                                <div class="deal-info">담당: 이지은</div>
+                                <div class="deal-info">예상 마감: 2024-07-10</div>
+                                <div class="deal-amount">₩120M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-new">신규</span>
+                                    <span class="badge badge-urgent">긴급</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 20%;"></div>
+                                </div>
+                            </div>
+                            <button class="add-deal-btn">+ 새 영업 건 추가</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Column 2: 연락 진행 -->
+                    <div class="pipeline-column">
+                        <div class="column-header">
+                            <span class="column-title">연락 진행</span>
+                            <span class="column-count">5</span>
+                        </div>
+                        <div class="column-stats">
+                            <div class="stats-row">
+                                <span class="stats-label">총액:</span>
+                                <span class="stats-value">₩380M</span>
+                            </div>
+                            <div class="stats-row">
+                                <span class="stats-label">평균:</span>
+                                <span class="stats-value">₩76M</span>
+                            </div>
+                        </div>
+                        <div class="cards-container">
+                            <div class="deal-card">
+                                <div class="deal-company">네이버</div>
+                                <div class="deal-info">담당: 정현우</div>
+                                <div class="deal-info">예상 마감: 2024-07-25</div>
+                                <div class="deal-amount">₩95M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-new">신규</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 35%;"></div>
+                                </div>
+                            </div>
+                            <div class="deal-card">
+                                <div class="deal-company">카카오</div>
+                                <div class="deal-info">담당: 김민준</div>
+                                <div class="deal-info">예상 마감: 2024-08-01</div>
+                                <div class="deal-amount">₩110M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-renewal">갱신</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 35%;"></div>
+                                </div>
+                            </div>
+                            <button class="add-deal-btn">+ 새 영업 건 추가</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Column 3: 제안/견적 -->
+                    <div class="pipeline-column">
+                        <div class="column-header">
+                            <span class="column-title">제안/견적</span>
+                            <span class="column-count">6</span>
+                        </div>
+                        <div class="column-stats">
+                            <div class="stats-row">
+                                <span class="stats-label">총액:</span>
+                                <span class="stats-value">₩520M</span>
+                            </div>
+                            <div class="stats-row">
+                                <span class="stats-label">평균:</span>
+                                <span class="stats-value">₩86.7M</span>
+                            </div>
+                        </div>
+                        <div class="cards-container">
+                            <div class="deal-card">
+                                <div class="deal-company">SK텔레콤</div>
+                                <div class="deal-info">담당: 김영희</div>
+                                <div class="deal-info">예상 마감: 2024-07-05</div>
+                                <div class="deal-amount">₩200M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-new">신규</span>
+                                    <span class="badge badge-urgent">긴급</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                            <div class="deal-card">
+                                <div class="deal-company">포스코</div>
+                                <div class="deal-info">담당: 박민수</div>
+                                <div class="deal-info">예상 마감: 2024-07-12</div>
+                                <div class="deal-amount">₩75M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-renewal">갱신</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                            <button class="add-deal-btn">+ 새 영업 건 추가</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Column 4: 협상 -->
+                    <div class="pipeline-column">
+                        <div class="column-header">
+                            <span class="column-title">협상</span>
+                            <span class="column-count">4</span>
+                        </div>
+                        <div class="column-stats">
+                            <div class="stats-row">
+                                <span class="stats-label">총액:</span>
+                                <span class="stats-value">₩410M</span>
+                            </div>
+                            <div class="stats-row">
+                                <span class="stats-label">평균:</span>
+                                <span class="stats-value">₩102.5M</span>
+                            </div>
+                        </div>
+                        <div class="cards-container">
+                            <div class="deal-card">
+                                <div class="deal-company">신한은행</div>
+                                <div class="deal-info">담당: 이지은</div>
+                                <div class="deal-info">예상 마감: 2024-06-30</div>
+                                <div class="deal-amount">₩180M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-new">신규</span>
+                                    <span class="badge badge-business">Business</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                            <div class="deal-card">
+                                <div class="deal-company">CJ그룹</div>
+                                <div class="deal-info">담당: 정현우</div>
+                                <div class="deal-info">예상 마감: 2024-07-08</div>
+                                <div class="deal-amount">₩130M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-renewal">갱신</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                            <button class="add-deal-btn">+ 새 영업 건 추가</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Column 5: 계약 완료 -->
+                    <div class="pipeline-column">
+                        <div class="column-header">
+                            <span class="column-title">계약 완료</span>
+                            <span class="column-count">12</span>
+                        </div>
+                        <div class="column-stats">
+                            <div class="stats-row">
+                                <span class="stats-label">총액:</span>
+                                <span class="stats-value">₩1.2B</span>
+                            </div>
+                            <div class="stats-row">
+                                <span class="stats-label">평균:</span>
+                                <span class="stats-value">₩100M</span>
+                            </div>
+                        </div>
+                        <div class="cards-container">
+                            <div class="deal-card" style="opacity: 0.8;">
+                                <div class="deal-company">한국전력</div>
+                                <div class="deal-info">담당: 김영희</div>
+                                <div class="deal-info">완료: 2024-06-25</div>
+                                <div class="deal-amount" style="color: #27ae60;">₩250M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-new">신규</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 100%; background: #27ae60;"></div>
+                                </div>
+                            </div>
+                            <div class="deal-card" style="opacity: 0.8;">
+                                <div class="deal-company">KT</div>
+                                <div class="deal-info">담당: 박민수</div>
+                                <div class="deal-info">완료: 2024-06-20</div>
+                                <div class="deal-amount" style="color: #27ae60;">₩180M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-renewal">갱신</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 100%; background: #27ae60;"></div>
+                                </div>
+                            </div>
+                            <button class="add-deal-btn">+ 새 영업 건 추가</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Column 6: 실패/보류 -->
+                    <div class="pipeline-column">
+                        <div class="column-header">
+                            <span class="column-title">실패/보류</span>
+                            <span class="column-count">3</span>
+                        </div>
+                        <div class="column-stats">
+                            <div class="stats-row">
+                                <span class="stats-label">총액:</span>
+                                <span class="stats-value">₩210M</span>
+                            </div>
+                            <div class="stats-row">
+                                <span class="stats-label">평균:</span>
+                                <span class="stats-value">₩70M</span>
+                            </div>
+                        </div>
+                        <div class="cards-container">
+                            <div class="deal-card" style="opacity: 0.6;">
+                                <div class="deal-company">두산그룹</div>
+                                <div class="deal-info">담당: 이지은</div>
+                                <div class="deal-info">종료: 2024-06-15</div>
+                                <div class="deal-amount" style="color: #e74c3c;">₩90M</div>
+                                <div class="deal-badges">
+                                    <span class="badge badge-new">신규</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 100%; background: #e74c3c;"></div>
+                                </div>
+                            </div>
+                            <button class="add-deal-btn">+ 새 영업 건 추가</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 새 영업 건 모달 열기
+        function openNewDealModal() {
+            alert('새 영업 건 추가 모달 (구현 예정)');
+        }
+        
+        // 드래그 앤 드롭 기능 (추후 구현)
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.deal-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    alert('영업 상세 정보 모달 (구현 예정)');
+                });
+            });
+            
+            // Add deal buttons
+            const addBtns = document.querySelectorAll('.add-deal-btn');
+            addBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    openNewDealModal();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

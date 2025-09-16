@@ -212,12 +212,25 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .column-header:hover {
+            background: #f8f9fa;
         }
         
         .column-title {
             font-size: 14px;
             font-weight: 600;
             color: #2c3e50;
+            flex: 1;
+        }
+        
+        .column-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .column-count {
@@ -226,6 +239,45 @@
             padding: 2px 8px;
             border-radius: 10px;
             font-size: 12px;
+        }
+        
+        .column-expand-btn {
+            padding: 4px 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+        
+        .column-expand-btn:hover {
+            color: #3498db;
+            background: #e3f2fd;
+            border-radius: 4px;
+        }
+        
+        .column-collapse-btn {
+            padding: 2px 6px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        
+        .column-collapse-btn:hover {
+            color: #3498db;
+        }
+        
+        .column-collapsed .cards-container,
+        .column-collapsed .column-stats {
+            display: none;
+        }
+        
+        .column-collapsed {
+            width: 200px;
         }
         
         .column-stats {
@@ -262,13 +314,24 @@
             border-radius: 6px;
             padding: 12px;
             margin-bottom: 8px;
-            cursor: pointer;
+            cursor: move;
             transition: all 0.2s;
+            position: relative;
         }
         
         .deal-card:hover {
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             transform: translateY(-2px);
+        }
+        
+        .deal-card.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+        
+        .cards-container.drag-over {
+            background: #f0f8ff;
+            border: 2px dashed #3498db;
         }
         
         .deal-company {
@@ -364,6 +427,164 @@
             color: #3498db;
             background: #f0f8ff;
         }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s ease;
+        }
+        
+        .modal-content.large {
+            max-width: 1200px;
+        }
+        
+        .modal-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .modal-close {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 24px;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+        
+        .modal-body {
+            padding: 30px;
+            max-height: calc(90vh - 140px);
+            overflow-y: auto;
+        }
+        
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            background: #f8f9fa;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-cancel:hover {
+            background: #5a6268;
+        }
+        
+        .btn-submit {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-submit:hover {
+            background: #218838;
+        }
+        
+        /* Large View Modal */
+        .large-view-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -445,10 +666,14 @@
             <div class="pipeline-container">
                 <div class="pipeline-board">
                     <!-- Column 1: 고객 1차 컨택 -->
-                    <div class="pipeline-column">
-                        <div class="column-header">
+                    <div class="pipeline-column" data-stage="contact">
+                        <div class="column-header" onclick="toggleColumn(this)">
                             <span class="column-title">고객 1차 컨택</span>
-                            <span class="column-count">5</span>
+                            <div class="column-actions">
+                                <span class="column-count">5</span>
+                                <button class="column-expand-btn" onclick="event.stopPropagation(); openLargeView('contact')" title="크게보기">⊞</button>
+                                <button class="column-collapse-btn" onclick="event.stopPropagation(); toggleColumn(this.parentElement.parentElement)">▼</button>
+                            </div>
                         </div>
                         <div class="column-stats">
                             <div class="stats-row">
@@ -492,10 +717,14 @@
                     </div>
                     
                     <!-- Column 2: 견적/제안 -->
-                    <div class="pipeline-column">
-                        <div class="column-header">
+                    <div class="pipeline-column" data-stage="proposal">
+                        <div class="column-header" onclick="toggleColumn(this)">
                             <span class="column-title">견적/제안</span>
-                            <span class="column-count">5</span>
+                            <div class="column-actions">
+                                <span class="column-count">5</span>
+                                <button class="column-expand-btn" onclick="event.stopPropagation(); openLargeView('proposal')" title="크게보기">⊞</button>
+                                <button class="column-collapse-btn" onclick="event.stopPropagation(); toggleColumn(this.parentElement.parentElement)">▼</button>
+                            </div>
                         </div>
                         <div class="column-stats">
                             <div class="stats-row">
@@ -537,10 +766,14 @@
                     </div>
                     
                     <!-- Column 3: 계약 진행 예정 -->
-                    <div class="pipeline-column">
-                        <div class="column-header">
+                    <div class="pipeline-column" data-stage="contract-pending">
+                        <div class="column-header" onclick="toggleColumn(this)">
                             <span class="column-title">계약 진행 예정</span>
-                            <span class="column-count">6</span>
+                            <div class="column-actions">
+                                <span class="column-count">6</span>
+                                <button class="column-expand-btn" onclick="event.stopPropagation(); openLargeView('contract-pending')" title="크게보기">⊞</button>
+                                <button class="column-collapse-btn" onclick="event.stopPropagation(); toggleColumn(this.parentElement.parentElement)">▼</button>
+                            </div>
                         </div>
                         <div class="column-stats">
                             <div class="stats-row">
@@ -583,10 +816,14 @@
                     </div>
                     
                     <!-- Column 4: 수주보고서 작성 -->
-                    <div class="pipeline-column">
-                        <div class="column-header">
+                    <div class="pipeline-column" data-stage="report">
+                        <div class="column-header" onclick="toggleColumn(this)">
                             <span class="column-title">수주보고서 작성</span>
-                            <span class="column-count">4</span>
+                            <div class="column-actions">
+                                <span class="column-count">4</span>
+                                <button class="column-expand-btn" onclick="event.stopPropagation(); openLargeView('report')" title="크게보기">⊞</button>
+                                <button class="column-collapse-btn" onclick="event.stopPropagation(); toggleColumn(this.parentElement.parentElement)">▼</button>
+                            </div>
                         </div>
                         <div class="column-stats">
                             <div class="stats-row">
@@ -629,10 +866,14 @@
                     </div>
                     
                     <!-- Column 5: 계약서발송완료 -->
-                    <div class="pipeline-column">
-                        <div class="column-header">
+                    <div class="pipeline-column" data-stage="contract-sent">
+                        <div class="column-header" onclick="toggleColumn(this)">
                             <span class="column-title">계약서발송완료</span>
-                            <span class="column-count">12</span>
+                            <div class="column-actions">
+                                <span class="column-count">12</span>
+                                <button class="column-expand-btn" onclick="event.stopPropagation(); openLargeView('contract-sent')" title="크게보기">⊞</button>
+                                <button class="column-collapse-btn" onclick="event.stopPropagation(); toggleColumn(this.parentElement.parentElement)">▼</button>
+                            </div>
                         </div>
                         <div class="column-stats">
                             <div class="stats-row">
@@ -674,10 +915,14 @@
                     </div>
                     
                     <!-- Column 6: 계약확정 -->
-                    <div class="pipeline-column">
-                        <div class="column-header">
+                    <div class="pipeline-column" data-stage="contract-confirmed">
+                        <div class="column-header" onclick="toggleColumn(this)">
                             <span class="column-title">계약확정</span>
-                            <span class="column-count">8</span>
+                            <div class="column-actions">
+                                <span class="column-count">8</span>
+                                <button class="column-expand-btn" onclick="event.stopPropagation(); openLargeView('contract-confirmed')" title="크게보기">⊞</button>
+                                <button class="column-collapse-btn" onclick="event.stopPropagation(); toggleColumn(this.parentElement.parentElement)">▼</button>
+                            </div>
                         </div>
                         <div class="column-stats">
                             <div class="stats-row">
@@ -719,10 +964,14 @@
                     </div>
                     
                     <!-- Column 7: 납품완료 -->
-                    <div class="pipeline-column">
-                        <div class="column-header">
+                    <div class="pipeline-column" data-stage="delivery">
+                        <div class="column-header" onclick="toggleColumn(this)">
                             <span class="column-title">납품완료</span>
-                            <span class="column-count">6</span>
+                            <div class="column-actions">
+                                <span class="column-count">6</span>
+                                <button class="column-expand-btn" onclick="event.stopPropagation(); openLargeView('delivery')" title="크게보기">⊞</button>
+                                <button class="column-collapse-btn" onclick="event.stopPropagation(); toggleColumn(this.parentElement.parentElement)">▼</button>
+                            </div>
                         </div>
                         <div class="column-stats">
                             <div class="stats-row">
@@ -752,10 +1001,14 @@
                     </div>
                     
                     <!-- Column 8: 세금계산서 발행완료 -->
-                    <div class="pipeline-column">
-                        <div class="column-header">
+                    <div class="pipeline-column" data-stage="invoice">
+                        <div class="column-header" onclick="toggleColumn(this)">
                             <span class="column-title">세금계산서 발행완료</span>
-                            <span class="column-count">12</span>
+                            <div class="column-actions">
+                                <span class="column-count">12</span>
+                                <button class="column-expand-btn" onclick="event.stopPropagation(); openLargeView('invoice')" title="크게보기">⊞</button>
+                                <button class="column-collapse-btn" onclick="event.stopPropagation(); toggleColumn(this.parentElement.parentElement)">▼</button>
+                            </div>
                         </div>
                         <div class="column-stats">
                             <div class="stats-row">
@@ -788,29 +1041,360 @@
         </div>
     </div>
     
+    <!-- 새 영업 건 추가/편집 모달 -->
+    <div class="modal" id="dealModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">새 영업 건 추가</h2>
+                <button class="modal-close" onclick="closeDealModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="dealForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">회사명 *</label>
+                            <input type="text" class="form-control" id="companyName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">담당자</label>
+                            <select class="form-control" id="manager">
+                                <option>김영희</option>
+                                <option>박민수</option>
+                                <option>이지은</option>
+                                <option>정현우</option>
+                                <option>김민준</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">단계</label>
+                            <select class="form-control" id="stage">
+                                <option value="contact">고객 1차 컨택</option>
+                                <option value="proposal">견적/제안</option>
+                                <option value="contract-pending">계약 진행 예정</option>
+                                <option value="report">수주보고서 작성</option>
+                                <option value="contract-sent">계약서발송완료</option>
+                                <option value="contract-confirmed">계약확정</option>
+                                <option value="delivery">납품완료</option>
+                                <option value="invoice">세금계산서 발행완료</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">예상 금액</label>
+                            <input type="text" class="form-control" id="amount" placeholder="₩0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">예상 마감일</label>
+                            <input type="date" class="form-control" id="expectedDate">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">계약 종류</label>
+                            <select class="form-control" id="contractType">
+                                <option>신규</option>
+                                <option>갱신</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">제품 유형</label>
+                        <select class="form-control" id="productType">
+                            <option>Business</option>
+                            <option>Prepaid</option>
+                            <option>SaaS</option>
+                            <option>CSAP</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">메모</label>
+                        <textarea class="form-control" id="notes" rows="3" placeholder="추가 정보 입력"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" onclick="closeDealModal()">취소</button>
+                <button class="btn btn-submit" onclick="saveDeal()">저장</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 크게보기 모달 -->
+    <div class="modal" id="largeViewModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2 class="modal-title" id="largeViewTitle">전체 보기</h2>
+                <button class="modal-close" onclick="closeLargeViewModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="large-view-grid" id="largeViewGrid">
+                    <!-- 카드들이 여기에 표시됨 -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeLargeViewModal()">닫기</button>
+            </div>
+        </div>
+    </div>
+    
     <script>
-        // 새 영업 건 모달 열기
-        function openNewDealModal() {
-            alert('새 영업 건 추가 모달 (구현 예정)');
+        let currentDealData = null;
+        let draggedCard = null;
+        let sourceColumn = null;
+        
+        // 컬럼 접기/펴기 토글
+        function toggleColumn(header) {
+            const column = header.closest('.pipeline-column');
+            column.classList.toggle('column-collapsed');
+            const collapseBtn = header.querySelector('.column-collapse-btn');
+            if (column.classList.contains('column-collapsed')) {
+                collapseBtn.textContent = '▶';
+            } else {
+                collapseBtn.textContent = '▼';
+            }
         }
         
-        // 드래그 앤 드롭 기능 (추후 구현)
-        document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.deal-card');
+        // 새 영업 건 모달 열기
+        function openNewDealModal(stage = 'contact') {
+            currentDealData = null;
+            document.getElementById('modalTitle').textContent = '새 영업 건 추가';
+            document.getElementById('dealForm').reset();
+            document.getElementById('stage').value = stage;
+            document.getElementById('dealModal').classList.add('active');
+        }
+        
+        // 영업 건 편집 모달 열기
+        function openEditDealModal(dealCard, newStage = null) {
+            const company = dealCard.querySelector('.deal-company').textContent;
+            const manager = dealCard.querySelector('.deal-info').textContent.replace('담당: ', '');
+            const amount = dealCard.querySelector('.deal-amount').textContent;
+            const stage = newStage || dealCard.closest('.pipeline-column').dataset.stage;
             
+            document.getElementById('modalTitle').textContent = '영업 건 편집';
+            document.getElementById('companyName').value = company;
+            document.getElementById('manager').value = manager;
+            document.getElementById('amount').value = amount;
+            document.getElementById('stage').value = stage;
+            
+            currentDealData = dealCard;
+            document.getElementById('dealModal').classList.add('active');
+        }
+        
+        // 모달 닫기
+        function closeDealModal() {
+            document.getElementById('dealModal').classList.remove('active');
+            currentDealData = null;
+        }
+        
+        // 영업 건 저장
+        function saveDeal() {
+            const formData = {
+                company: document.getElementById('companyName').value,
+                manager: document.getElementById('manager').value,
+                stage: document.getElementById('stage').value,
+                amount: document.getElementById('amount').value,
+                expectedDate: document.getElementById('expectedDate').value,
+                contractType: document.getElementById('contractType').value,
+                productType: document.getElementById('productType').value,
+                notes: document.getElementById('notes').value
+            };
+            
+            if (currentDealData) {
+                // 편집 모드 - 카드 업데이트
+                updateDealCard(currentDealData, formData);
+            } else {
+                // 새로 추가 - 새 카드 생성
+                createNewDealCard(formData);
+            }
+            
+            closeDealModal();
+        }
+        
+        // 새 카드 생성
+        function createNewDealCard(data) {
+            const targetColumn = document.querySelector(`[data-stage="${data.stage}"] .cards-container`);
+            const newCard = document.createElement('div');
+            newCard.className = 'deal-card';
+            newCard.draggable = true;
+            newCard.innerHTML = `
+                <div class="deal-company">${data.company}</div>
+                <div class="deal-info">담당: ${data.manager}</div>
+                <div class="deal-info">예상 마감: ${data.expectedDate}</div>
+                <div class="deal-amount">${data.amount}</div>
+                <div class="deal-badges">
+                    <span class="badge badge-${data.contractType === '신규' ? 'new' : 'renewal'}">${data.contractType}</span>
+                    <span class="badge badge-business">${data.productType}</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${getProgressByStage(data.stage)}%;"></div>
+                </div>
+            `;
+            
+            // 이벤트 리스너 추가
+            setupCardEvents(newCard);
+            
+            // 마지막 버튼 앞에 삽입
+            const addBtn = targetColumn.querySelector('.add-deal-btn');
+            targetColumn.insertBefore(newCard, addBtn);
+            
+            updateColumnCount(targetColumn);
+        }
+        
+        // 카드 업데이트
+        function updateDealCard(card, data) {
+            const targetColumn = document.querySelector(`[data-stage="${data.stage}"] .cards-container`);
+            const currentColumn = card.closest('.cards-container');
+            
+            // 카드 정보 업데이트
+            card.querySelector('.deal-company').textContent = data.company;
+            card.querySelector('.deal-info').textContent = `담당: ${data.manager}`;
+            card.querySelector('.progress-fill').style.width = `${getProgressByStage(data.stage)}%`;
+            
+            // 다른 단계로 이동해야 하는 경우
+            if (targetColumn !== currentColumn) {
+                const addBtn = targetColumn.querySelector('.add-deal-btn');
+                targetColumn.insertBefore(card, addBtn);
+                updateColumnCount(currentColumn);
+                updateColumnCount(targetColumn);
+            }
+        }
+        
+        // 단계별 진행률 계산
+        function getProgressByStage(stage) {
+            const stages = {
+                'contact': 12.5,
+                'proposal': 25,
+                'contract-pending': 37.5,
+                'report': 50,
+                'contract-sent': 62.5,
+                'contract-confirmed': 75,
+                'delivery': 87.5,
+                'invoice': 100
+            };
+            return stages[stage] || 0;
+        }
+        
+        // 컬럼 카운트 업데이트
+        function updateColumnCount(container) {
+            const column = container.closest('.pipeline-column');
+            const count = container.querySelectorAll('.deal-card').length;
+            column.querySelector('.column-count').textContent = count;
+        }
+        
+        // 크게보기 모달 열기
+        function openLargeView(stage) {
+            const column = document.querySelector(`[data-stage="${stage}"]`);
+            const title = column.querySelector('.column-title').textContent;
+            const cards = column.querySelectorAll('.deal-card');
+            
+            document.getElementById('largeViewTitle').textContent = `${title} - 전체 보기 (${cards.length}건)`;
+            const grid = document.getElementById('largeViewGrid');
+            grid.innerHTML = '';
+            
+            // 카드 복사해서 표시
             cards.forEach(card => {
-                card.addEventListener('click', function() {
-                    alert('영업 상세 정보 모달 (구현 예정)');
-                });
+                const clonedCard = card.cloneNode(true);
+                clonedCard.draggable = false;
+                clonedCard.style.cursor = 'pointer';
+                grid.appendChild(clonedCard);
             });
             
-            // Add deal buttons
+            document.getElementById('largeViewModal').classList.add('active');
+        }
+        
+        // 크게보기 모달 닫기
+        function closeLargeViewModal() {
+            document.getElementById('largeViewModal').classList.remove('active');
+        }
+        
+        // 카드에 이벤트 리스너 설정
+        function setupCardEvents(card) {
+            // 드래그 시작
+            card.addEventListener('dragstart', function(e) {
+                draggedCard = this;
+                sourceColumn = this.closest('.cards-container');
+                this.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            });
+            
+            // 드래그 끝
+            card.addEventListener('dragend', function(e) {
+                this.classList.remove('dragging');
+                draggedCard = null;
+                sourceColumn = null;
+            });
+            
+            // 클릭 이벤트
+            card.addEventListener('click', function(e) {
+                if (!e.target.closest('.add-deal-btn')) {
+                    openEditDealModal(this);
+                }
+            });
+        }
+        
+        // 컨테이너에 드롭 이벤트 설정
+        function setupContainerEvents(container) {
+            // 드래그 오버
+            container.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('drag-over');
+            });
+            
+            // 드래그 나감
+            container.addEventListener('dragleave', function(e) {
+                if (!this.contains(e.relatedTarget)) {
+                    this.classList.remove('drag-over');
+                }
+            });
+            
+            // 드롭
+            container.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+                
+                if (draggedCard && this !== sourceColumn) {
+                    const newStage = this.closest('.pipeline-column').dataset.stage;
+                    openEditDealModal(draggedCard, newStage);
+                }
+            });
+        }
+        
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            // 모든 카드에 이벤트 리스너 추가
+            const cards = document.querySelectorAll('.deal-card');
+            cards.forEach(card => {
+                card.draggable = true;
+                setupCardEvents(card);
+            });
+            
+            // 모든 컨테이너에 드롭 이벤트 추가
+            const containers = document.querySelectorAll('.cards-container');
+            containers.forEach(container => {
+                setupContainerEvents(container);
+            });
+            
+            // 새 영업 건 추가 버튼들
             const addBtns = document.querySelectorAll('.add-deal-btn');
             addBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
-                    openNewDealModal();
+                    const stage = this.closest('.pipeline-column').dataset.stage;
+                    openNewDealModal(stage);
                 });
             });
+            
+            // 헤더의 새 영업 건 버튼
+            const headerBtn = document.querySelector('.header .btn-primary');
+            if (headerBtn) {
+                headerBtn.addEventListener('click', function() {
+                    openNewDealModal();
+                });
+            }
         });
     </script>
 </body>

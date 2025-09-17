@@ -1104,11 +1104,36 @@
                     <div class="form-group">
                         <label class="form-label">제품 유형</label>
                         <select class="form-control" id="productType">
-                            <option>Business</option>
-                            <option>Prepaid</option>
                             <option>SaaS</option>
                             <option>CSAP</option>
+                            <option>OnPremise</option>
                         </select>
+                    </div>
+                    
+                    <!-- 단계별 추가 필드 -->
+                    <div class="form-group" id="quotationLinkGroup" style="display: none;">
+                        <label class="form-label">견적서 링크</label>
+                        <input type="text" class="form-control" id="quotationLink" placeholder="견적서 이폼사인 링크 입력">
+                    </div>
+                    
+                    <div class="form-group" id="orderReportLinkGroup" style="display: none;">
+                        <label class="form-label">수주보고서 링크</label>
+                        <input type="text" class="form-control" id="orderReportLink" placeholder="수주보고서 이폼사인 링크 입력">
+                    </div>
+                    
+                    <div class="form-group" id="contractLinkGroup" style="display: none;">
+                        <label class="form-label">계약서 링크</label>
+                        <input type="text" class="form-control" id="contractLink" placeholder="계약서 이폼사인 링크 입력">
+                    </div>
+                    
+                    <div class="form-group" id="deliveryLinkGroup" style="display: none;">
+                        <label class="form-label">납품확인서 링크</label>
+                        <input type="text" class="form-control" id="deliveryLink" placeholder="납품확인서 이폼사인 링크 입력">
+                    </div>
+                    
+                    <div class="form-group" id="invoiceLinkGroup" style="display: none;">
+                        <label class="form-label">세금계산서 발행 링크</label>
+                        <input type="text" class="form-control" id="invoiceLink" placeholder="세금계산서 발행 이폼사인 링크 입력">
                     </div>
                     
                     <div class="form-group">
@@ -1165,6 +1190,10 @@
             document.getElementById('modalTitle').textContent = '새 영업 건 추가';
             document.getElementById('dealForm').reset();
             document.getElementById('stage').value = stage;
+            
+            // 단계별 추가 필드 표시/숨김
+            showStageSpecificFields(stage);
+            
             document.getElementById('dealModal').classList.add('active');
         }
         
@@ -1180,6 +1209,26 @@
             document.getElementById('manager').value = manager;
             document.getElementById('amount').value = amount;
             document.getElementById('stage').value = stage;
+            
+            // 저장된 링크 데이터가 있다면 로드 (실제 구현시 데이터 저장소에서 가져와야 함)
+            if (dealCard.dataset.quotationLink) {
+                document.getElementById('quotationLink').value = dealCard.dataset.quotationLink;
+            }
+            if (dealCard.dataset.orderReportLink) {
+                document.getElementById('orderReportLink').value = dealCard.dataset.orderReportLink;
+            }
+            if (dealCard.dataset.contractLink) {
+                document.getElementById('contractLink').value = dealCard.dataset.contractLink;
+            }
+            if (dealCard.dataset.deliveryLink) {
+                document.getElementById('deliveryLink').value = dealCard.dataset.deliveryLink;
+            }
+            if (dealCard.dataset.invoiceLink) {
+                document.getElementById('invoiceLink').value = dealCard.dataset.invoiceLink;
+            }
+            
+            // 단계별 추가 필드 표시/숨김
+            showStageSpecificFields(stage);
             
             currentDealData = dealCard;
             document.getElementById('dealModal').classList.add('active');
@@ -1201,7 +1250,13 @@
                 expectedDate: document.getElementById('expectedDate').value,
                 contractType: document.getElementById('contractType').value,
                 productType: document.getElementById('productType').value,
-                notes: document.getElementById('notes').value
+                notes: document.getElementById('notes').value,
+                // 추가 링크 필드들
+                quotationLink: document.getElementById('quotationLink').value,
+                orderReportLink: document.getElementById('orderReportLink').value,
+                contractLink: document.getElementById('contractLink').value,
+                deliveryLink: document.getElementById('deliveryLink').value,
+                invoiceLink: document.getElementById('invoiceLink').value
             };
             
             if (currentDealData) {
@@ -1235,6 +1290,13 @@
                 </div>
             `;
             
+            // 링크 데이터 저장 (데이터 속성으로)
+            if (data.quotationLink) newCard.dataset.quotationLink = data.quotationLink;
+            if (data.orderReportLink) newCard.dataset.orderReportLink = data.orderReportLink;
+            if (data.contractLink) newCard.dataset.contractLink = data.contractLink;
+            if (data.deliveryLink) newCard.dataset.deliveryLink = data.deliveryLink;
+            if (data.invoiceLink) newCard.dataset.invoiceLink = data.invoiceLink;
+            
             // 이벤트 리스너 추가
             setupCardEvents(newCard);
             
@@ -1254,6 +1316,13 @@
             card.querySelector('.deal-company').textContent = data.company;
             card.querySelector('.deal-info').textContent = `담당: ${data.manager}`;
             card.querySelector('.progress-fill').style.width = `${getProgressByStage(data.stage)}%`;
+            
+            // 링크 데이터 저장 (데이터 속성으로)
+            if (data.quotationLink) card.dataset.quotationLink = data.quotationLink;
+            if (data.orderReportLink) card.dataset.orderReportLink = data.orderReportLink;
+            if (data.contractLink) card.dataset.contractLink = data.contractLink;
+            if (data.deliveryLink) card.dataset.deliveryLink = data.deliveryLink;
+            if (data.invoiceLink) card.dataset.invoiceLink = data.invoiceLink;
             
             // 다른 단계로 이동해야 하는 경우
             if (targetColumn !== currentColumn) {
@@ -1337,6 +1406,46 @@
             });
         }
         
+        // 단계별 추가 필드 표시/숨김
+        function showStageSpecificFields(stage) {
+            // 모든 추가 필드 숨김
+            document.getElementById('quotationLinkGroup').style.display = 'none';
+            document.getElementById('orderReportLinkGroup').style.display = 'none';
+            document.getElementById('contractLinkGroup').style.display = 'none';
+            document.getElementById('deliveryLinkGroup').style.display = 'none';
+            document.getElementById('invoiceLinkGroup').style.display = 'none';
+            
+            // 단계에 따라 필요한 필드만 표시
+            switch(stage) {
+                case 'contract-pending':
+                    document.getElementById('quotationLinkGroup').style.display = 'block';
+                    break;
+                case 'report':
+                    document.getElementById('quotationLinkGroup').style.display = 'block';
+                    document.getElementById('orderReportLinkGroup').style.display = 'block';
+                    break;
+                case 'contract-sent':
+                case 'contract-confirmed':
+                    document.getElementById('quotationLinkGroup').style.display = 'block';
+                    document.getElementById('orderReportLinkGroup').style.display = 'block';
+                    document.getElementById('contractLinkGroup').style.display = 'block';
+                    break;
+                case 'delivery':
+                    document.getElementById('quotationLinkGroup').style.display = 'block';
+                    document.getElementById('orderReportLinkGroup').style.display = 'block';
+                    document.getElementById('contractLinkGroup').style.display = 'block';
+                    document.getElementById('deliveryLinkGroup').style.display = 'block';
+                    break;
+                case 'invoice':
+                    document.getElementById('quotationLinkGroup').style.display = 'block';
+                    document.getElementById('orderReportLinkGroup').style.display = 'block';
+                    document.getElementById('contractLinkGroup').style.display = 'block';
+                    document.getElementById('deliveryLinkGroup').style.display = 'block';
+                    document.getElementById('invoiceLinkGroup').style.display = 'block';
+                    break;
+            }
+        }
+        
         // 컨테이너에 드롭 이벤트 설정
         function setupContainerEvents(container) {
             // 드래그 오버
@@ -1395,6 +1504,11 @@
                     openNewDealModal();
                 });
             }
+            
+            // 단계 드롭다운 변경 시 이벤트
+            document.getElementById('stage').addEventListener('change', function() {
+                showStageSpecificFields(this.value);
+            });
         });
     </script>
 </body>

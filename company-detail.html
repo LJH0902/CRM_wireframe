@@ -434,6 +434,61 @@
             width: 100% !important;
             height: 250px !important;
         }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -473,75 +528,42 @@
             
             <!-- Content Area -->
             <div class="content">
-                <!-- Company Basic Info -->
+                <!-- Customer Info -->
                 <div class="info-section">
-                    <h2 class="section-title">기본 정보</h2>
+                    <h2 class="section-title">고객 정보</h2>
                     <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">가입일</span>
+                            <span class="info-value">2023-01-15</span>
+                        </div>
                         <div class="info-item">
                             <span class="info-label">회사명</span>
                             <span class="info-value" id="companyName">삼성전자</span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">회사 ID</span>
-                            <span class="info-value">bbedf6fc25c64a6ca0cb858a6325a9da</span>
+                            <span class="info-label">국가</span>
+                            <span class="info-value">대한민국</span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">상태</span>
-                            <span class="status-badge status-active">활성</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">회사그룹</span>
-                            <span class="info-value">삼성그룹</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">사업자번호</span>
-                            <span class="info-value">124-81-00998</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">대표자명</span>
-                            <span class="info-value">한종희</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">업종</span>
-                            <span class="info-value">전자제품 제조업</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">설립일</span>
-                            <span class="info-value">1969-01-13</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">직원수</span>
-                            <span class="info-value">약 267,937명</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Contact Info -->
-                <div class="info-section">
-                    <h2 class="section-title">연락처 정보</h2>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-label">대표전화</span>
+                            <span class="info-label">연락처</span>
                             <span class="info-value">02-2053-0000</span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">팩스</span>
-                            <span class="info-value">02-2053-0001</span>
+                            <span class="info-label">대표관리자명</span>
+                            <span class="info-value">김영희</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">이메일</span>
                             <span class="info-value">contact@samsung.com</span>
                         </div>
-                        <div class="info-item" style="grid-column: span 3;">
-                            <span class="info-label">주소</span>
-                            <span class="info-value">서울특별시 서초구 서초대로74길 11 (서초동)</span>
-                        </div>
                     </div>
                 </div>
                 
-                <!-- Service Info -->
+                <!-- Plan Info -->
                 <div class="info-section">
-                    <h2 class="section-title">서비스 정보</h2>
+                    <h2 class="section-title">요금제 정보 
+                        <button class="btn btn-secondary" style="margin-left: 10px; font-size: 12px; padding: 4px 12px;" onclick="showPlanHistory()">요금제 변경내역</button>
+                    </h2>
                     <div class="info-grid">
                         <div class="info-item">
                             <span class="info-label">현재 요금제</span>
@@ -555,18 +577,6 @@
                             <span class="info-label">계약 종료일</span>
                             <span class="info-value">2025-01-14</span>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">월 요금</span>
-                            <span class="info-value">₩1,200,000</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">사용자 수</span>
-                            <span class="info-value">500명</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">스토리지</span>
-                            <span class="info-value">1TB / 2TB</span>
-                        </div>
                     </div>
                 </div>
                 
@@ -578,27 +588,25 @@
                         <div class="stat-change">▲ 15% vs 지난달</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">활성 사용자</div>
+                        <div class="stat-label">멤버 수</div>
                         <div class="stat-value">423</div>
                         <div class="stat-change">▲ 8% vs 지난달</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-label">API 호출</div>
-                        <div class="stat-value">85.2K</div>
-                        <div class="stat-change">▲ 23% vs 지난달</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">에러율</div>
-                        <div class="stat-value">0.02%</div>
-                        <div class="stat-change negative">▲ 0.01% vs 지난달</div>
+                    <div class="stat-card" style="position: relative;">
+                        <div class="stat-label">문서 소진율 (%)</div>
+                        <div class="stat-value">78.4%</div>
+                        <div class="stat-change">▲ 12% vs 지난달</div>
+                        <div style="position: absolute; bottom: 10px; right: 10px; font-size: 11px; color: #7f8c8d;">
+                            영업담당: 김영희
+                        </div>
                     </div>
                 </div>
                 
                 <!-- Tabs -->
                 <div class="tabs">
                     <button class="tab active" onclick="showTab('usage')">사용 현황</button>
-                    <button class="tab" onclick="showTab('billing')">요금 및 결제</button>
-                    <button class="tab" onclick="showTab('contacts')">담당자 정보</button>
+                    <button class="tab" onclick="showTab('billing')">결제 내역</button>
+                    <button class="tab" onclick="showTab('contracts')">계약내역</button>
                     <button class="tab" onclick="showTab('history')">히스토리</button>
                 </div>
                 
@@ -614,24 +622,10 @@
                         </div>
                         <div class="chart-card">
                             <div class="chart-header">
-                                <h3 class="chart-title">사용자 활동 현황</h3>
+                                <h3 class="chart-title">멤버 수 현황</h3>
                                 <span class="chart-period">최근 30일</span>
                             </div>
                             <canvas id="userChart"></canvas>
-                        </div>
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <h3 class="chart-title">API 사용량</h3>
-                                <span class="chart-period">최근 7일</span>
-                            </div>
-                            <canvas id="apiChart"></canvas>
-                        </div>
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <h3 class="chart-title">스토리지 사용량</h3>
-                                <span class="chart-period">현재</span>
-                            </div>
-                            <canvas id="storageChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -682,37 +676,56 @@
                     </div>
                 </div>
                 
-                <div class="tab-content" id="contacts-tab">
-                    <div class="contact-list">
-                        <div class="contact-item">
-                            <div class="contact-info">
-                                <div class="contact-name">김영희</div>
-                                <div class="contact-role">IT 부서장 (주 담당자)</div>
-                            </div>
-                            <div class="contact-details">
-                                <span class="contact-email">kim.yh@samsung.com</span>
-                                <span class="contact-phone">010-1234-5678</span>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-info">
-                                <div class="contact-name">박민수</div>
-                                <div class="contact-role">구매 담당자</div>
-                            </div>
-                            <div class="contact-details">
-                                <span class="contact-email">park.ms@samsung.com</span>
-                                <span class="contact-phone">010-2345-6789</span>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-info">
-                                <div class="contact-name">이지은</div>
-                                <div class="contact-role">기술 지원 담당</div>
-                            </div>
-                            <div class="contact-details">
-                                <span class="contact-email">lee.je@samsung.com</span>
-                                <span class="contact-phone">010-3456-7890</span>
-                            </div>
+                <div class="tab-content" id="contracts-tab">
+                    <div class="info-section">
+                        <h2 class="section-title">계약 정보</h2>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>계약일</th>
+                                        <th>영업 담당</th>
+                                        <th>견적서</th>
+                                        <th>수주보고서</th>
+                                        <th>계약서</th>
+                                        <th>납품확인서</th>
+                                        <th>세금계산서</th>
+                                        <th>상태</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2025-01-15</td>
+                                        <td>김영희</td>
+                                        <td><a href="#" style="color: #3498db;">견적서.pdf</a></td>
+                                        <td><a href="#" style="color: #3498db;">수주보고서.pdf</a></td>
+                                        <td><a href="#" style="color: #3498db;">계약서.pdf</a></td>
+                                        <td><a href="#" style="color: #3498db;">납품확인서.pdf</a></td>
+                                        <td><a href="#" style="color: #3498db;">세금계산서.pdf</a></td>
+                                        <td><span class="status-badge status-active">완료</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2024-01-15</td>
+                                        <td>박민수</td>
+                                        <td><a href="#" style="color: #3498db;">견적서.pdf</a></td>
+                                        <td><a href="#" style="color: #3498db;">수주보고서.pdf</a></td>
+                                        <td><a href="#" style="color: #3498db;">계약서.pdf</a></td>
+                                        <td><a href="#" style="color: #3498db;">납품확인서.pdf</a></td>
+                                        <td><a href="#" style="color: #3498db;">세금계산서.pdf</a></td>
+                                        <td><span class="status-badge status-active">완료</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2023-01-15</td>
+                                        <td>이지은</td>
+                                        <td><a href="#" style="color: #3498db;">견적서.pdf</a></td>
+                                        <td><a href="#" style="color: #3498db;">수주보고서.pdf</a></td>
+                                        <td><a href="#" style="color: #3498db;">계약서.pdf</a></td>
+                                        <td><a href="#" style="color: #3498db;">납품확인서.pdf</a></td>
+                                        <td><a href="#" style="color: #3498db;">세금계산서.pdf</a></td>
+                                        <td><span class="status-badge status-active">완료</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -760,6 +773,52 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Plan History Modal -->
+    <div class="modal" id="planHistoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">요금제 변경 내역</h2>
+                <button class="modal-close" onclick="closePlanHistory()">&times;</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>변경일</th>
+                            <th>이전 요금제</th>
+                            <th>변경 요금제</th>
+                            <th>변경 사유</th>
+                            <th>처리자</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2025-06-01</td>
+                            <td>Business Standard</td>
+                            <td>Business Pro</td>
+                            <td>사용자 증가로 인한 업그레이드</td>
+                            <td>김영희</td>
+                        </tr>
+                        <tr>
+                            <td>2024-12-15</td>
+                            <td>Starter</td>
+                            <td>Business Standard</td>
+                            <td>기능 확장 필요</td>
+                            <td>박민수</td>
+                        </tr>
+                        <tr>
+                            <td>2023-01-15</td>
+                            <td>-</td>
+                            <td>Starter</td>
+                            <td>신규 가입</td>
+                            <td>이지은</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -819,14 +878,14 @@
                 }
             });
             
-            // 사용자 활동 현황 차트
+            // 멤버 수 현황 차트
             const userCtx = document.getElementById('userChart').getContext('2d');
             new Chart(userCtx, {
                 type: 'bar',
                 data: {
                     labels: ['월', '화', '수', '목', '금', '토', '일'],
                     datasets: [{
-                        label: '활성 사용자',
+                        label: '멤버 수',
                         data: [423, 412, 435, 445, 468, 234, 189],
                         backgroundColor: '#2ecc71'
                     }]
@@ -834,48 +893,6 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false
-                }
-            });
-            
-            // API 사용량 차트
-            const apiCtx = document.getElementById('apiChart').getContext('2d');
-            new Chart(apiCtx, {
-                type: 'line',
-                data: {
-                    labels: ['9/10', '9/11', '9/12', '9/13', '9/14', '9/15', '9/16'],
-                    datasets: [{
-                        label: 'API 호출',
-                        data: [12100, 11800, 12300, 11500, 12800, 13100, 12200],
-                        borderColor: '#f39c12',
-                        backgroundColor: 'rgba(243, 156, 18, 0.1)',
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
-            
-            // 스토리지 사용량 차트
-            const storageCtx = document.getElementById('storageChart').getContext('2d');
-            new Chart(storageCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['사용중', '여유 공간'],
-                    datasets: [{
-                        data: [1024, 1024],
-                        backgroundColor: ['#e74c3c', '#ecf0f1']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
                 }
             });
         }
@@ -897,6 +914,23 @@
                 alert('회사 삭제 기능 (구현 예정)');
             }
         }
+        
+        // 요금제 변경 내역 모달 열기
+        function showPlanHistory() {
+            document.getElementById('planHistoryModal').classList.add('active');
+        }
+        
+        // 요금제 변경 내역 모달 닫기
+        function closePlanHistory() {
+            document.getElementById('planHistoryModal').classList.remove('active');
+        }
+        
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePlanHistory();
+            }
+        });
     </script>
 </body>
 </html>

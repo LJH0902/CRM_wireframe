@@ -561,17 +561,84 @@
 <body>
     <div class="container">
         <!-- Sidebar -->
+                <!-- Enhanced Sidebar with Hierarchical Menu -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h2>eformsign CRM</h2>
             </div>
             <nav class="sidebar-nav">
-                <a href="company.html" class="nav-item">회사관리</a>
-                <a href="company-group.html" class="nav-item">회사그룹관리</a>
-                <a href="contract.html" class="nav-item">계약관리</a>
-                <a href="sales-pipeline.html" class="nav-item">영업 파이프라인</a>
-                <a href="index.html" class="nav-item">매출 및 통계</a>
-                <a href="mypage.html" class="nav-item active">마이페이지</a>
+                <!-- 1. 고객관리 -->
+                <div class="menu-group">
+                    <div class="menu-header" onclick="toggleMenu(this)">
+                        <span>고객관리</span>
+                        <span class="menu-arrow">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <a href="company.html" class="submenu-item">회사관리</a>
+                        <a href="company-group.html" class="submenu-item">회사그룹관리</a>
+                    </div>
+                </div>
+                
+                <!-- 2. 영업관리 -->
+                <div class="menu-group">
+                    <div class="menu-header" onclick="toggleMenu(this)">
+                        <span>영업관리</span>
+                        <span class="menu-arrow">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <a href="inbound.html" class="submenu-item">인바운드</a>
+                        <a href="outbound.html" class="submenu-item">아웃바운드</a>
+                        <a href="sales-pipeline.html" class="submenu-item">영업현황</a>
+                    </div>
+                </div>
+                
+                <!-- 3. 사업관리 -->
+                <div class="menu-group">
+                    <div class="menu-header" onclick="toggleMenu(this)">
+                        <span>사업관리</span>
+                        <span class="menu-arrow">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <a href="overview.html" class="submenu-item">종합현황관리</a>
+                        <a href="contract.html" class="submenu-item">요금제관리</a>
+                        <a href="performance.html" class="submenu-item">실적관리</a>
+                        <a href="campaign.html" class="submenu-item">캠페인 관리</a>
+                        <a href="channel.html" class="submenu-item">채널 관리</a>
+                    </div>
+                </div>
+                
+                <!-- 4. 기술지원관리 -->
+                <div class="menu-group">
+                    <div class="menu-header" onclick="toggleMenu(this)">
+                        <span>기술지원관리</span>
+                        <span class="menu-arrow">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <a href="voc.html" class="submenu-item">VoC 관리</a>
+                    </div>
+                </div>
+                
+                <!-- 5. 통계 및 분석 -->
+                <div class="menu-group">
+                    <div class="menu-header" onclick="toggleMenu(this)">
+                        <span>통계 및 분석</span>
+                        <span class="menu-arrow">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <a href="index.html" class="submenu-item">매출현황</a>
+                    </div>
+                </div>
+                
+                <!-- 6. 마이페이지 -->
+                <div class="menu-group">
+                    <div class="menu-header" onclick="toggleMenu(this)">
+                        <span>마이페이지</span>
+                        <span class="menu-arrow">▼</span>
+                    </div>
+                    <div class="submenu">
+                        <a href="mypage.html" class="submenu-item">마이페이지</a>
+                    </div>
+                </div>
             </nav>
         </aside>
         

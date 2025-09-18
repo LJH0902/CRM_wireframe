@@ -22,7 +22,100 @@
             height: 100vh;
         }
         
-        /* Sidebar */
+                /* Enhanced Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: #1a252f;
+            border-bottom: 1px solid #34495e;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 10px 0;
+        }
+        
+        /* Menu Group */
+        .menu-group {
+            border-bottom: 1px solid #34495e;
+        }
+        
+        .menu-group:last-child {
+            border-bottom: none;
+        }
+        
+        .menu-header {
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        
+        .menu-header:hover {
+            background: #34495e;
+        }
+        
+        .menu-header.active {
+            background: #34495e;
+            color: #3498db;
+        }
+        
+        .menu-arrow {
+            transition: transform 0.3s;
+            font-size: 12px;
+        }
+        
+        .menu-header.active .menu-arrow {
+            transform: rotate(180deg);
+        }
+        
+        /* Submenu */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: #253443;
+        }
+        
+        .menu-group.expanded .submenu {
+            max-height: 500px;
+            transition: max-height 0.3s ease-in;
+        }
+        
+        .submenu-item {
+            padding: 10px 20px 10px 40px;
+            display: block;
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+        }
+        
+        .submenu-item:hover {
+            background: #1a252f;
+            color: #ecf0f1;
+            border-left-color: #3498db;
+        }
+        
+        .submenu-item.active {
+            background: #1a252f;
+            color: #3498db;
+            border-left-color: #e74c3c;
+        }
+        
         .sidebar {
             width: 240px;
             background: #2c3e50;
@@ -58,6 +151,85 @@
         
         .nav-item.active {
             background: #34495e;
+            border-left-color: #e74c3c;
+        }
+        
+        /* Enhanced Sidebar Styles for Collapsible Menu */
+        .nav-group {
+            margin-bottom: 5px;
+        }
+        
+        .nav-group-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            position: relative;
+            color: #ecf0f1;
+        }
+        
+        .nav-group-header:hover {
+            background: #34495e;
+        }
+        
+        .nav-group-header.active {
+            background: #34495e;
+        }
+        
+        .nav-group-header .icon {
+            width: 20px;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        .nav-group-header .arrow {
+            position: absolute;
+            right: 20px;
+            transition: transform 0.3s;
+            font-size: 10px;
+        }
+        
+        .nav-group.expanded .arrow {
+            transform: rotate(90deg);
+        }
+        
+        .nav-group-title {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .nav-submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #1a252f;
+        }
+        
+        .nav-group.expanded .nav-submenu {
+            max-height: 500px;
+        }
+        
+        .nav-subitem {
+            display: block;
+            padding: 8px 20px 8px 50px;
+            color: #bdc3c7;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-subitem:hover {
+            background: #34495e;
+            color: #ecf0f1;
+            border-left-color: #3498db;
+        }
+        
+        .nav-subitem.active {
+            background: #34495e;
+            color: white;
             border-left-color: #e74c3c;
         }
         
@@ -503,12 +675,70 @@
             <div class="sidebar-header">
                 <h2>CRM System</h2>
             </div>
+            
             <nav class="sidebar-nav">
-                <a href="company.html" class="nav-item active">회사관리</a>
-                <a href="company-group.html" class="nav-item">회사그룹관리</a>
-                <a href="contract.html" class="nav-item">계약관리</a>
-                <a href="sales-pipeline.html" class="nav-item">영업 파이프라인</a>
-                <a href="index.html" class="nav-item">매출 및 통계</a>
+                <!-- 1. 고객관리 -->
+                <div class="nav-group expanded">
+                    <div class="nav-group-header" onclick="toggleNavGroup(this)">
+                        <span class="icon">👥</span>
+                        <span class="nav-group-title">고객관리</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="nav-submenu">
+                        <a href="company.html" class="nav-subitem active">회사관리</a>
+                        <a href="company-group.html" class="nav-subitem">회사그룹관리</a>
+                    </div>
+                </div>
+                
+                <!-- 2. 영업관리 -->
+                <div class="nav-group">
+                    <div class="nav-group-header" onclick="toggleNavGroup(this)">
+                        <span class="icon">💼</span>
+                        <span class="nav-group-title">영업관리</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="nav-submenu">
+                        <a href="inbound.html" class="nav-subitem">인바운드</a>
+                        <a href="outbound.html" class="nav-subitem">아웃바운드</a>
+                        <a href="sales-status.html" class="nav-subitem">영업현황</a>
+                    </div>
+                </div>
+                
+                <!-- 3. 사업관리 -->
+                <div class="nav-group">
+                    <div class="nav-group-header" onclick="toggleNavGroup(this)">
+                        <span class="icon">📊</span>
+                        <span class="nav-group-title">사업관리</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="nav-submenu">
+                        <a href="overview.html" class="nav-subitem">종합현황관리</a>
+                        <a href="pricing.html" class="nav-subitem">요금제관리</a>
+                        <a href="performance.html" class="nav-subitem">실적관리</a>
+                        <a href="campaign.html" class="nav-subitem">캠페인 관리</a>
+                        <a href="channel.html" class="nav-subitem">채널 관리</a>
+                    </div>
+                </div>
+                
+                <!-- 기술지원관리 (단독 메뉴) -->
+                <a href="tech-support.html" class="nav-item">기술지원관리</a>
+                
+                <!-- VoC 관리 (단독 메뉴) -->
+                <a href="voc.html" class="nav-item">VoC 관리</a>
+                
+                <!-- 통계 및 분석 -->
+                <div class="nav-group">
+                    <div class="nav-group-header" onclick="toggleNavGroup(this)">
+                        <span class="icon">📈</span>
+                        <span class="nav-group-title">통계 및 분석</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="nav-submenu">
+                        <a href="index.html" class="nav-subitem">매출현황</a>
+                    </div>
+                </div>
+                
+                <!-- 마이페이지 (단독 메뉴) -->
                 <a href="mypage.html" class="nav-item">마이페이지</a>
             </nav>
         </div>
@@ -757,6 +987,12 @@
     </div>
     
     <script>
+        // Toggle navigation group
+        function toggleNavGroup(header) {
+            const group = header.closest('.nav-group');
+            group.classList.toggle('expanded');
+        }
+        
         // 데이터
         let companies = [];
         let currentPage = 1;
@@ -1860,6 +2096,39 @@
         document.getElementById('searchInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 searchCompanies();
+            }
+        });
+    
+        // Toggle menu function
+        function toggleMenu(header) {
+            const menuGroup = header.parentElement;
+            const wasExpanded = menuGroup.classList.contains('expanded');
+            
+            // Close all other menus
+            document.querySelectorAll('.menu-group').forEach(group => {
+                group.classList.remove('expanded');
+                group.querySelector('.menu-header').classList.remove('active');
+            });
+            
+            // Toggle current menu
+            if (!wasExpanded) {
+                menuGroup.classList.add('expanded');
+                header.classList.add('active');
+            }
+        }
+        
+        // Auto-expand menu based on current page
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname.split('/').pop();
+            const activeLink = document.querySelector(`a[href="${currentPath}"]`);
+            
+            if (activeLink) {
+                activeLink.classList.add('active');
+                const menuGroup = activeLink.closest('.menu-group');
+                if (menuGroup) {
+                    menuGroup.classList.add('expanded');
+                    menuGroup.querySelector('.menu-header').classList.add('active');
+                }
             }
         });
     </script>
